@@ -3,14 +3,17 @@
 
 # Compiled Object files
 *.slo
+*.sln
 *.lo
 *.o
 *.obj
 *.suo
 *.db
 *.log
+*.tlog
 *.vcxproj
 *.vcxproj.filters
+*.lastbuildstate
 
 # Precompiled Headers
 *.gch
@@ -95,6 +98,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+*.inl
+*.vcxproj.user
 
 *.ipch
 *.enc
