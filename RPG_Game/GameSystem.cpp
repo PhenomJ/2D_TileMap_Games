@@ -33,7 +33,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 GameSystem::GameSystem()
 {
-	_isFullScreen = true;
+	_isFullScreen = false;
 	_testSprite = NULL;
 }
 
@@ -115,33 +115,8 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		return false;
 	}
 
+	_testSprite = new Sprite();
 	_testSprite->Init(_device3d, _sprite);
-
-	/*
-	HRESULT hr = D3DXCreateTextureFromFileEx
-	(
-		_device3d,
-		L"character_sprite.png",
-		_textureInfo.Width,
-		_textureInfo.Height,
-		1,
-		0,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_DEFAULT,
-		D3DX_DEFAULT,
-		D3DX_DEFAULT,
-		D3DCOLOR_ARGB(255, 255, 255, 255),
-		&_textureInfo,
-		NULL,
-		&_texture
-	);
-
-	_srcTextureRect.left = 0;
-	_srcTextureRect.top = 0;
-	_srcTextureRect.right = _textureInfo.Width;
-	_srcTextureRect.bottom = _textureInfo.Height;
-	_textureColor = D3DCOLOR_ARGB(255, 255, 255, 255);
-	*/
 
 	return true;
 }
@@ -173,7 +148,9 @@ int GameSystem::UpdateSystem()
 			
 			_frameduration += deltaTime;
 
-			if (frameTime <= _frameduration)
+			_testSprite->Update(deltaTime);
+
+			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
 			{
 				wchar_t time[256];
 				swprintf(time, L"deltaTime : %f\n", _frameduration);
@@ -184,28 +161,10 @@ int GameSystem::UpdateSystem()
 				_device3d->BeginScene();
 				// Sprite는 _sprite begin-end 사이에 존재해야함.
 				
-				/*
-				// Sprite 출력전 모양 & 위치 조정
-				D3DXVECTOR2 spriteCenter = D3DXVECTOR2((float)_textureInfo.Width / 2.0f ,(float) _textureInfo.Height / 2.0f);
-				D3DXVECTOR2 translate = D3DXVECTOR2((float)_clientWidth / 2.0f - _textureInfo.Width / 2.0f , (float)_clientHeight / 2.0f - _textureInfo.Height / 2.0f);
-				D3DXVECTOR2 scaling = D3DXVECTOR2(1.0f, 1.0f);
-
-				D3DXMATRIX matrix;
-				D3DXMatrixTransformation2D(
-					&matrix,
-					NULL,
-					0.0f,
-					&scaling,
-					&spriteCenter,
-					0.0f,
-					&translate
-				);
-
-				_sprite->SetTransform(&matrix);
-				*/
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
-				//_sprite->Draw(_texture, &_srcTextureRect, NULL, NULL, _textureColor);
+				
 				_testSprite->Render();
+
 				_sprite->End();
 				
 
@@ -285,24 +244,6 @@ bool GameSystem::InitDirect3D() // COM interface
 		return false;
 	}
 
-	// Texture
-	{
-		//파일 정보 가져오기
-		
-		//HRESULT hr = D3DXGetImageInfoFromFile(L"character_sprite.png", &_textureInfo);
-
-		if (FAILED(hr))
-		{
-			MessageBox(0, L"Image Load Error", L"Image Load Error", MB_OK);
-			return false;
-		}
-
-		//Texture 생성
-		
-
-
-	}
-	
 	return true;
 }
 
@@ -323,36 +264,9 @@ void GameSystem::CheckDeviceLost()
 		else if (hr == D3DERR_DEVICENOTRESET)
 		{
 			_testSprite->Release();
-			//RELEASE_COM(_texture);
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);
 			_testSprite->Reset(_device3d, _sprite);
-
-			/*
-			hr = D3DXCreateTextureFromFileEx
-			(
-				_device3d,
-				L"character_sprite.png",
-				_textureInfo.Width,
-				_textureInfo.Height,
-				1,
-				0,
-				D3DFMT_UNKNOWN,
-				D3DPOOL_DEFAULT,
-				D3DX_DEFAULT,
-				D3DX_DEFAULT,
-				D3DCOLOR_ARGB(255, 255, 255, 255),
-				&_textureInfo,
-				NULL,
-				&_texture
-			);
-
-			_srcTextureRect.left = 0;
-			_srcTextureRect.top = 0;
-			_srcTextureRect.right = _textureInfo.Width;
-			_srcTextureRect.bottom = _textureInfo.Height;
-			_textureColor = D3DCOLOR_ARGB(255, 255, 255, 255);
-			*/
 		}
 	}
 }
