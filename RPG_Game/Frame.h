@@ -1,6 +1,8 @@
 #pragma once
 #include <d3dx9.h>
 
+class Texture;
+
 class Frame
 {
 public:
@@ -8,18 +10,21 @@ public:
 	~Frame();
 
 public:
-	void Init(LPDIRECT3DDEVICE9 device3d, LPD3DXSPRITE sprite, IDirect3DTexture9* _texture, int x, int y, int width, int height);
+	void Init(Texture* _texture, int x, int y, int width, int height, float frameDelay);
 	void Deinit();
 	void Render();
 	void Release();
-	void Reset(LPDIRECT3DDEVICE9 device3d, LPD3DXSPRITE sprite);
+	void Reset();
+	float GetFrameDelay();
 
 private:
-	IDirect3DTexture9* _texture;
+	Texture* _texture;
 	RECT _srcTextureRect;
 	D3DCOLOR _textureColor;
 	LPD3DXSPRITE _sprite;
 
 	int _width;
 	int _height;
+
+	float _frameDelay;
 };

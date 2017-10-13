@@ -116,7 +116,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	_testSprite = new Sprite();
-	_testSprite->Init(_device3d, _sprite);
+	_testSprite->Init();
 
 	return true;
 }
@@ -173,10 +173,7 @@ int GameSystem::UpdateSystem()
 				CheckDeviceLost();
 				_device3d->Present(NULL, NULL, NULL, NULL);
 			}
-			
-			
 			// 대기영역 -> 게임 처리
-			
 		}
 	}
 
@@ -266,7 +263,7 @@ void GameSystem::CheckDeviceLost()
 			_testSprite->Release();
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);
-			_testSprite->Reset(_device3d, _sprite);
+			_testSprite->Reset();
 		}
 	}
 }
@@ -279,4 +276,14 @@ int GameSystem::GetClientWidth()
 int GameSystem::GetClientHeight()
 {
 	return _clientHeight;
+}
+
+LPD3DXSPRITE GameSystem::GetSprite()
+{
+	return _sprite;
+}
+
+LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
+{
+	return _device3d;
 }

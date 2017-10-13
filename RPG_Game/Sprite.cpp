@@ -1,8 +1,10 @@
 #include "Sprite.h"
 #include "GameSystem.h"
 #include "Frame.h"
+#include "Texture.h"
+#include "ResourceManager.h"
 
-Sprite::Sprite() : _currnetFrame(0)
+Sprite::Sprite() : _currnetFrame(0), _frameTime(0.0f), _srcTexture(NULL)
 {
 
 }
@@ -12,53 +14,33 @@ Sprite::~Sprite()
 
 }
 
-void Sprite::Init(LPDIRECT3DDEVICE9 device3d, LPD3DXSPRITE sprite)
+void Sprite::Init()
 {	
-	_sprite = sprite;
-	HRESULT hr = D3DXGetImageInfoFromFile(L"character_sprite.png", &_textureInfo);
-	hr = D3DXCreateTextureFromFileEx
-	(
-		device3d,
-		L"character_sprite.png",
-		_textureInfo.Width,
-		_textureInfo.Height,
-		1,
-		0,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_DEFAULT,
-		D3DX_DEFAULT,
-		D3DX_DEFAULT,
-		D3DCOLOR_ARGB(255, 255, 255, 255),
-		&_textureInfo,
-		NULL,
-		&_texture
-	);
+	_device3d = GameSystem::GetInstance()->GetDevice3d();
+	_sprite = GameSystem::GetInstance()->GetSprite();
+	
+	_srcTexture = new Texture();
+	_srcTexture->Init(L"character_sprite.png");
 
 	{
 		Frame* frame = new Frame();
-		frame->Init(device3d, sprite, _texture, 32*0, 0, 32, 32);
-		_frameList.push_back(frame);
-		
-	}
-
-	{
-		Frame* frame = new Frame();
-		frame->Init(device3d, sprite, _texture, 32*1, 0, 32, 32);
+		frame->Init(_srcTexture, 32*0, 0, 32, 32, 0.2f);
 		_frameList.push_back(frame);
 	}
 
 	{
 		Frame* frame = new Frame();
-		frame->Init(device3d, sprite, _texture, 32*2, 0, 32, 32);
+		frame->Init(_srcTexture, 32*2, 0, 32, 32, 0.2f);
 		_frameList.push_back(frame);
 	}
-	_currnetFrame = 2;
+	_currnetFrame = 0;
+	_frameTime = 0.0f;
+
+	_srcTexture = ResourceManager::GetInstance()->LoadTexture(L"character_sprite.png");
 }
 
 void Sprite::Deinit()
-{
-	RELEASE_COM(_texture);
-	
+{	
 	std::vector<Frame*>::iterator itr = _frameList.begin();
 	for (itr = _frameList.begin(); itr != _frameList.end(); itr++)
 	{
@@ -67,6 +49,13 @@ void Sprite::Deinit()
 		delete frame;
 	}
 	_frameList.clear();
+
+	if (_srcTexture != NULL)
+	{
+		_srcTexture->Deinit();
+		delete _srcTexture;
+		_srcTexture = NULL;
+	}
 }
 
 void Sprite::Render()
@@ -75,16 +64,15 @@ void Sprite::Render()
 	_frameList[_currnetFrame]->Render();
 }
 
-void Sprite::Reset(LPDIRECT3DDEVICE9 device3d, LPD3DXSPRITE sprite)
+void Sprite::Reset()
 {
-	Init(device3d, sprite);
+	Init();
 	std::vector<Frame*>::iterator itr = _frameList.begin();
 	for (itr = _frameList.begin(); itr != _frameList.end(); itr++)
 	{
 		Frame* frame = (*itr);
-		frame->Reset(device3d, sprite);
+		frame->Reset();
 	}
-
 }
 
 void Sprite::Release()
@@ -95,10 +83,15 @@ void Sprite::Release()
 		Frame* frame = (*itr);
 		frame->Release();
 	}
-	RELEASE_COM(_texture);
+	_srcTexture->Release();
 }
 
 void Sprite::Update(float deltaTime)
 {
-
+	_frameTime += deltaTime;
+	if (_frameList[_currnetFrame]->GetFrameDelay() <= _frameTime)
+	{
+		_frameTime = 0.0f;
+		_currnetFrame = (_currnetFrame + 1) % _frameList.size();
+	}
 }

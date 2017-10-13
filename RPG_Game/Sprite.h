@@ -2,6 +2,7 @@
 #include <d3dx9.h>
 #include <vector>
 
+class Texture;
 class Frame;
 
 class Sprite
@@ -11,20 +12,23 @@ public:
 	~Sprite();
 
 public:
-	void Init(LPDIRECT3DDEVICE9 device3d, LPD3DXSPRITE sprite);
+	void Init();
 	void Deinit();
+	
 	void Render();
-	void Reset(LPDIRECT3DDEVICE9 device3d, LPD3DXSPRITE sprite);
+	void Reset();
 	void Release();
+
 	void Update(float deltaTime);
+
 	//Direct X
 private:
-	IDirect3DTexture9* _texture;
-	D3DXIMAGE_INFO _textureInfo;
 	LPD3DXSPRITE _sprite;
-
+	LPDIRECT3DDEVICE9 _device3d;
 private:
 	// Frame* _frame;
 	std::vector<Frame*> _frameList;
 	int _currnetFrame;
+	float _frameTime;
+	Texture* _srcTexture;
 };

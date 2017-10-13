@@ -35,11 +35,7 @@ private:
 
 	//Texture
 	Sprite* _testSprite;
-	/*IDirect3DTexture9* _texture;
-	RECT _srcTextureRect;
-	D3DCOLOR _textureColor;
-	D3DXIMAGE_INFO _textureInfo;*/
-
+	
 	D3DPRESENT_PARAMETERS _d3dpp;
 
 	bool _isFullScreen;
@@ -50,4 +46,6 @@ private:
 public:
 	int GetClientWidth();
 	int GetClientHeight();
+	LPD3DXSPRITE GetSprite();
+	LPDIRECT3DDEVICE9 GetDevice3d();
 };
