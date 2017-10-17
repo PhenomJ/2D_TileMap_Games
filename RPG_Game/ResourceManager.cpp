@@ -1,10 +1,10 @@
-#include"ResourceManager.h"
+#include "ResourceManager.h"
 
-ResourceManager* ResourceManager::_Instace = NULL;
+ResourceManager* ResourceManager::_Instance = 0;
 
 ResourceManager::ResourceManager()
 {
-	
+
 }
 
 ResourceManager::~ResourceManager()
@@ -14,15 +14,25 @@ ResourceManager::~ResourceManager()
 
 ResourceManager* ResourceManager::GetInstance()
 {
-	if (_Instace == NULL)
+	if (_Instance == 0)
 	{
-		_Instace = new ResourceManager();
+		_Instance = new ResourceManager();
 	}
 
-	return _Instace;
+	return _Instance;
 }
 
 Texture* ResourceManager::LoadTexture(LPCWSTR fileName)
 {
-	return _texture;
+	std::map<LPCWSTR, Texture*>::iterator itr = _textureMap.find(fileName);
+	if (itr != _textureMap.end())
+	{
+		return itr->second;
+	}
+
+	Texture* texture = new Texture();
+	texture->Init(fileName);
+	
+	_textureMap[fileName] = texture;
+	return texture;
 }

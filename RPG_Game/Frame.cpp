@@ -36,7 +36,7 @@ void Frame::Deinit()
 void Frame::Render()
 {
 	D3DXVECTOR2 spriteCenter = D3DXVECTOR2((float)_width / 2.0f, (float)_height / 2.0f);
-	D3DXVECTOR2 translate = D3DXVECTOR2((float)GameSystem::GetInstance()->GetClientWidth() / 2.0f - _width / 2.0f, (float)GameSystem::GetInstance()->GetClientHeight() / 2.0f - _height / 2.0f);
+	D3DXVECTOR2 translate = D3DXVECTOR2(_x - _width / 2.0f, _y - _height / 2.0f);
 	D3DXVECTOR2 scaling = D3DXVECTOR2(1.0f, 1.0f);
 
 	D3DXMATRIX matrix;
@@ -67,4 +67,10 @@ void Frame::Reset()
 float Frame::GetFrameDelay()
 {
 	return _frameDelay;
+}
+
+void Frame::SetPosition(float x, float y)
+{
+	_x = x;
+	_y = y;
 }

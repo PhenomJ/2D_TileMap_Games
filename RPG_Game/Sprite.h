@@ -8,7 +8,7 @@ class Frame;
 class Sprite
 {
 public:
-	Sprite();
+	Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName);
 	~Sprite();
 
 public:
@@ -20,7 +20,7 @@ public:
 	void Release();
 
 	void Update(float deltaTime);
-
+	void SetPosition(float posX, float posY);
 	//Direct X
 private:
 	LPD3DXSPRITE _sprite;
@@ -31,4 +31,10 @@ private:
 	int _currnetFrame;
 	float _frameTime;
 	Texture* _srcTexture;
+
+	LPCWSTR _texturefileName;
+	LPCWSTR _scriptfileName;
+
+	float _x;
+	float _y;
 };

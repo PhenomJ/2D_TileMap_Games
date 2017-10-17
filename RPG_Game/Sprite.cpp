@@ -1,12 +1,17 @@
+#include <fstream>
+#include <reader.h>
+
 #include "Sprite.h"
 #include "GameSystem.h"
 #include "Frame.h"
 #include "Texture.h"
 #include "ResourceManager.h"
 
-Sprite::Sprite() : _currnetFrame(0), _frameTime(0.0f), _srcTexture(NULL)
-{
 
+Sprite::Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName) : _currnetFrame(0), _frameTime(0.0f), _srcTexture(NULL),
+																	_texturefileName(texturefileName), _scriptfileName(scriptfileName)
+{
+	
 }
 
 Sprite::~Sprite()
@@ -19,24 +24,38 @@ void Sprite::Init()
 	_device3d = GameSystem::GetInstance()->GetDevice3d();
 	_sprite = GameSystem::GetInstance()->GetSprite();
 	
-	_srcTexture = new Texture();
-	_srcTexture->Init(L"character_sprite.png");
+	_srcTexture = ResourceManager::GetInstance()->LoadTexture(_texturefileName);
 
+	//json Parsing
 	{
-		Frame* frame = new Frame();
-		frame->Init(_srcTexture, 32*0, 0, 32, 32, 0.2f);
-		_frameList.push_back(frame);
+		char inputBuffer[1000];
+		std::ifstream infile(_scriptfileName);
+		while (!infile.eof())
+		{
+			infile.getline(inputBuffer, 100);
+			
+			Json::Value root;
+			Json::Reader reader;
+			bool isSuccess = reader.parse(inputBuffer, root);
+
+			if (isSuccess)
+			{
+				std::string texture = root["texture"].asString();
+				int x = root["x"].asInt();
+				int y = root["y"].asInt();
+				int width = root["width"].asInt();
+				int height = root["height"].asInt();
+				double framedelay = root["framedelay"].asDouble();
+
+				Frame* frame = new Frame();
+				frame->Init(_srcTexture, x, y, width, height, framedelay);
+				_frameList.push_back(frame);
+			}
+		}
 	}
 
-	{
-		Frame* frame = new Frame();
-		frame->Init(_srcTexture, 32*2, 0, 32, 32, 0.2f);
-		_frameList.push_back(frame);
-	}
 	_currnetFrame = 0;
 	_frameTime = 0.0f;
-
-	_srcTexture = ResourceManager::GetInstance()->LoadTexture(L"character_sprite.png");
 }
 
 void Sprite::Deinit()
@@ -56,12 +75,16 @@ void Sprite::Deinit()
 		delete _srcTexture;
 		_srcTexture = NULL;
 	}
+	
 }
 
 void Sprite::Render()
 {
 	if (_currnetFrame < _frameList.size())
-	_frameList[_currnetFrame]->Render();
+	{
+		_frameList[_currnetFrame]->SetPosition(_x, _y);
+		_frameList[_currnetFrame]->Render();
+	}
 }
 
 void Sprite::Reset()
@@ -94,4 +117,10 @@ void Sprite::Update(float deltaTime)
 		_frameTime = 0.0f;
 		_currnetFrame = (_currnetFrame + 1) % _frameList.size();
 	}
+}
+
+void Sprite::SetPosition(float posX, float posY)
+{
+	_x = posX;
+	_y = posY;
 }

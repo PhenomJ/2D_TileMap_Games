@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <d3dx9.h>
 #include <Windows.h>
 
@@ -34,8 +35,9 @@ private:
 	LPD3DXSPRITE _sprite;
 
 	//Texture
-	Sprite* _testSprite;
-	
+	//std::vector<Sprite*> _testSpriteList;
+	Sprite* _testTileMap[16][16];
+
 	D3DPRESENT_PARAMETERS _d3dpp;
 
 	bool _isFullScreen;

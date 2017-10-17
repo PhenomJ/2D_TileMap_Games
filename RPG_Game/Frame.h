@@ -16,7 +16,7 @@ public:
 	void Release();
 	void Reset();
 	float GetFrameDelay();
-
+	void SetPosition(float _x, float _y);
 private:
 	Texture* _texture;
 	RECT _srcTextureRect;
@@ -27,4 +27,7 @@ private:
 	int _height;
 
 	float _frameDelay;
+
+	float _x;
+	float _y;
 };
