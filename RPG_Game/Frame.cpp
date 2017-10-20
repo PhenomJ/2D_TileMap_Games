@@ -16,6 +16,7 @@ void Frame::Init(Texture* texture, int x, int y, int width, int height, float fr
 {
 	_sprite = GameSystem::GetInstance()->GetSprite();
 	_texture = texture;
+
 	_width = width;
 	_height = height;
 
@@ -30,7 +31,12 @@ void Frame::Init(Texture* texture, int x, int y, int width, int height, float fr
 
 void Frame::Deinit()
 {
-
+	if (_texture != NULL)
+	{
+		_texture->Deinit();
+		delete _texture;
+		_texture = NULL;
+	}
 }
 
 void Frame::Render()

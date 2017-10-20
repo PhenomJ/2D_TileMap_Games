@@ -15,11 +15,6 @@ void Texture::Init(LPCWSTR fileName)
 {
 	HRESULT hr = D3DXGetImageInfoFromFile(fileName, &_textureInfo);
 
-	if (FAILED(hr))
-	{
-		MessageBox(0, L"Error", L"can't init _textureinfo", MB_OK);
-	}
-
 	hr = D3DXCreateTextureFromFileEx
 	(
 		GameSystem::GetInstance()->GetDevice3d(),
@@ -41,7 +36,11 @@ void Texture::Init(LPCWSTR fileName)
 
 void Texture::Deinit()
 {
-	RELEASE_COM(_texture);
+	if (_texture != NULL)
+	{
+		_texture->Release();
+		_texture = NULL;
+	}
 }
 
 void Texture::Release()

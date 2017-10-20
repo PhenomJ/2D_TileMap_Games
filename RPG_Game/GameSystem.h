@@ -3,11 +3,13 @@
 #include <d3dx9.h>
 #include <Windows.h>
 
+
+
 #define RELEASE_COM(x) {if (x != NULL) {x->Release(); x = NULL;}}
 #define SAFE_DELETE(x) {if(x) {delete x; x = NULL;}}
 
 class GameTimer;
-class Sprite;
+class Map;
 
 class GameSystem
 {
@@ -34,9 +36,8 @@ private:
 	LPDIRECT3DDEVICE9 _device3d;
 	LPD3DXSPRITE _sprite;
 
-	//Texture
-	//std::vector<Sprite*> _testSpriteList;
-	Sprite* _testTileMap[16][16];
+	// Sprite / Texture
+	
 
 	D3DPRESENT_PARAMETERS _d3dpp;
 
@@ -50,4 +51,10 @@ public:
 	int GetClientHeight();
 	LPD3DXSPRITE GetSprite();
 	LPDIRECT3DDEVICE9 GetDevice3d();
+
+	//Scroll
+public:
+	void MapScrollTest(float x, float y);
+
+	Map* _map;
 };

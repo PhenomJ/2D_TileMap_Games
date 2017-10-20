@@ -18,6 +18,22 @@ Sprite::~Sprite()
 {
 
 }
+void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay)
+{
+	_device3d = GameSystem::GetInstance()->GetDevice3d();
+	_sprite = GameSystem::GetInstance()->GetSprite();
+
+	_srcTexture = ResourceManager::GetInstance()->LoadTexture(_texturefileName);
+
+	{
+		Frame* frame = new Frame();
+		frame->Init(_srcTexture, srcX, srcY, x, y, frameDelay);
+		_frameList.push_back(frame);
+	}
+
+	_currnetFrame = 0;
+	_frameTime = 0.0f;
+}
 
 void Sprite::Init()
 {	
@@ -28,15 +44,15 @@ void Sprite::Init()
 
 	//json Parsing
 	{
-		char inputBuffer[1000];
-		std::ifstream infile(_scriptfileName);
-		while (!infile.eof())
+		std::vector<std::string> script = ResourceManager::GetInstance()->LoadScript(_scriptfileName);
+
+		for (int i = 0 ; i < script.size(); i++)
 		{
-			infile.getline(inputBuffer, 100);
-			
+			std::string record = script[i];
+
 			Json::Value root;
 			Json::Reader reader;
-			bool isSuccess = reader.parse(inputBuffer, root);
+			bool isSuccess = reader.parse(record, root);
 
 			if (isSuccess)
 			{

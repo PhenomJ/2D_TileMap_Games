@@ -1,6 +1,7 @@
 #include "GameSystem.h"
 #include "GameTimer.h"
 #include "Sprite.h"
+#include "Map.h"
 #include <stdio.h>
 #include <string>
 
@@ -13,17 +14,38 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		if (VK_ESCAPE == wParam)
 			DestroyWindow(hwnd);
+
+		// scroll test
+		if (VK_UP == wParam)
+		{
+			GameSystem::GetInstance()->MapScrollTest(0.0f, -3.0f);
+		}
+
+		if (VK_DOWN == wParam)
+		{
+			GameSystem::GetInstance()->MapScrollTest(0.0f, 3.0f);
+		}
+
+		if (VK_RIGHT == wParam)
+		{
+			GameSystem::GetInstance()->MapScrollTest(3.0f, 0.0f);
+		}
+
+		if (VK_LEFT == wParam)
+		{
+			GameSystem::GetInstance()->MapScrollTest(-3.0f, 0.0f);
+		}
+
 		return 0;
 
+	case WM_KEYUP:
+		GameSystem::GetInstance()->MapScrollTest(0.0f, 0.0f);
+		break;
 
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
-
-	case WM_LBUTTONDOWN:
-		MessageBox(0, L"Hello World", L"Hello", MB_OK);
-		break;
-
+	
 	default:
 		break;
 	}
@@ -33,10 +55,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 GameSystem::GameSystem()
 {
-	_isFullScreen = false;
-	//testSpriteList = NULL;
-	//_testSpriteList.clear();
+	_isFullScreen = true;	
 	
+	_map = NULL;
 }
 
 GameSystem::~GameSystem()
@@ -44,28 +65,11 @@ GameSystem::~GameSystem()
 	RELEASE_COM(_device3d);
 	RELEASE_COM(_sprite);
 
-	//if (_testSprite != NULL)
-	//{
-	//	_testSprite->Deinit();
-	//	_testSprite->Release();
-	//	_testSprite = NULL;
-	//}
-
-	/*for (int i = 0; i < _testSpriteList.size(); i++)
+	if (_map != NULL)
 	{
-		_testSpriteList[i]->Deinit();
-		delete _testSpriteList[i];
-	}
-
-	_testSpriteList.clear();*/
-
-	for (int y = 0; y < 16; y++)
-	{
-		for (int x = 0; x < 16; x++)
-		{
-			_testTileMap[x][y]->Deinit();
-			delete _testTileMap[x][y];
-		}
+		_map->Deinit();
+		delete _map;
+		_map = NULL;
 	}
 }
 
@@ -134,61 +138,8 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		return false;
 	}
 
-	/*_testSprite = new Sprite(L"character_sprite.png", L"jsontest.json");
-	_testSprite->Init();*/
-
-	/*{
-		Sprite* sprite = new Sprite(L"character_sprite.png", L"char_sprite_01.json");
-		sprite->Init();
-		_testSpriteList.push_back(sprite);
-	}
-
-	{
-		Sprite* sprite = new Sprite(L"character_sprite.png", L"char_sprite_02.json");
-		sprite->Init();
-		_testSpriteList.push_back(sprite);
-	}
-
-	{
-		Sprite* sprite = new Sprite(L"character_sprite.png", L"char_sprite_03.json");
-		sprite->Init();
-		_testSpriteList.push_back(sprite);
-	}
-
-	{
-		Sprite* sprite = new Sprite(L"character_sprite.png", L"char_sprite_04.json");
-		sprite->Init();
-		_testSpriteList.push_back(sprite);
-	}*/
-
-	for (int y = 0; y < 16; y++)
-	{
-		for (int x = 0; x < 16; x++)
-		{
-			Sprite* sprite;
-			int randValue = rand() % 4;
-			switch (randValue)
-			{
-			case 0:
-				sprite = new Sprite(L"character_sprite.png", L"char_sprite_01.json");
-				break;
-			case 1:
-				sprite = new Sprite(L"character_sprite.png", L"char_sprite_02.json");
-				break;
-			case 2:
-				sprite = new Sprite(L"character_sprite.png", L"char_sprite_03.json");
-				break;
-			case 3:
-				sprite = new Sprite(L"character_sprite.png", L"char_sprite_04.json");
-				break;
-			default:
-				break;
-			}
-
-			sprite->Init();
-			_testTileMap[x][y] = sprite;
-		}
-	}
+	_map = new Map(L"mapsprite.png");
+	_map->Init();
 
 	return true;
 }
@@ -220,15 +171,9 @@ int GameSystem::UpdateSystem()
 			
 			_frameduration += deltaTime;
 
-			//_testSprite->Update(deltaTime);
-			//_testSpriteList[2]->Update(deltaTime);
-			for (int y = 0; y < 16; y++)
-			{
-				for (int x = 0; x < 16; x++)
-				{
-					_testTileMap[x][y]->Update(deltaTime);
-				}
-			}
+			
+
+			_map->Update(deltaTime);
 
 			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
 			{
@@ -243,26 +188,7 @@ int GameSystem::UpdateSystem()
 				
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 				
-				//_testSprite->Render();
-				//_testSpriteList[2]->Render();
-
-				float startX = 0.0f;
-				float startY = 0.0f;
-				float posX = startX;
-				float posY = startY;
-				int tileSize = 32;
-
-				for (int y = 0; y < 16; y++)
-				{
-					for (int x = 0; x < 16; x++)
-					{
-						_testTileMap[x][y]->SetPosition(posX, posY);
-						_testTileMap[x][y]->Render();
-						posX += 32;						
-					}
-					posX = startX;
-					posY += tileSize;
-				}
+				_map->Render();
 
 				_sprite->End();
 				
@@ -343,24 +269,6 @@ bool GameSystem::InitDirect3D() // COM interface
 		return false;
 	}
 
-	// Texture
-	{
-		//파일 정보 가져오기
-		
-		//HRESULT hr = D3DXGetImageInfoFromFile(L"character_sprite.png", &_textureInfo);
-
-		if (FAILED(hr))
-		{
-			MessageBox(0, L"Image Load Error", L"Image Load Error", MB_OK);
-			return false;
-		}
-
-		//Texture 생성
-		
-
-
-	}
-	
 	return true;
 }
 
@@ -380,77 +288,12 @@ void GameSystem::CheckDeviceLost()
 
 		else if (hr == D3DERR_DEVICENOTRESET)
 		{
-			/*for (int i = 0; i < _testSpriteList.size(); i++)
-			{
-				_testSpriteList[i]->Deinit();
-				delete _testSpriteList[i];
-			}
-
-			_testSpriteList.clear();*/
-
-			for (int y = 0; y < 16; y++)
-			{
-				for (int x = 0; x < 16; x++)
-				{
-					_testTileMap[x][y]->Deinit();
-					delete _testTileMap[x][y];
-				}
-			}
-
-			//_testSprite->Release();
-			//RELEASE_COM(_texture);
+			_map->Release();
 			InitDirect3D();
-			hr = _device3d->Reset(&_d3dpp);
-
-			//_testSprite->Reset();
-			/*for (int i = 0 ; i < _testSpriteList.size(); i++)
-				_testSpriteList[i]->Reset();*/
-
-			for (int y = 0; y < 16; y++)
-			{
-				for (int x = 0; x < 16; x++)
-				{
-					_testTileMap[x][y]->Reset();
-				}
-			}
-
-			/*
-			hr = D3DXCreateTextureFromFileEx
-			(
-				_device3d,
-				L"character_sprite.png",
-				_textureInfo.Width,
-				_textureInfo.Height,
-				1,
-				0,
-				D3DFMT_UNKNOWN,
-				D3DPOOL_DEFAULT,
-				D3DX_DEFAULT,
-				D3DX_DEFAULT,
-				D3DCOLOR_ARGB(255, 255, 255, 255),
-				&_textureInfo,
-				NULL,
-				&_texture
-			);
-
-			_srcTextureRect.left = 0;
-			_srcTextureRect.top = 0;
-			_srcTextureRect.right = _textureInfo.Width;
-			_srcTextureRect.bottom = _textureInfo.Height;
-			_textureColor = D3DCOLOR_ARGB(255, 255, 255, 255);
-			*/
+			hr = _device3d->Reset(&_d3dpp);			
+			_map->Reset();
 		}
 	}
-}
-
-int GameSystem::GetClientWidth()
-{
-	return _clientWidth;
-}
-
-int GameSystem::GetClientHeight()
-{
-	return _clientHeight;
 }
 
 LPD3DXSPRITE GameSystem::GetSprite()
@@ -461,4 +304,9 @@ LPD3DXSPRITE GameSystem::GetSprite()
 LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
 {
 	return _device3d;
+}
+
+void GameSystem::MapScrollTest(float deltaX, float deltaY)
+{
+	_map->Scroll(deltaX, deltaY);
 }

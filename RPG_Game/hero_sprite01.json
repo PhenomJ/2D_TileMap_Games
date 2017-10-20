@@ -1,0 +1,4 @@
+[
+{"texture":"hero.png","x":0,"y":0,"width":16,"height":16,"framedelay":0.2},
+{"texture":"hero.png","x":32,"y":0,"width":16,"height":16,"framedelay":0.2}
+]

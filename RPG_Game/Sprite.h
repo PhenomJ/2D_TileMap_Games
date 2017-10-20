@@ -13,6 +13,7 @@ public:
 
 public:
 	void Init();
+	void Init(int srcX, int srcY, int x, int y, float frameDelay);
 	void Deinit();
 	
 	void Render();
@@ -21,6 +22,8 @@ public:
 
 	void Update(float deltaTime);
 	void SetPosition(float posX, float posY);
+
+
 	//Direct X
 private:
 	LPD3DXSPRITE _sprite;
