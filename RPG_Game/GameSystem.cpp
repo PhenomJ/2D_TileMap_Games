@@ -2,6 +2,8 @@
 #include "GameTimer.h"
 #include "Sprite.h"
 #include "Map.h"
+#include "Character.h"
+#include "ComponentSystem.h"
 #include <stdio.h>
 #include <string>
 
@@ -13,8 +15,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_KEYDOWN:
 		if (VK_ESCAPE == wParam)
+		{
+			ComponentSystem::GetInstance()->RemoveAllComponents();
 			DestroyWindow(hwnd);
-
+		}
 		// scroll test
 		if (VK_UP == wParam)
 		{
@@ -55,9 +59,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 GameSystem::GameSystem()
 {
-	_isFullScreen = true;	
+	_isFullScreen = false;	
 	
 	_map = NULL;
+	_character = NULL;
 }
 
 GameSystem::~GameSystem()
@@ -70,6 +75,13 @@ GameSystem::~GameSystem()
 		_map->Deinit();
 		delete _map;
 		_map = NULL;
+	}
+
+	if (_character != NULL)
+	{
+		_character->Deinit();
+		delete _character;
+		_character = NULL;
 	}
 }
 
@@ -138,8 +150,11 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		return false;
 	}
 
-	_map = new Map(L"mapsprite.png");
+	_map = new Map(L"tileMap");
 	_map->Init();
+
+	_character = new Character(L"testCharacter");
+	_character->Init();
 
 	return true;
 }
@@ -174,6 +189,7 @@ int GameSystem::UpdateSystem()
 			
 
 			_map->Update(deltaTime);
+			_character->Update(deltaTime);
 
 			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
 			{
@@ -189,6 +205,7 @@ int GameSystem::UpdateSystem()
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 				
 				_map->Render();
+				_character->Render();
 
 				_sprite->End();
 				
@@ -289,9 +306,11 @@ void GameSystem::CheckDeviceLost()
 		else if (hr == D3DERR_DEVICENOTRESET)
 		{
 			_map->Release();
+			_character->Release();
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);			
 			_map->Reset();
+			_character->Reset();
 		}
 	}
 }

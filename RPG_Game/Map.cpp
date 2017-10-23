@@ -1,7 +1,7 @@
 #include "Map.h"
 #include "Sprite.h"
 
-Map::Map(LPCWSTR fileName)
+Map::Map(LPCWSTR name) : Component(name)
 {
 	_startX = 0;
 	_startY = 0;

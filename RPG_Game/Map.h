@@ -2,26 +2,27 @@
 #include <Windows.h>
 #include <vector>
 #include <fstream>
-
-//#define MAP_HEIGHT 16
-//#define MAP_WIDTH 16
+#include "Component.h"
 
 class Sprite;
-class Map
+
+class Map : public Component
 {
 public:
 	Map(LPCWSTR fileName);
 	~Map();
+
+public:
 	void Init();
 	void Deinit();
 	void Update(float deltaTime);
 	void Render();
 	void Release();
 	void Reset();
+
 	void Scroll(float deltaX, float deltaY);
 
 private:
-	//Sprite* _TileMap[MAP_HEIGHT][MAP_WIDTH];
 	std::vector<std::vector<Sprite*>> _tileMap;
 	float _startX;
 	float _startY;
