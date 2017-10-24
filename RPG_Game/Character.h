@@ -16,10 +16,16 @@ public:
 	void Render();
 	void Release();
 	void Reset();
+	void Move(int x, int y);
 
 private:
 	
 	Sprite* _sprite;
 	float _x;
 	float _y;
+
+private:
+	int _tileX;
+	int _tileY;
+	int _map;
 };

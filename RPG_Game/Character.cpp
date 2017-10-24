@@ -1,9 +1,11 @@
 #include "Character.h"
 #include "Sprite.h"
+#include "Map.h"
+#include "ComponentSystem.h"
 
-Character::Character(LPCWSTR name) : Component(name)
+Character::Character(LPCWSTR name) : Component(name), _sprite(NULL), _x(0.0f), _y(0.0f)
 {
-	_sprite = NULL;
+	_map = 32;
 }
 
 Character::~Character()
@@ -21,12 +23,20 @@ void Character::Init()
 	_sprite->Init();
 
 	{
-		int mapTileSize = 32;
-		int tileX = 2; // 실질적으로 이동할떄
-		int tileY = 2; // 바뀌어야 하는 값
+		//int mapTileSize = 32;
+		//int tileX = 2; // 실질적으로 이동할떄
+		//int tileY = 2; // 바뀌어야 하는 값
 
-		_x = tileX * mapTileSize;
-		_y = tileY * mapTileSize;
+		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+		int tileX = 2;
+		int tileY = 3;
+
+		_x = map->GetPositionX(tileX, tileY);
+		_y = map->GetPositionY(tileX, tileY);
+		map->SetTileComponent(tileX, tileY, this);
+
+		//_x = tileX * mapTileSize;
+		//_y = tileY * mapTileSize;
 	}
 }
 
@@ -59,4 +69,10 @@ void Character::Release()
 void Character::Reset()
 {
 	_sprite->Reset();
+}
+
+void Character::Move(int x, int y)
+{
+	_x = _x + x * _map;
+	_y = _y + y * _map;
 }

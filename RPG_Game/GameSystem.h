@@ -4,7 +4,6 @@
 #include <Windows.h>
 
 #define RELEASE_COM(x) {if (x != NULL) {x->Release(); x = NULL;}}
-#define SAFE_DELETE(x) {if(x) {delete x; x = NULL;}}
 
 class GameTimer;
 class Map;
@@ -55,9 +54,13 @@ public:
 public:
 	void MapScrollTest(float x, float y);
 
+	//Map
+private:
 	Map* _map;
-
 	//Character
 private:
 	Character* _character;
+
+public:
+	void CharacterControllTest(int x, int y);
 };

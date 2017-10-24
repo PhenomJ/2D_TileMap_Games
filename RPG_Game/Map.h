@@ -5,6 +5,7 @@
 #include "Component.h"
 
 class Sprite;
+class TileCell;
 
 class Map : public Component
 {
@@ -22,14 +23,19 @@ public:
 
 	void Scroll(float deltaX, float deltaY);
 
+	float GetPositionX(int tileX, int tileY);
+	float GetPositionY(int tileX, int tileY);
+	void SetTileComponent(int tileX, int tileY, Component* thisComponent);
+
 private:
-	std::vector<std::vector<Sprite*>> _tileMap;
+	//std::vector<std::vector<Sprite*>> _tileMap;
+	std::vector<std::vector <TileCell*>> _tileMap;
 	float _startX;
 	float _startY;
 	float _deltaX;
 	float _deltaY;
 	int _width;
 	int _height;
-
+	int _tileSize = 32;
 	std::vector<Sprite*> _spriteList;
 };
