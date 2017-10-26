@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include "Component.h"
+#include <vector>
 
 class Sprite;
 class Character : public Component
@@ -9,6 +10,11 @@ public:
 	Character(LPCWSTR name);
 	~Character();
 
+	enum eDirection
+	{
+		LEFT, RIGHT, UP, DOWN
+	};
+
 public:
 	void Init();
 	void Deinit();
@@ -16,11 +22,10 @@ public:
 	void Render();
 	void Release();
 	void Reset();
-	void Move(int x, int y);
+	
 
 private:
-	
-	Sprite* _sprite;
+	std::vector<Sprite*> _spriteList;
 	float _x;
 	float _y;
 
@@ -28,4 +33,30 @@ private:
 	int _tileX;
 	int _tileY;
 	int _map;
+
+	// AI
+
+private:
+	bool _isMoving;
+	float _moveSpeed;
+	float _movingDuration;
+
+	eDirection _currentDirection;
+	
+
+public:
+	void UpdateAI(float deltaTime);
+	void InitMove();
+	void MoveStart(eDirection direction);
+	void UpdateMove(float deltaTime);
+	
+	void MoveDeltaPosition(float deltaX, float deltaY);
+
+	//Move
+private:
+	float _targetX;
+	float _targetY;
+
+	float _moveDistanceperTimeX;
+	float _moveDistanceperTimeY;
 };

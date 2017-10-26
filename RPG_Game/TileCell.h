@@ -22,14 +22,16 @@ public:
 	float GetPositionX();
 	float GetPositionY();
 	void SetPosition(float posX, float posY);
+	void MoveDeltaPosition(float deltaX, float deltaY);
 
 	//Component
-	void AddComponent(Component* thisComponent);
+	void AddComponent(Component* thisComponent, bool isRender);
 	void RemoveComponent(Component* thisComponent);
 
 private:
 	Sprite* _sprite;
 	std::list<Component*> _componentList;
+	std::list<Component*> _renderList;
 	float _posX;
 	float _posY;
 

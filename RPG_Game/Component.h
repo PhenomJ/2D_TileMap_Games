@@ -16,6 +16,7 @@ public:
 	virtual void Render() = 0;
 	virtual void Release() = 0;
 	virtual void Reset() = 0;
+	virtual void MoveDeltaPosition(float deltaX, float deltaY) {}
 
 protected:
 	LPCWSTR _name;

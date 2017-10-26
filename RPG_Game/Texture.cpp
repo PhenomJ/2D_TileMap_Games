@@ -38,6 +38,7 @@ void Texture::Deinit()
 {
 	if (_texture != NULL)
 	{
+		delete _texture;
 		_texture->Release();
 		_texture = NULL;
 	}

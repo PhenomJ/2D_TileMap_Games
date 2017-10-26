@@ -4,9 +4,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <Windows.h>
 #include "Texture.h"
-
-
 
 class ResourceManager
 {
@@ -18,12 +17,16 @@ public:
 	~ResourceManager();
 	static ResourceManager* GetInstance();
 	
-	Texture* LoadTexture(LPCWSTR fileName);
+	Texture* LoadTexture(std::wstring fileName);
 
 
-	std::vector<std::string> LoadScript(LPCWSTR scriptfileName);
+	
 private:
 	Texture* _texture;
-	std::map<LPCWSTR, Texture*> _textureMap;
-	std::map<LPCWSTR, std::vector<std::string>> _scriptMap;
+	std::map<std::wstring, Texture*> _textureMap;
+
+public:
+	std::vector<std::string> LoadScript(std::wstring scriptfileName);
+private:
+	std::map<std::wstring, std::vector<std::string>> _scriptMap;
 };

@@ -13,7 +13,7 @@ Map::Map(LPCWSTR name) : Component(name)
 
 Map::~Map()
 {
-	
+
 }
 
 void Map::Init()
@@ -72,7 +72,7 @@ void Map::Init()
 					for (int x = 0; x < _width; x++)
 					{
 						int index = atoi(token);
-						//rowList.push_back(_spriteList[index]);
+						//rowList.push_back(_spriteLIstList[index]);
 						TileCell* tileCell = new TileCell();
 						tileCell->SetSprite(_spriteList[index]);
 						rowList.push_back(tileCell);
@@ -129,7 +129,8 @@ void Map::Update(float deltaTime)
 
 void Map::Render()
 {
-	_startX += _deltaX;
+
+	/*_startX += _deltaX;
 	_startY += _deltaY;
 	float posX = _startX;
 	float posY = _startY;
@@ -145,6 +146,15 @@ void Map::Render()
 		}
 		posX = _startX;
 		posY += tileSize;
+	}*/
+
+	for (int y = 0; y < _height; y++)
+	{
+		for (int x = 0; x < _width; x++)
+		{
+			_tileMap[y][x]->MoveDeltaPosition(_deltaX, _deltaY);
+			_tileMap[y][x]->Render();
+		}
 	}
 }
 
@@ -186,7 +196,13 @@ float Map::GetPositionY(int tileX, int tileY)
 	return _tileMap[tileY][tileX]->GetPositionY();
 }
 
-void Map::SetTileComponent(int tileX, int tileY, Component* thisComponent)
+void Map::SetTileComponent(int tileX, int tileY, Component* thisComponent, bool isRender)
 {
-	_tileMap[tileY][tileX]->AddComponent(thisComponent);
+	if (isRender == true)
+	_tileMap[tileY][tileX]->AddComponent(thisComponent, isRender);
+}
+
+void Map::ResetTileComponent(int tileX, int tileY, Component* thisComponent)
+{
+	_tileMap[tileY][tileX]->RemoveComponent(thisComponent);
 }

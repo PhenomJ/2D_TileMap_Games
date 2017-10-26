@@ -22,32 +22,32 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		// scroll test
 		if (VK_UP == wParam)
 		{
-			GameSystem::GetInstance()->CharacterControllTest(0, -1);
-			//GameSystem::GetInstance()->MapScrollTest(0.0f, -3.0f);
+			//GameSystem::GetInstance()->CharacterControllTest(0, -1);
+			GameSystem::GetInstance()->MapScrollTest(0.0f, -3.0f);
 		}
 
 		if (VK_DOWN == wParam)
 		{
-			GameSystem::GetInstance()->CharacterControllTest(0, 1);
-			//GameSystem::GetInstance()->MapScrollTest(0.0f, 3.0f);
+			//GameSystem::GetInstance()->CharacterControllTest(0, 1);
+			GameSystem::GetInstance()->MapScrollTest(0.0f, 3.0f);
 		}
 
 		if (VK_RIGHT == wParam)
 		{
-			GameSystem::GetInstance()->CharacterControllTest(1, 0);
-			//GameSystem::GetInstance()->MapScrollTest(3.0f, 0.0f);
+			//GameSystem::GetInstance()->CharacterControllTest(1, 0);
+			GameSystem::GetInstance()->MapScrollTest(3.0f, 0.0f);
 		}
 
 		if (VK_LEFT == wParam)
 		{
-			GameSystem::GetInstance()->CharacterControllTest(-1, 0);
-			//GameSystem::GetInstance()->MapScrollTest(-3.0f, 0.0f);
+			//GameSystem::GetInstance()->CharacterControllTest(-1, 0);
+			GameSystem::GetInstance()->MapScrollTest(-3.0f, 0.0f);
 		}
 
 		return 0;
 
 	case WM_KEYUP:
-		GameSystem::GetInstance()->CharacterControllTest(0, 0);
+		//GameSystem::GetInstance()->CharacterControllTest(0, 0);
 		GameSystem::GetInstance()->MapScrollTest(0.0f, 0.0f);
 		break;
 
@@ -191,6 +191,7 @@ int GameSystem::UpdateSystem()
 			
 			_frameduration += deltaTime;
 
+			
 			_map->Update(deltaTime);
 			_character->Update(deltaTime);
 
@@ -203,12 +204,13 @@ int GameSystem::UpdateSystem()
 				_frameduration = 0.0f;
 				_device3d->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(53, 41, 42), 0.0f, 0);
 				_device3d->BeginScene();
-				// Sprite는 _sprite begin-end 사이에 존재해야함.
+				// Sprite는 _spriteLIst begin-end 사이에 존재해야함.
 				
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 				
 				_map->Render();
-				//_character->Render();
+				
+				_character->Render();
 
 				_sprite->End();
 				
@@ -331,9 +333,4 @@ LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
 void GameSystem::MapScrollTest(float deltaX, float deltaY)
 {
 	_map->Scroll(deltaX, deltaY);
-}
-
-void GameSystem::CharacterControllTest(int x, int y)
-{
-	_character->Move(x, y);
 }

@@ -7,6 +7,7 @@
 class Sprite;
 class TileCell;
 
+
 class Map : public Component
 {
 public:
@@ -25,10 +26,11 @@ public:
 
 	float GetPositionX(int tileX, int tileY);
 	float GetPositionY(int tileX, int tileY);
-	void SetTileComponent(int tileX, int tileY, Component* thisComponent);
-
+	void SetTileComponent(int tileX, int tileY, Component* thisComponent, bool isRender);
+	void ResetTileComponent(int _tileX,int _tileY, Component* thisComponent);
+	
 private:
-	//std::vector<std::vector<Sprite*>> _tileMap;
+	
 	std::vector<std::vector <TileCell*>> _tileMap;
 	float _startX;
 	float _startY;
