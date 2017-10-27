@@ -108,19 +108,10 @@ void Character::Reset()
 	_spriteList.clear();
 }
 
-void Character::UpdateAI(float deltaTime)
-{
-	if (_isMoving == false)
-	{
-		int direction = rand() % 4;
-		MoveStart((eDirection)direction);
-	}
-}
-
 void Character::InitMove()
 {
 	_isMoving = false;
-	_moveSpeed = 1.0f;
+	_moveSpeed = 0.7f;
 	_movingDuration = 0.0f;
 	_currentDirection = eDirection::DOWN;
 }
@@ -160,11 +151,6 @@ void Character::MoveStart(eDirection direction)
 			break;
 		}
 		
-		/*_x = map->GetPositionX(_tileX, _tileY);
-		_y = map->GetPositionY(_tileX, _tileY);
-		map->SetTileComponent(_tileX, _tileY, this);
-		*/
-
 		// 이동을 위한 보간작업.
 		{
 			map->SetTileComponent(_tileX, _tileY, this,false);
@@ -193,10 +179,11 @@ void Character::UpdateMove(float deltaTime)
 
 	if (_moveSpeed <= _movingDuration)
 	{
+		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 		_movingDuration = 0.0f;
 		_isMoving = false;
-		_x = _targetX;
-		_y = _targetY;
+		_x = map->GetPositionX(_tileX, _tileY);
+		_y = map->GetPositionY(_tileX, _tileY);
 	}
 
 	else

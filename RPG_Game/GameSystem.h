@@ -4,6 +4,8 @@
 #include <Windows.h>
 
 #define RELEASE_COM(x) {if (x != NULL) {x->Release(); x = NULL;}}
+#define SAFE_DELETE(x) {if(x) {delete x; x = NULL;}}
+
 
 class GameTimer;
 class Map;
@@ -54,13 +56,31 @@ public:
 public:
 	void MapScrollTest(float x, float y);
 
-	//Map
-private:
-	Map* _map;
 	//Character
 private:
 	Character* _character;
 
+	//Map
+private:
+	Map* _map;
+	//Character
+
+
 public:
 	void CharacterControllTest(int x, int y);
+
+	//Input
+public:
+	void InitInput();
+	void KeyDown(unsigned int KeyCode);
+	void KeyUp(unsigned int KeyCode);
+	
+	enum eKeyState
+	{
+		KEY_DOWN,
+		KEY_UP
+	};
+
+private:
+	eKeyState _keyState[256];
 };

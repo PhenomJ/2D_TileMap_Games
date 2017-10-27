@@ -8,6 +8,7 @@ class Character : public Component
 {
 public:
 	Character(LPCWSTR name);
+	Character() {}
 	~Character();
 
 	enum eDirection
@@ -21,8 +22,7 @@ public:
 	void Update(float deltaTime);
 	void Render();
 	void Release();
-	void Reset();
-	
+	void Reset();	
 
 private:
 	std::vector<Sprite*> _spriteList;
@@ -35,17 +35,15 @@ private:
 	int _map;
 
 	// AI
-
-private:
+protected:
 	bool _isMoving;
 	float _moveSpeed;
 	float _movingDuration;
 
 	eDirection _currentDirection;
 	
-
 public:
-	void UpdateAI(float deltaTime);
+	virtual void UpdateAI(float deltaTime) {};
 	void InitMove();
 	void MoveStart(eDirection direction);
 	void UpdateMove(float deltaTime);

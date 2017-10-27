@@ -2,7 +2,9 @@
 #include "GameTimer.h"
 #include "Sprite.h"
 #include "Map.h"
-#include "Character.h"
+//#include "Character.h"
+#include "Player.h"
+#include "NPC.h"
 #include "ComponentSystem.h"
 #include <stdio.h>
 #include <string>
@@ -14,41 +16,42 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_KEYDOWN:
+		GameSystem::GetInstance()->KeyDown(wParam);
+		
 		if (VK_ESCAPE == wParam)
 		{
 			ComponentSystem::GetInstance()->RemoveAllComponents();
 			DestroyWindow(hwnd);
 		}
-		// scroll test
-		if (VK_UP == wParam)
-		{
-			//GameSystem::GetInstance()->CharacterControllTest(0, -1);
-			GameSystem::GetInstance()->MapScrollTest(0.0f, -3.0f);
-		}
+		//
+		//// scroll test
+		//if (VK_UP == wParam)
+		//{
 
-		if (VK_DOWN == wParam)
-		{
-			//GameSystem::GetInstance()->CharacterControllTest(0, 1);
-			GameSystem::GetInstance()->MapScrollTest(0.0f, 3.0f);
-		}
+		//	GameSystem::GetInstance()->MapScrollTest(0.0f, -3.0f);
+		//}
 
-		if (VK_RIGHT == wParam)
-		{
-			//GameSystem::GetInstance()->CharacterControllTest(1, 0);
-			GameSystem::GetInstance()->MapScrollTest(3.0f, 0.0f);
-		}
+		//if (VK_DOWN == wParam)
+		//{
+		//	GameSystem::GetInstance()->MapScrollTest(0.0f, 3.0f);
+		//}
 
-		if (VK_LEFT == wParam)
-		{
-			//GameSystem::GetInstance()->CharacterControllTest(-1, 0);
-			GameSystem::GetInstance()->MapScrollTest(-3.0f, 0.0f);
-		}
+		//if (VK_RIGHT == wParam)
+		//{
+		//	GameSystem::GetInstance()->MapScrollTest(3.0f, 0.0f);
+		//}
+
+		//if (VK_LEFT == wParam)
+		//{
+		//	GameSystem::GetInstance()->MapScrollTest(-3.0f, 0.0f);
+		//}
 
 		return 0;
 
 	case WM_KEYUP:
+		//GameSystem::GetInstance()->MapScrollTest(0.0f, 0.0f);
 		//GameSystem::GetInstance()->CharacterControllTest(0, 0);
-		GameSystem::GetInstance()->MapScrollTest(0.0f, 0.0f);
+		GameSystem::GetInstance()->KeyUp(wParam);
 		break;
 
 	case WM_DESTROY:
@@ -158,8 +161,12 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	_map = new Map(L"tileMap");
 	_map->Init();
 
-	_character = new Character(L"testCharacter");
+	//_character = new Character(L"testCharacter");
+	//_character = new NPC(L"npc");
+	_character = new Player(L"testCharacter");
 	_character->Init();
+
+	InitInput();
 
 	return true;
 }
@@ -333,4 +340,23 @@ LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
 void GameSystem::MapScrollTest(float deltaX, float deltaY)
 {
 	_map->Scroll(deltaX, deltaY);
+}
+
+void GameSystem::InitInput()
+{
+	for (int i = 0; i < 256; i++)
+	{
+		_keyState[i] = eKeyState::KEY_UP;
+	}
+}
+
+void GameSystem::KeyDown(unsigned int KeyCode)
+{
+	
+	_keyState[KeyCode] = eKeyState::KEY_DOWN;
+}
+
+void GameSystem::KeyUp(unsigned int KeyCode)
+{
+	_keyState[KeyCode] = eKeyState::KEY_UP;
 }

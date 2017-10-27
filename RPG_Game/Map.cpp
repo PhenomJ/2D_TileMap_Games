@@ -198,7 +198,6 @@ float Map::GetPositionY(int tileX, int tileY)
 
 void Map::SetTileComponent(int tileX, int tileY, Component* thisComponent, bool isRender)
 {
-	if (isRender == true)
 	_tileMap[tileY][tileX]->AddComponent(thisComponent, isRender);
 }
 
