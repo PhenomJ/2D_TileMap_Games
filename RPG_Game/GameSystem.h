@@ -58,7 +58,8 @@ public:
 
 	//Character
 private:
-	Character* _character;
+	Character* _player;
+	Character* _npc;
 
 	//Map
 private:
@@ -74,7 +75,8 @@ public:
 	void InitInput();
 	void KeyDown(unsigned int KeyCode);
 	void KeyUp(unsigned int KeyCode);
-	
+	bool IsKeyDown(unsigned int KeyCode);
+
 	enum eKeyState
 	{
 		KEY_DOWN,

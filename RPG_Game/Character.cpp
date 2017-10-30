@@ -10,6 +10,7 @@ Character::Character(LPCWSTR name) : Component(name), _spriteList(NULL), _x(0.0f
 	_targetY = 0;
 	_moveDistanceperTimeX = 0;
 	_moveDistanceperTimeY = 0;
+	_moveSpeed = 0.5f;
 }
 
 Character::~Character()
@@ -111,7 +112,7 @@ void Character::Reset()
 void Character::InitMove()
 {
 	_isMoving = false;
-	_moveSpeed = 0.7f;
+	
 	_movingDuration = 0.0f;
 	_currentDirection = eDirection::DOWN;
 }

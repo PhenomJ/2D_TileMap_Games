@@ -7,4 +7,9 @@ public:
 	Player(LPCWSTR name);
 	~Player();
 	
+	//AI
+	void UpdateAI(float deltaTime);
+
+	//MOVE
+	void UpdateMove(float deltaTime);
 };

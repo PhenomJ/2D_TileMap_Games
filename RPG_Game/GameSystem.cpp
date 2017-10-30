@@ -2,7 +2,6 @@
 #include "GameTimer.h"
 #include "Sprite.h"
 #include "Map.h"
-//#include "Character.h"
 #include "Player.h"
 #include "NPC.h"
 #include "ComponentSystem.h"
@@ -70,27 +69,13 @@ GameSystem::GameSystem()
 	_isFullScreen = false;	
 	
 	_map = NULL;
-	_character = NULL;
+	_player = NULL;
 }
 
 GameSystem::~GameSystem()
 {
 	RELEASE_COM(_device3d);
 	RELEASE_COM(_sprite);
-
-	if (_map != NULL)
-	{
-		_map->Deinit();
-		delete _map;
-		_map = NULL;
-	}
-
-	if (_character != NULL)
-	{
-		_character->Deinit();
-		delete _character;
-		_character = NULL;
-	}
 }
 
 GameSystem* GameSystem::GetInstance()
@@ -161,10 +146,11 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	_map = new Map(L"tileMap");
 	_map->Init();
 
-	//_character = new Character(L"testCharacter");
-	//_character = new NPC(L"npc");
-	_character = new Player(L"testCharacter");
-	_character->Init();
+	_player = new Player(L"testCharacter");
+	_player->Init();
+
+	_npc = new NPC(L"npc");
+	_npc->Init();
 
 	InitInput();
 
@@ -200,7 +186,8 @@ int GameSystem::UpdateSystem()
 
 			
 			_map->Update(deltaTime);
-			_character->Update(deltaTime);
+			_player->Update(deltaTime);
+			_npc->Update(deltaTime);
 
 			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
 			{
@@ -217,8 +204,8 @@ int GameSystem::UpdateSystem()
 				
 				_map->Render();
 				
-				_character->Render();
-
+				_player->Render();
+				_npc->Render();
 				_sprite->End();
 				
 
@@ -318,11 +305,13 @@ void GameSystem::CheckDeviceLost()
 		else if (hr == D3DERR_DEVICENOTRESET)
 		{
 			_map->Release();
-			_character->Release();
+			_player->Release();
+			_npc->Release();
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);			
 			_map->Reset();
-			_character->Reset();
+			_player->Reset();
+			_npc->Reset();
 		}
 	}
 }
@@ -352,11 +341,15 @@ void GameSystem::InitInput()
 
 void GameSystem::KeyDown(unsigned int KeyCode)
 {
-	
 	_keyState[KeyCode] = eKeyState::KEY_DOWN;
 }
 
 void GameSystem::KeyUp(unsigned int KeyCode)
 {
 	_keyState[KeyCode] = eKeyState::KEY_UP;
+}
+
+bool GameSystem::IsKeyDown(unsigned int KeyCode)
+{
+	return (eKeyState::KEY_DOWN == _keyState[KeyCode]);
 }

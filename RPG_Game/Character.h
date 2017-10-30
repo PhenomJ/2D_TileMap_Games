@@ -46,12 +46,12 @@ public:
 	virtual void UpdateAI(float deltaTime) {};
 	void InitMove();
 	void MoveStart(eDirection direction);
-	void UpdateMove(float deltaTime);
+	virtual void UpdateMove(float deltaTime);
 	
 	void MoveDeltaPosition(float deltaX, float deltaY);
 
 	//Move
-private:
+protected:
 	float _targetX;
 	float _targetY;
 
