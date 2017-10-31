@@ -203,9 +203,9 @@ int GameSystem::UpdateSystem()
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 				
 				_map->Render();
-				
 				_player->Render();
 				_npc->Render();
+
 				_sprite->End();
 				
 

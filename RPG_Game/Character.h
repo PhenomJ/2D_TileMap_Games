@@ -24,12 +24,12 @@ public:
 	void Release();
 	void Reset();	
 
-private:
+protected:
 	std::vector<Sprite*> _spriteList;
 	float _x;
 	float _y;
 
-private:
+protected:
 	int _tileX;
 	int _tileY;
 	int _map;
@@ -48,7 +48,7 @@ public:
 	void MoveStart(eDirection direction);
 	virtual void UpdateMove(float deltaTime);
 	
-	void MoveDeltaPosition(float deltaX, float deltaY);
+	virtual void MoveDeltaPosition(float deltaX, float deltaY);
 
 	//Move
 protected:

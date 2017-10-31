@@ -165,9 +165,7 @@ void Character::MoveStart(eDirection direction)
 
 			//최소 이동거리
 			_moveDistanceperTimeX = distanceX / _moveSpeed;
-			_moveDistanceperTimeY = distanceY / _moveSpeed;
-
-			
+			_moveDistanceperTimeY = distanceY / _moveSpeed;	
 		}
 
 		_isMoving = true;

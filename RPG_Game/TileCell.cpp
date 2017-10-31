@@ -31,6 +31,7 @@ void TileCell::SetPosition(float posX, float posY)
 
 void TileCell::Render()
 {
+	_sprite->SetPosition(_posX, _posY);
 	_sprite->Render();
 
 	for (std::list<Component*>::iterator itr = _renderList.begin(); itr != _renderList.end(); itr++)

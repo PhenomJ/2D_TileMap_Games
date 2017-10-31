@@ -38,11 +38,11 @@ void Map::Init()
 	_width = 16;
 	_height = 16;
 
-	// Load Map Script
+	// Load Map Script layer1
 	{
 		int line = 0;
 		char record[1024];
-		std::ifstream infile("MapData.csv");
+		std::ifstream infile("MapData_layer1.csv");
 		while (!infile.eof())
 		{
 			infile.getline(record, 1024);
@@ -72,14 +72,66 @@ void Map::Init()
 					for (int x = 0; x < _width; x++)
 					{
 						int index = atoi(token);
-						//rowList.push_back(_spriteLIstList[index]);
 						TileCell* tileCell = new TileCell();
-						tileCell->SetSprite(_spriteList[index]);
+						WCHAR componentName[256];
+						wsprintf(componentName, L"map_layer1_%d_%d", line, x);
+						TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+						tileCell->AddComponent(tileObject, true);
+						//tileCell->SetSprite(_spriteList[index]);
 						rowList.push_back(tileCell);
 						token = strtok(NULL, ",");
 					}
 
 					_tileMap.push_back(rowList);
+				}
+				break;
+			}
+			line++;
+		}
+	}
+
+
+	//Load Map Layer2
+	{
+		int line = 0;
+		int row = 0;
+		char record[1024];
+		std::ifstream infile("MapData_layer2.csv");
+		while (!infile.eof())
+		{
+			infile.getline(record, 1024);
+
+			char* token = strtok(record, ",");
+
+			switch (line)
+			{
+			case 0:
+				break;
+
+			case 1:
+				break;
+
+			default:
+				//Read Map data
+				if (NULL != token)
+				{
+					std::vector<TileCell*> rowList = _tileMap[row];
+					for (int x = 0; x < _width; x++)
+					{
+						int index = atoi(token);
+						if (index >= 0)
+						{
+							TileCell* tileCell = rowList[x];
+							WCHAR componentName[256];
+							wsprintf(componentName, L"map_layer1_%d_%d", line, x);
+							TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+							tileCell->AddComponent(tileObject, true);
+							//tileCell->SetSprite(_spriteList[index]);
+						}
+						token = strtok(NULL, ",");
+					}
+
+					row++;
 				}
 				break;
 			}
@@ -122,6 +174,7 @@ void Map::Update(float deltaTime)
 	{
 		for (int x = 0; x < _width; x++)
 		{
+			_tileMap[y][x]->MoveDeltaPosition(_deltaX, _deltaY);
 			_tileMap[y][x]->Update(deltaTime);
 		}
 	}
@@ -129,30 +182,11 @@ void Map::Update(float deltaTime)
 
 void Map::Render()
 {
-
-	/*_startX += _deltaX;
-	_startY += _deltaY;
-	float posX = _startX;
-	float posY = _startY;
-	int tileSize = 32;
-
 	for (int y = 0; y < _height; y++)
 	{
 		for (int x = 0; x < _width; x++)
 		{
-			_tileMap[y][x]->SetPosition(posX, posY);
-			_tileMap[y][x]->Render();
-			posX += tileSize;
-		}
-		posX = _startX;
-		posY += tileSize;
-	}*/
-
-	for (int y = 0; y < _height; y++)
-	{
-		for (int x = 0; x < _width; x++)
-		{
-			_tileMap[y][x]->MoveDeltaPosition(_deltaX, _deltaY);
+			/*_tileMap[y][x]->MoveDeltaPosition(_deltaX, _deltaY);*/
 			_tileMap[y][x]->Render();
 		}
 	}

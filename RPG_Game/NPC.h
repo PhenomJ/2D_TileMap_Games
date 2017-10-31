@@ -11,6 +11,4 @@ public:
 	//AI
 public:
 	void UpdateAI(float deltaTime);
-
-
 };
