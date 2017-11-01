@@ -11,3 +11,13 @@ Component::~Component()
 {
 
 }
+
+//void Component::SetCanMove(bool canMove)
+//{
+//	_canMove = CanMove;
+//}
+
+bool Component::CanMove()
+{
+	return _canMove;
+}

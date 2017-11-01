@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "Sprite.h"
 #include "TileCell.h"
+#include "TileObject.h"
 
 Map::Map(LPCWSTR name) : Component(name)
 {
@@ -123,8 +124,9 @@ void Map::Init()
 						{
 							TileCell* tileCell = rowList[x];
 							WCHAR componentName[256];
-							wsprintf(componentName, L"map_layer1_%d_%d", line, x);
+							wsprintf(componentName, L"map_layer2_%d_%d", line, x);
 							TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+							tileObject->SetCanMove(false);
 							tileCell->AddComponent(tileObject, true);
 							//tileCell->SetSprite(_spriteList[index]);
 						}
@@ -238,4 +240,22 @@ void Map::SetTileComponent(int tileX, int tileY, Component* thisComponent, bool 
 void Map::ResetTileComponent(int tileX, int tileY, Component* thisComponent)
 {
 	_tileMap[tileY][tileX]->RemoveComponent(thisComponent);
+}
+
+bool Map::CanMove(int tileX, int tileY)
+{
+	if (tileX < 0)
+		return false;
+
+	if (tileX >= _width)
+		return false;
+
+	if (tileY < 0)
+		return false;
+
+	if (tileY >= _width)
+		return false;
+
+
+	return _tileMap[tileY][tileX]->CanMove();
 }

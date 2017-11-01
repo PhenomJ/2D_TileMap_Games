@@ -125,32 +125,35 @@ void Character::MoveStart(eDirection direction)
 	_currentDirection = direction;
 
 	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-	map->ResetTileComponent(_tileX, _tileY, this);
+	int newTileX = _tileX;
+	int newTileY = _tileY;
+
 
 	switch (direction)
 	{
 	case eDirection::LEFT: // left
-		_tileX--;
-		if (_tileX < 0)
-			_tileX = 0;
+		newTileX--;
 		break;
 	case eDirection::RIGHT: // right
-		_tileX++;
-		if (_tileX > 49)
-			_tileX = 49;
+		newTileX++;
 		break;
 
-		case eDirection::UP: // up
-			_tileY--;
-			if (_tileY < 0)
-				_tileY = 0;
-			break;
-		case eDirection::DOWN: // down
-			_tileY++;
-			if (_tileY > 30)
-				_tileY = 30;
-			break;
-		}
+	case eDirection::UP: // up
+		newTileY--;
+		break;
+	case eDirection::DOWN: // down
+		newTileY++;
+		break;
+	}
+	
+	if (map->CanMove(newTileX, newTileY) == false)
+		return;
+	
+	map->ResetTileComponent(_tileX, _tileY, this);
+
+	_tileX = newTileX;
+	_tileY = newTileY;
+
 		
 		// 이동을 위한 보간작업.
 		{

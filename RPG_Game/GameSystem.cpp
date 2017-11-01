@@ -148,10 +148,11 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 
 	_player = new Player(L"testCharacter");
 	_player->Init();
+	_player->SetCanMove(false);
 
 	_npc = new NPC(L"npc");
 	_npc->Init();
-
+	_npc->SetCanMove(false);
 	InitInput();
 
 	return true;

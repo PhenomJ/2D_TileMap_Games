@@ -1,7 +1,6 @@
 #pragma once
 #include <list>
 
-class Sprite;
 class Component;
 class TileCell
 {
@@ -15,8 +14,6 @@ public:
 	void Render();
 	void Release();
 	void Reset();
-	
-	void SetSprite(Sprite* sprite);
 
 	//Position
 	float GetPositionX();
@@ -28,8 +25,10 @@ public:
 	void AddComponent(Component* thisComponent, bool isRender);
 	void RemoveComponent(Component* thisComponent);
 
+	//Collision Check
+	bool CanMove();
+
 private:
-	Sprite* _sprite;
 	std::list<Component*> _componentList;
 	std::list<Component*> _renderList;
 	float _posX;
