@@ -30,8 +30,7 @@ protected:
 	float _y;
 
 protected:
-	int _tileX;
-	int _tileY;
+	
 	int _map;
 
 	// AI

@@ -22,34 +22,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			ComponentSystem::GetInstance()->RemoveAllComponents();
 			DestroyWindow(hwnd);
 		}
-		//
-		//// scroll test
-		//if (VK_UP == wParam)
-		//{
-
-		//	GameSystem::GetInstance()->MapScrollTest(0.0f, -3.0f);
-		//}
-
-		//if (VK_DOWN == wParam)
-		//{
-		//	GameSystem::GetInstance()->MapScrollTest(0.0f, 3.0f);
-		//}
-
-		//if (VK_RIGHT == wParam)
-		//{
-		//	GameSystem::GetInstance()->MapScrollTest(3.0f, 0.0f);
-		//}
-
-		//if (VK_LEFT == wParam)
-		//{
-		//	GameSystem::GetInstance()->MapScrollTest(-3.0f, 0.0f);
-		//}
-
+		
 		return 0;
 
 	case WM_KEYUP:
-		//GameSystem::GetInstance()->MapScrollTest(0.0f, 0.0f);
-		//GameSystem::GetInstance()->CharacterControllTest(0, 0);
 		GameSystem::GetInstance()->KeyUp(wParam);
 		break;
 
@@ -91,7 +67,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 {
 	WNDCLASS  wc;
 	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WndProc; // 
+	wc.lpfnWndProc = WndProc; 
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
@@ -153,6 +129,9 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	_npc = new NPC(L"npc");
 	_npc->Init();
 	_npc->SetCanMove(false);
+
+	_map->InitViewer(_player);
+
 	InitInput();
 
 	return true;
@@ -215,8 +194,7 @@ int GameSystem::UpdateSystem()
 				CheckDeviceLost();
 				_device3d->Present(NULL, NULL, NULL, NULL);
 			}
-			
-			
+		
 			// 대기영역 -> 게임 처리
 			
 		}
@@ -353,4 +331,14 @@ void GameSystem::KeyUp(unsigned int KeyCode)
 bool GameSystem::IsKeyDown(unsigned int KeyCode)
 {
 	return (eKeyState::KEY_DOWN == _keyState[KeyCode]);
+}
+
+int GameSystem::GetClientWidth()
+{
+	return _clientWidth;
+}
+
+int GameSystem::GetClientHeight()
+{
+	return _clientHeight;
 }

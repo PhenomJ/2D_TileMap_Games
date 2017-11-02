@@ -60,7 +60,7 @@ void Character::Init()
 	{
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 		_tileX = 2;
-		_tileY = 3;
+		_tileY = 2;
 		_x = map->GetPositionX(_tileX, _tileY);
 		_y = map->GetPositionY(_tileX, _tileY);
 		map->SetTileComponent(_tileX, _tileY, this, false);
@@ -125,10 +125,9 @@ void Character::MoveStart(eDirection direction)
 	_currentDirection = direction;
 
 	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+	
 	int newTileX = _tileX;
 	int newTileY = _tileY;
-
-
 	switch (direction)
 	{
 	case eDirection::LEFT: // left
@@ -137,7 +136,6 @@ void Character::MoveStart(eDirection direction)
 	case eDirection::RIGHT: // right
 		newTileX++;
 		break;
-
 	case eDirection::UP: // up
 		newTileY--;
 		break;
@@ -145,17 +143,15 @@ void Character::MoveStart(eDirection direction)
 		newTileY++;
 		break;
 	}
-	
-	if (map->CanMove(newTileX, newTileY) == false)
-		return;
-	
-	map->ResetTileComponent(_tileX, _tileY, this);
 
+	if (map->CanMoveTileMap(newTileX, newTileY) == false)
+		return;
+
+	map->ResetTileComponent(_tileX, _tileY, this);
 	_tileX = newTileX;
 	_tileY = newTileY;
 
-		
-		// 이동을 위한 보간작업.
+	// 이동을 위한 보간작업.
 		{
 			map->SetTileComponent(_tileX, _tileY, this,false);
 

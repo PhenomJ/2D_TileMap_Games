@@ -17,11 +17,18 @@ public:
 	virtual void Release() = 0;
 	virtual void Reset() = 0;
 	virtual void MoveDeltaPosition(float deltaX, float deltaY) {}
-	virtual void SetPosition(float posX, float posY) {};
+	virtual void SetPosition(float posX, float posY) {}
 
 	void SetCanMove(bool canMove) { _canMove = canMove; }
 	bool CanMove();
+
+	//
+	int GetTileX();
+	int GetTileY();
+
 protected:
 	LPCWSTR _name;
 	bool _canMove = true;
+	int _tileX;
+	int _tileY;
 };

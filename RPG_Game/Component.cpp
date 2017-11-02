@@ -12,12 +12,17 @@ Component::~Component()
 
 }
 
-//void Component::SetCanMove(bool canMove)
-//{
-//	_canMove = CanMove;
-//}
-
 bool Component::CanMove()
 {
 	return _canMove;
+}
+
+int Component::GetTileX()
+{
+	return _tileX;
+}
+
+int Component::GetTileY()
+{
+	return _tileY;
 }

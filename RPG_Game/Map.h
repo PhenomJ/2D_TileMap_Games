@@ -27,10 +27,13 @@ public:
 	float GetPositionX(int tileX, int tileY);
 	float GetPositionY(int tileX, int tileY);
 	void SetTileComponent(int tileX, int tileY, Component* thisComponent, bool isRender);
-	void ResetTileComponent(int tileX,int tileY, Component* thisComponent);
+	void ResetTileComponent(int _tileX,int _tileY, Component* thisComponent);
 	
-	//Collision Check
-	bool CanMove(int tileX, int tileY);
+
+	bool CanMoveTileMap(int newTileX, int newTileY);
+
+	//Viewer
+	void InitViewer(Component* viewer);
 
 private:
 	

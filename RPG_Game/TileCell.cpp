@@ -13,10 +13,12 @@ TileCell::~TileCell()
 
 void TileCell::Deinit()
 {
+	
 }
 
 void TileCell::Update(float deltaTime)
 {
+	
 }
 
 void TileCell::SetPosition(float posX, float posY)
@@ -40,13 +42,14 @@ void TileCell::Render()
 
 void TileCell::Release()
 {
-
+	
 }
 
 void TileCell::Reset()
 {
-
+	
 }
+
 
 float TileCell::GetPositionX()
 {
@@ -62,7 +65,7 @@ void TileCell::MoveDeltaPosition(float deltaX, float deltaY)
 {
 	_posX += deltaX;
 	_posY += deltaY;
-
+	
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 	{
 		(*itr)->MoveDeltaPosition(deltaX, deltaY);
@@ -89,7 +92,7 @@ bool TileCell::CanMove()
 {
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 	{
-		if ((*itr)->CanMove() == false)
+		if (false == (*itr)->CanMove())
 			return false;
 	}
 
