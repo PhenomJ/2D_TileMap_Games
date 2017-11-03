@@ -2,6 +2,7 @@
 #include <vector>
 #include <d3dx9.h>
 #include <Windows.h>
+#include <list>
 
 #define RELEASE_COM(x) {if (x != NULL) {x->Release(); x = NULL;}}
 #define SAFE_DELETE(x) {if(x) {delete x; x = NULL;}}
@@ -10,6 +11,7 @@
 class GameTimer;
 class Map;
 class Character;
+class Component;
 
 class GameSystem
 {
@@ -56,20 +58,10 @@ public:
 public:
 	void MapScrollTest(float x, float y);
 
-	//Character
+	//Component List
 private:
-	Character* _player;
-	Character* _npc;
-
-	//Map
-private:
-	Map* _map;
-	//Character
-
-
-public:
-	void CharacterControllTest(int x, int y);
-
+	std::list<Component*> _componentList;
+	
 	//Input
 public:
 	void InitInput();

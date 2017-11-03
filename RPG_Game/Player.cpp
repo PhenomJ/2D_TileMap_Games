@@ -3,7 +3,7 @@
 #include "ComponentSystem.h"
 #include "Map.h"
 
-Player::Player(LPCWSTR name) : Character(name)
+Player::Player(LPCWSTR name, LPCWSTR spriteName) : Character(name, spriteName)
 {
 	_moveSpeed = 0.3f;
 }
@@ -50,8 +50,6 @@ void Player::UpdateMove(float deltaTime)
 		_movingDuration = 0.0f;
 		_isMoving = false;
 		map->Scroll(0.0f, 0.0f);
-		//_x = map->GetPositionX(_tileX, _tileY);
-		//_y = map->GetPositionY(_tileX, _tileY);
 	}
 
 	else
@@ -61,9 +59,6 @@ void Player::UpdateMove(float deltaTime)
 		float moveDistanceX = _moveDistanceperTimeX * deltaTime;
 		float moveDistanceY = _moveDistanceperTimeY * deltaTime;
 
-		//_x += moveDistanceX;
-		//_y += moveDistanceY;
-
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 		map->Scroll(-moveDistanceX, -moveDistanceY);
 	}
@@ -72,5 +67,5 @@ void Player::UpdateMove(float deltaTime)
 
 void Player::MoveDeltaPosition(float deltaX, float deltaY)
 {
-
+	
 }

@@ -1,7 +1,7 @@
 #include "TileObject.h"
 #include "Sprite.h"
 
-TileObject::TileObject(LPCWSTR name, Sprite* sprite) :Component(name)
+TileObject::TileObject(LPCWSTR name, Sprite* sprite) : Component(name)
 {
 	_sprite = sprite;
 }
@@ -42,14 +42,14 @@ void TileObject::Reset()
 	_sprite->Reset();
 }
 
-void TileObject::SetPosition(float posX, float posY)
-{
-	_posX = posX;
-	_posY = posY;
-}
-
 void TileObject::MoveDeltaPosition(float deltaX, float deltaY)
 {
 	_posX += deltaX;
 	_posY += deltaY;
+}
+
+void TileObject::SetPosition(float posX, float posY)
+{
+	_posX = posX;
+	_posY = posY;
 }

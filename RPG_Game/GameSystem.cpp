@@ -4,7 +4,9 @@
 #include "Map.h"
 #include "Player.h"
 #include "NPC.h"
+#include "Monster.h"
 #include "ComponentSystem.h"
+#include "Component.h"
 #include <stdio.h>
 #include <string>
 
@@ -43,9 +45,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 GameSystem::GameSystem()
 {
 	_isFullScreen = false;	
-	
-	_map = NULL;
-	_player = NULL;
 }
 
 GameSystem::~GameSystem()
@@ -119,18 +118,30 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		return false;
 	}
 
-	_map = new Map(L"tileMap");
-	_map->Init();
+	_componentList.clear();
 
-	_player = new Player(L"testCharacter");
-	_player->Init();
-	_player->SetCanMove(false);
+	Map* map = new Map(L"tileMap");
+	_componentList.push_back(map);
+	
 
-	_npc = new NPC(L"npc");
-	_npc->Init();
-	_npc->SetCanMove(false);
+	Character* player = new Player(L"testCharacter", L"testCharacter");
+	
+	_componentList.push_back(player);
 
-	_map->InitViewer(_player);
+	Character* npc = new NPC(L"npc", L"npc");
+	
+	_componentList.push_back(npc);
+
+	Character* monster = new Monster(L"testCharacter", L"testCharacter");
+	
+	_componentList.push_back(monster);
+	
+	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+	{
+		(*itr)->Init();
+	}
+
+	map->InitViewer(player);
 
 	InitInput();
 
@@ -164,11 +175,11 @@ int GameSystem::UpdateSystem()
 			
 			_frameduration += deltaTime;
 
+			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+			{
+				(*itr)->Update(deltaTime); // ComponentList Update
+			}
 			
-			_map->Update(deltaTime);
-			_player->Update(deltaTime);
-			_npc->Update(deltaTime);
-
 			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
 			{
 				wchar_t time[256];
@@ -182,10 +193,11 @@ int GameSystem::UpdateSystem()
 				
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 				
-				_map->Render();
-				_player->Render();
-				_npc->Render();
-
+				for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+				{
+					(*itr)->Render();
+				}
+				
 				_sprite->End();
 				
 
@@ -283,14 +295,18 @@ void GameSystem::CheckDeviceLost()
 
 		else if (hr == D3DERR_DEVICENOTRESET)
 		{
-			_map->Release();
-			_player->Release();
-			_npc->Release();
+			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+			{
+				(*itr)->Release();
+			}
+			
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);			
-			_map->Reset();
-			_player->Reset();
-			_npc->Reset();
+
+			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+			{
+				(*itr)->Reset();
+			}
 		}
 	}
 }
@@ -303,11 +319,6 @@ LPD3DXSPRITE GameSystem::GetSprite()
 LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
 {
 	return _device3d;
-}
-
-void GameSystem::MapScrollTest(float deltaX, float deltaY)
-{
-	_map->Scroll(deltaX, deltaY);
 }
 
 void GameSystem::InitInput()

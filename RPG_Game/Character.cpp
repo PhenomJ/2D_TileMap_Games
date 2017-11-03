@@ -1,9 +1,10 @@
 #include "Character.h"
+#include "GameSystem.h"
 #include "Sprite.h"
 #include "Map.h"
 #include "ComponentSystem.h"
 
-Character::Character(LPCWSTR name) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
+Character::Character(LPCWSTR name, LPCWSTR spriteName) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
 {
 	_map = 32;
 	_targetX = 0;
@@ -11,6 +12,8 @@ Character::Character(LPCWSTR name) : Component(name), _spriteList(NULL), _x(0.0f
 	_moveDistanceperTimeX = 0;
 	_moveDistanceperTimeY = 0;
 	_moveSpeed = 0.5f;
+	_spriteName = spriteName;
+
 }
 
 Character::~Character()
@@ -21,10 +24,11 @@ Character::~Character()
 void Character::Init()
 {
 	WCHAR textureFilename[256];
+	wsprintf(textureFilename, L"%s.png", _spriteName.c_str());
+
 	WCHAR scriptFilename[256];
 	
 	{
-		wsprintf(textureFilename, L"%s.png", _name);
 		wsprintf(scriptFilename, L"%s_01.json", _name);
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
@@ -32,7 +36,6 @@ void Character::Init()
 	}
 
 	{
-		wsprintf(textureFilename, L"%s.png", _name);
 		wsprintf(scriptFilename, L"%s_02.json", _name);
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
@@ -40,7 +43,6 @@ void Character::Init()
 	}
 
 	{
-		wsprintf(textureFilename, L"%s.png", _name);
 		wsprintf(scriptFilename, L"%s_03.json", _name);
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
@@ -48,7 +50,6 @@ void Character::Init()
 	}
 
 	{
-		wsprintf(textureFilename, L"%s.png", _name);
 		wsprintf(scriptFilename, L"%s_04.json", _name);
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
@@ -63,6 +64,7 @@ void Character::Init()
 		_tileY = 2;
 		_x = map->GetPositionX(_tileX, _tileY);
 		_y = map->GetPositionY(_tileX, _tileY);
+
 		map->SetTileComponent(_tileX, _tileY, this, false);
 	}
 }
@@ -104,9 +106,14 @@ void Character::Reset()
 	for (int i = 0; i < _spriteList.size(); i++)
 	{
 		_spriteList[i]->Reset();
-		
 	}
 	_spriteList.clear();
+}
+
+void Character::SetPosition(float tileX, float tileY)
+{
+	_x = tileX;
+	_y = tileY;
 }
 
 void Character::InitMove()
@@ -200,4 +207,13 @@ void Character::MoveDeltaPosition(float deltaX, float deltaY)
 {
 	_x += deltaX;
 	_y += deltaY;
+}
+
+void Character::UpdateAI(float deltaTime)
+{
+	if (_isMoving == false)
+	{
+		int direction = rand() % 4;
+		MoveStart((eDirection)direction);
+	}
 }

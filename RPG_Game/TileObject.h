@@ -1,12 +1,13 @@
 #pragma once
 #include "Component.h"
+#include <vector>
 
 class Sprite;
 
 class TileObject : public Component
 {
 public:
-	TileObject(LPCWSTR name, Sprite* sprite);
+	TileObject(LPCWSTR componentName, Sprite* sprite);
 	~TileObject();
 
 	void Init();
@@ -16,11 +17,12 @@ public:
 	void Release();
 	void Reset();
 
-	void SetPosition(float posX, float posY);
 	void MoveDeltaPosition(float deltaX, float deltaY);
+	void SetPosition(float posX, float posY);
 
 private:
 	Sprite* _sprite;
+
 	float _posX;
 	float _posY;
 };

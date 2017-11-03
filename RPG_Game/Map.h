@@ -46,4 +46,5 @@ private:
 	int _height;
 	int _tileSize = 32;
 	std::vector<Sprite*> _spriteList;
+	Component* _viewer;
 };

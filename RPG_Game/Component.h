@@ -22,13 +22,14 @@ public:
 	void SetCanMove(bool canMove) { _canMove = canMove; }
 	bool CanMove();
 
-	//
+	
 	int GetTileX();
 	int GetTileY();
 
 protected:
 	LPCWSTR _name;
-	bool _canMove = true;
+	
+	bool _canMove = false;
 	int _tileX;
 	int _tileY;
 };

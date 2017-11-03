@@ -4,11 +4,11 @@
 class NPC : public Character
 {
 public:
-	NPC(LPCWSTR name);
+	NPC(LPCWSTR name, LPCWSTR spriteName);
 	~NPC();
 
 
 	//AI
 public:
-	void UpdateAI(float deltaTime);
+	//void UpdateAI(float deltaTime);
 };
