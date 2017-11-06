@@ -45,6 +45,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 GameSystem::GameSystem()
 {
 	_isFullScreen = false;	
+	
+	//_map = NULL;
+	//_player = NULL;
 }
 
 GameSystem::~GameSystem()
@@ -124,15 +127,18 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	_componentList.push_back(map);
 	
 
-	Character* player = new Player(L"testCharacter", L"testCharacter");
+	Character* player = new Player(L"testCharacter", L"testCharacter", L"testCharacter");
 	
 	_componentList.push_back(player);
 
-	Character* npc = new NPC(L"npc", L"npc");
-	
-	_componentList.push_back(npc);
-
-	Character* monster = new Monster(L"testCharacter", L"testCharacter");
+	for (int i = 0; i < 100; i++)
+	{
+		WCHAR name[256];
+		wsprintf(name, L"npc_%d");
+		NPC* npc = new NPC(name, L"npc", L"npc");
+		_componentList.push_back(npc);
+	}
+	Monster* monster = new Monster(L"testCharacter", L"testCharacter", L"testCharacter");
 	
 	_componentList.push_back(monster);
 	
@@ -177,9 +183,12 @@ int GameSystem::UpdateSystem()
 
 			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 			{
-				(*itr)->Update(deltaTime); // ComponentList Update
+				(*itr)->Update(deltaTime);
 			}
-			
+			/*_map->Update(deltaTime);
+			_player->Update(deltaTime);
+			_npc->Update(deltaTime);
+			_monster->Update(deltaTime);*/
 			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
 			{
 				wchar_t time[256];
@@ -197,7 +206,10 @@ int GameSystem::UpdateSystem()
 				{
 					(*itr)->Render();
 				}
-				
+				/*_map->Render();
+				_player->Render();
+				_npc->Render();
+				_monster->Render();*/
 				_sprite->End();
 				
 
@@ -299,6 +311,10 @@ void GameSystem::CheckDeviceLost()
 			{
 				(*itr)->Release();
 			}
+			/*_map->Release();
+			_player->Release();
+			_npc->Release();
+			_monster->Release();*/
 			
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);			
@@ -307,6 +323,10 @@ void GameSystem::CheckDeviceLost()
 			{
 				(*itr)->Reset();
 			}
+			/*_map->Reset();
+			_player->Reset();
+			_npc->Reset();
+			_monster->Reset();*/
 		}
 	}
 }
@@ -319,6 +339,11 @@ LPD3DXSPRITE GameSystem::GetSprite()
 LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
 {
 	return _device3d;
+}
+
+void GameSystem::MapScrollTest(float deltaX, float deltaY)
+{
+	//_map->Scroll(deltaX, deltaY);
 }
 
 void GameSystem::InitInput()

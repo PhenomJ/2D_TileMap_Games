@@ -2,13 +2,14 @@
 #include <Windows.h>
 #include "Component.h"
 #include <vector>
+#include <list>
 #include <string>
 
 class Sprite;
 class Character : public Component
 {
 public:
-	Character(LPCWSTR name, LPCWSTR spriteName);
+	Character(LPCWSTR name, LPCWSTR scriptName ,LPCWSTR spriteName);
 	Character() {}
 	~Character();
 
@@ -34,7 +35,7 @@ protected:
 	float _y;
 
 	std::wstring _spriteName;
-
+	std::wstring _scriptName;
 protected:
 	
 	int _map;

@@ -1,6 +1,6 @@
 #include "Monster.h"
 
-Monster::Monster(LPCWSTR name, LPCWSTR spriteName) : Character(name, spriteName)
+Monster::Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName ,spriteName)
 {
 
 }

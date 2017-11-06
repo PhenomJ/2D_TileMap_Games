@@ -10,7 +10,7 @@ ComponentSystem::ComponentSystem()
 
 ComponentSystem::~ComponentSystem()
 {
-	
+
 }
 
 ComponentSystem* ComponentSystem::GetInstance()
@@ -22,6 +22,18 @@ ComponentSystem* ComponentSystem::GetInstance()
 	return _instance;
 }
 
+//void ComponentSystem::AddComponent(LPCWSTR name, Component* thisComponent) // LPCWSTR로 하면 왜 안되는지
+//{
+//	if (thisComponent != NULL)
+//	{
+//		std::map<LPCWSTR, Component*>::iterator itr = _componentMap.find(name);
+//
+//		if (itr == _componentMap.end())
+//		{
+//			_componentMap[name] = thisComponent;
+//		}
+//	}
+//}
 
 void ComponentSystem::AddComponent(std::wstring name, Component* thisComponent)
 {
@@ -56,4 +68,9 @@ Component* ComponentSystem::FindComponent(std::wstring name)
 
 		return 0;
 	}
+}
+
+void ComponentSystem::SendMessage(Component* sendComponent, Component* receiveComponent, std::wstring message)
+{
+	receiveComponent->receiveMessage(sendComponent, message);
 }

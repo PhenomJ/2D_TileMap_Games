@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <vector>
 #include <fstream>
+#include <list>
 #include "Component.h"
 
 class Sprite;
@@ -32,6 +33,9 @@ public:
 
 	bool CanMoveTileMap(int newTileX, int newTileY);
 
+
+	//Collision
+	bool GetTileCollisionList(int tileX, int tileY, std::list<Component*> &collisionList);
 	//Viewer
 	void InitViewer(Component* viewer);
 

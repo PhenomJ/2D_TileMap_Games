@@ -25,9 +25,9 @@ public:
 	void AddComponent(Component* thisComponent, bool isRender);
 	void RemoveComponent(Component* thisComponent);
 
-	//Collision Check
+	//Collision
 	bool CanMove();
-
+	bool GetCollisionList(std::list<Component*> &collisionList);
 private:
 	std::list<Component*> _componentList;
 	std::list<Component*> _renderList;

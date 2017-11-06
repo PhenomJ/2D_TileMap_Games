@@ -27,3 +27,11 @@ int Component::GetTileY()
 {
 	return _tileY;
 }
+
+void Component::receiveMessage(Component* sendComponent, std::wstring message)
+{
+	if (message == L"Collision Event")
+	{
+		
+	}
+}

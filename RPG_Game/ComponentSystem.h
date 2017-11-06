@@ -20,6 +20,8 @@ public:
 	void RemoveAllComponents();
 	Component* FindComponent(std::wstring name);
 	
+	//Message
+	void SendMessage(Component* sendComponent, Component* receiveComponent, std::wstring message);
 private:
 	std::map<std::wstring, Component*> _componentMap;
 };

@@ -127,6 +127,7 @@ void Map::Init()
 							WCHAR componentName[256];
 							wsprintf(componentName, L"map_layer2_%d_%d", line, x);
 							TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+							//tileObject->SetCanMove(false);
 							tileCell->AddComponent(tileObject, true);
 						}
 						token = strtok(NULL, ",");
@@ -139,6 +140,22 @@ void Map::Init()
 			line++;
 		}
 	}
+
+	/*_startX += _deltaX;
+	_startY += _deltaY;
+	float posX = _startX;
+	float posY = _startY;
+
+	for (int y = 0; y < _height; y++)
+	{
+		for (int x = 0; x < _width; x++)
+		{
+			_tileMap[y][x]->SetPosition(posX, posY);
+			posX += _tileSize;
+		}
+		posX = _startX;
+		posY += _tileSize;
+	}*/
 }
 
 void Map::Deinit()
@@ -167,6 +184,13 @@ void Map::Update(float deltaTime)
 
 void Map::Render()
 {
+	/*for (int y = 0; y < _height; y++)
+	{
+		for (int x = 0; x < _width; x++)
+		{
+			_tileMap[y][x]->Render();
+		}
+	}*/
 	int midX = GameSystem::GetInstance()->GetClientWidth() / 2;
 	int midY = GameSystem::GetInstance()->GetClientHeight() / 2;
 
@@ -192,7 +216,13 @@ void Map::Render()
 	if (_height <= maxY)
 		maxY = _height;
 
+	/*
+	_startX = (-_viewer->GetTileX() * _tileSize) + midX - _tileSize / 2;
+	_startY = (-_viewer->GetTileY() * _tileSize) + midY - _tileSize / 2;
 	
+	float posX = _startX;
+	float posY = _startY;
+	*/
 	for (int y = minY; y < maxY; y++)
 	{
 		for (int x = minX; x < maxX; x++)
@@ -268,6 +298,23 @@ bool Map::CanMoveTileMap(int tileX, int tileY)
 	return _tileMap[tileY][tileX]->CanMove();
 }
 
+bool Map::GetTileCollisionList(int tileX, int tileY, std::list<Component*> &collisionList)
+{
+	if (tileX < 0)
+		return false;
+
+	if (_width <= tileX)
+		return false;
+
+	if (tileY < 0)
+		return false;
+
+	if (_height <= tileY)
+		return false;
+
+	return _tileMap[tileY][tileX]->GetCollisionList(collisionList);
+}
+
 void Map::InitViewer(Component* viewer)
 {
 	_viewer = viewer;
@@ -278,7 +325,29 @@ void Map::InitViewer(Component* viewer)
 
 	int midX = GameSystem::GetInstance()->GetClientWidth() / 2;
 	int midY = GameSystem::GetInstance()->GetClientHeight() / 2;
+	/*
+	int tileXCount = midX / _tileSize;
+	int tileYCount = midY / _tileSize;
+
+	// 최대 최소 렌더링 영역
+	int minX = _viewer->GetTileX() - tileXCount - 1;
+	int maxX = _viewer->GetTileX() + tileXCount + 1;
+	int minY = _viewer->GetTileY() - tileYCount - 1;
+	int maxY = _viewer->GetTileY() + tileYCount + 1;
 	
+	// 범위 보정
+	if (minX < 0)
+		minX = 0;
+
+	if (_width <= maxX)
+		maxX = _width - 1;
+
+	if (minY < 0)
+		minY = 0;
+
+	if (_height <= maxY)
+		maxY = _height - 1;
+		*/
 	_startX = (-_viewer->GetTileX() * _tileSize) + midX - _tileSize /2;
 	_startY = (-_viewer->GetTileY() * _tileSize) + midY - _tileSize /2;
 

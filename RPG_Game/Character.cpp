@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "ComponentSystem.h"
 
-Character::Character(LPCWSTR name, LPCWSTR spriteName) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
+Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
 {
 	_map = 32;
 	_targetX = 0;
@@ -13,7 +13,7 @@ Character::Character(LPCWSTR name, LPCWSTR spriteName) : Component(name), _sprit
 	_moveDistanceperTimeY = 0;
 	_moveSpeed = 0.5f;
 	_spriteName = spriteName;
-
+	_scriptName = scriptName;
 }
 
 Character::~Character()
@@ -27,30 +27,29 @@ void Character::Init()
 	wsprintf(textureFilename, L"%s.png", _spriteName.c_str());
 
 	WCHAR scriptFilename[256];
-	
 	{
-		wsprintf(scriptFilename, L"%s_01.json", _name);
+		wsprintf(scriptFilename, L"%s_01.json", _scriptName.c_str());
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
 
 	{
-		wsprintf(scriptFilename, L"%s_02.json", _name);
+		wsprintf(scriptFilename, L"%s_02.json", _scriptName.c_str());
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
 
 	{
-		wsprintf(scriptFilename, L"%s_03.json", _name);
+		wsprintf(scriptFilename, L"%s_03.json", _scriptName.c_str());
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
 
 	{
-		wsprintf(scriptFilename, L"%s_04.json", _name);
+		wsprintf(scriptFilename, L"%s_04.json", _scriptName.c_str());
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
@@ -151,8 +150,18 @@ void Character::MoveStart(eDirection direction)
 		break;
 	}
 
-	if (map->CanMoveTileMap(newTileX, newTileY) == false)
+	std::list<Component*> collisionList;
+	bool canMove = map->GetTileCollisionList(newTileX, newTileY, collisionList);
+
+	if (canMove == false)
+	{
+		for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
+		{
+			ComponentSystem::GetInstance()->SendMessage(this, (*itr), L"Collision Event");
+		}
+
 		return;
+	}
 
 	map->ResetTileComponent(_tileX, _tileY, this);
 	_tileX = newTileX;

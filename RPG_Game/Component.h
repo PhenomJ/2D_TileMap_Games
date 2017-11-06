@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-
+#include <string>
 
 class Component
 {
@@ -22,10 +22,13 @@ public:
 	void SetCanMove(bool canMove) { _canMove = canMove; }
 	bool CanMove();
 
-	
+	//
 	int GetTileX();
 	int GetTileY();
 
+
+	//Message
+	virtual void receiveMessage(Component* sendComponent, std::wstring message);
 protected:
 	LPCWSTR _name;
 	
