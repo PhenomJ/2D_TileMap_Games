@@ -39,6 +39,9 @@ public:
 	//Viewer
 	void InitViewer(Component* viewer);
 
+	int GetWidth();
+	int GetHeight();
+
 private:
 	
 	std::vector<std::vector <TileCell*>> _tileMap;

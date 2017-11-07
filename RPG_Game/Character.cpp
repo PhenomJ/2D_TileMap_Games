@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Map.h"
 #include "ComponentSystem.h"
+#include <time.h>
 
 Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
 {
@@ -55,17 +56,19 @@ void Character::Init()
 		_spriteList.push_back(sprite);
 	}
 	
-	InitMove();
-
 	{
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-		_tileX = 2;
-		_tileY = 2;
+		
+		_tileX = rand() % (map->GetWidth() -1) +1;
+		_tileY = rand() % (map->GetHeight() -1) +1;
+		
 		_x = map->GetPositionX(_tileX, _tileY);
 		_y = map->GetPositionY(_tileX, _tileY);
 
 		map->SetTileComponent(_tileX, _tileY, this, false);
 	}
+
+	InitMove();
 }
 
 void Character::Deinit()
@@ -196,8 +199,12 @@ void Character::UpdateMove(float deltaTime)
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 		_movingDuration = 0.0f;
 		_isMoving = false;
+		
 		_x = map->GetPositionX(_tileX, _tileY);
 		_y = map->GetPositionY(_tileX, _tileY);
+
+		_moveDistanceperTimeX = 0.0f;
+		_moveDistanceperTimeY = 0.0f;
 	}
 
 	else

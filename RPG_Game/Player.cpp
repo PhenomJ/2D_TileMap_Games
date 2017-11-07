@@ -46,12 +46,15 @@ void Player::UpdateMove(float deltaTime)
 
 	if (_moveSpeed <= _movingDuration)
 	{
-		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 		_movingDuration = 0.0f;
 		_isMoving = false;
-		map->Scroll(0.0f, 0.0f);
+		// Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+		//map->Scroll(0.0f, 0.0f);
 		//_x = map->GetPositionX(_tileX, _tileY);
 		//_y = map->GetPositionY(_tileX, _tileY);
+
+		_moveDistanceperTimeX = 0.0f;
+		_moveDistanceperTimeY = 0.0f;
 	}
 
 	else
@@ -64,8 +67,8 @@ void Player::UpdateMove(float deltaTime)
 		//_x += moveDistanceX;
 		//_y += moveDistanceY;
 
-		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-		map->Scroll(-moveDistanceX, -moveDistanceY);
+		//Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+		//map->Scroll(-moveDistanceX, -moveDistanceY);
 	}
 
 }

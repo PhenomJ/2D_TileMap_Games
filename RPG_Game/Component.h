@@ -26,6 +26,8 @@ public:
 	int GetTileX();
 	int GetTileY();
 
+	float GetMoveDeltaX();
+	float GetMoveDeltaY();
 
 	//Message
 	virtual void receiveMessage(Component* sendComponent, std::wstring message);
@@ -35,4 +37,7 @@ protected:
 	bool _canMove = false;
 	int _tileX;
 	int _tileY;
+
+	float _moveDistanceperTimeX;
+	float _moveDistanceperTimeY;
 };

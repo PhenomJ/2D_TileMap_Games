@@ -63,6 +63,6 @@ protected:
 	float _targetX;
 	float _targetY;
 
-	float _moveDistanceperTimeX;
-	float _moveDistanceperTimeY;
+	/*float _moveDistanceperTimeX;
+	float _moveDistanceperTimeY;*/
 };

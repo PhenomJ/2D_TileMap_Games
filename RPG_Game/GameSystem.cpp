@@ -45,9 +45,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 GameSystem::GameSystem()
 {
 	_isFullScreen = false;	
-	
-	//_map = NULL;
-	//_player = NULL;
 }
 
 GameSystem::~GameSystem()
@@ -128,16 +125,19 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	
 
 	Character* player = new Player(L"testCharacter", L"testCharacter", L"testCharacter");
-	
 	_componentList.push_back(player);
 
-	for (int i = 0; i < 100; i++)
+	/*for (int i = 0; i < 3; i++)
 	{
 		WCHAR name[256];
 		wsprintf(name, L"npc_%d");
 		NPC* npc = new NPC(name, L"npc", L"npc");
 		_componentList.push_back(npc);
-	}
+	}*/
+
+	NPC* npc = new NPC(L"npc", L"npc", L"npc");
+	_componentList.push_back(npc);
+
 	Monster* monster = new Monster(L"testCharacter", L"testCharacter", L"testCharacter");
 	
 	_componentList.push_back(monster);
@@ -147,7 +147,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		(*itr)->Init();
 	}
 
-	map->InitViewer(player);
+	map->InitViewer(npc);
 
 	InitInput();
 

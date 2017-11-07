@@ -58,10 +58,16 @@ public:
 public:
 	void MapScrollTest(float x, float y);
 
-	//Component List
+	//Character
 private:
 	std::list<Component*> _componentList;
-	
+
+	//Map
+private:
+	//Map* _map;
+public:
+	void CharacterControllTest(int x, int y);
+
 	//Input
 public:
 	void InitInput();
