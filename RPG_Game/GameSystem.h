@@ -25,7 +25,6 @@ public:
 	bool InitSystem(HINSTANCE hInstance, int nCmdShow);
 	int UpdateSystem();
 	
-	// Direct3D
 public:
 	bool InitDirect3D();
 	void CheckDeviceLost();
@@ -38,7 +37,6 @@ private:
 	LPDIRECT3DDEVICE9 _device3d;
 	LPD3DXSPRITE _sprite;
 
-	// Sprite / Texture
 	
 
 	D3DPRESENT_PARAMETERS _d3dpp;
@@ -54,21 +52,10 @@ public:
 	LPD3DXSPRITE GetSprite();
 	LPDIRECT3DDEVICE9 GetDevice3d();
 
-	//Scroll
-public:
-	void MapScrollTest(float x, float y);
 
-	//Character
 private:
 	std::list<Component*> _componentList;
 
-	//Map
-private:
-	//Map* _map;
-public:
-	void CharacterControllTest(int x, int y);
-
-	//Input
 public:
 	void InitInput();
 	void KeyDown(unsigned int KeyCode);

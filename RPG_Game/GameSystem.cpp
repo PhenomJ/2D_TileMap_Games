@@ -74,9 +74,9 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
-	wc.lpszClassName = L"Base"; // 윈도우를 나타내는 이름, 받아올때 사용
+	wc.lpszClassName = L"Base"; 
 
-	if (!RegisterClass(&wc)) // 등록
+	if (!RegisterClass(&wc)) 
 	{
 		return false;
 	}
@@ -91,7 +91,6 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		style = WS_OVERLAPPEDWINDOW;
 	}
 
-	// 윈도우 생성
 	_hMainWnd = CreateWindow(L"Base", L"Test", style, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, hInstance, 0);
 
 	if (_isFullScreen == false)
@@ -107,10 +106,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		MoveWindow(_hMainWnd, 0, 0, finalwidth, finalheight, TRUE);
 	}
 
-	// 윈도우 출력
 	ShowWindow(_hMainWnd, nCmdShow);
-
-	// 윈도우 업데이트
 	UpdateWindow(_hMainWnd);
 
 	if (false == InitDirect3D())
@@ -127,14 +123,6 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	Character* player = new Player(L"testCharacter", L"testCharacter", L"testCharacter");
 	_componentList.push_back(player);
 
-	/*for (int i = 0; i < 3; i++)
-	{
-		WCHAR name[256];
-		wsprintf(name, L"npc_%d");
-		NPC* npc = new NPC(name, L"npc", L"npc");
-		_componentList.push_back(npc);
-	}*/
-
 	NPC* npc = new NPC(L"npc", L"npc", L"npc");
 	_componentList.push_back(npc);
 
@@ -147,7 +135,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		(*itr)->Init();
 	}
 
-	map->InitViewer(npc);
+	map->InitViewer(player);
 
 	InitInput();
 
@@ -167,12 +155,11 @@ int GameSystem::UpdateSystem()
 	{
 		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 		{
-			// 윈도우 메시지 처리
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
-		else // Message가 정상적으로 들어올때
+		else
 		{
 			_gameTimer->Update();
 			float deltaTime = _gameTimer->GetDeltaTime();
@@ -185,11 +172,8 @@ int GameSystem::UpdateSystem()
 			{
 				(*itr)->Update(deltaTime);
 			}
-			/*_map->Update(deltaTime);
-			_player->Update(deltaTime);
-			_npc->Update(deltaTime);
-			_monster->Update(deltaTime);*/
-			if (frameTime <= _frameduration) // 프레임이 훨씬 더 중요한 경우에는 delta값이 이부분 안에 들어옴.
+			
+			if (frameTime <= _frameduration)
 			{
 				wchar_t time[256];
 				swprintf(time, L"deltaTime : %f\n", _frameduration);
@@ -198,7 +182,6 @@ int GameSystem::UpdateSystem()
 				_frameduration = 0.0f;
 				_device3d->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(53, 41, 42), 0.0f, 0);
 				_device3d->BeginScene();
-				// Sprite는 _spriteLIst begin-end 사이에 존재해야함.
 				
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 				
@@ -206,10 +189,7 @@ int GameSystem::UpdateSystem()
 				{
 					(*itr)->Render();
 				}
-				/*_map->Render();
-				_player->Render();
-				_npc->Render();
-				_monster->Render();*/
+				
 				_sprite->End();
 				
 
@@ -217,17 +197,14 @@ int GameSystem::UpdateSystem()
 
 				CheckDeviceLost();
 				_device3d->Present(NULL, NULL, NULL, NULL);
-			}
-		
-			// 대기영역 -> 게임 처리
-			
+			}	
 		}
 	}
 
 	return (int)msg.wParam;
 }
 
-bool GameSystem::InitDirect3D() // COM interface
+bool GameSystem::InitDirect3D() 
 {
 	LPDIRECT3D9 direct3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (direct3d == NULL)
@@ -294,8 +271,6 @@ bool GameSystem::InitDirect3D() // COM interface
 void GameSystem::CheckDeviceLost()
 {
 	HRESULT hr = _device3d->TestCooperativeLevel();
-		//D3DERR_DEVICENOTRESET : 디바이스 재시동 가능
-		//D3DERR_DEVICELOST : 디바이스 로스트 상태라 현재 복구 불가능.
 
 	if (FAILED(hr))
 	{
@@ -311,10 +286,6 @@ void GameSystem::CheckDeviceLost()
 			{
 				(*itr)->Release();
 			}
-			/*_map->Release();
-			_player->Release();
-			_npc->Release();
-			_monster->Release();*/
 			
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);			
@@ -323,10 +294,6 @@ void GameSystem::CheckDeviceLost()
 			{
 				(*itr)->Reset();
 			}
-			/*_map->Reset();
-			_player->Reset();
-			_npc->Reset();
-			_monster->Reset();*/
 		}
 	}
 }
@@ -339,11 +306,6 @@ LPD3DXSPRITE GameSystem::GetSprite()
 LPDIRECT3DDEVICE9 GameSystem::GetDevice3d()
 {
 	return _device3d;
-}
-
-void GameSystem::MapScrollTest(float deltaX, float deltaY)
-{
-	//_map->Scroll(deltaX, deltaY);
 }
 
 void GameSystem::InitInput()

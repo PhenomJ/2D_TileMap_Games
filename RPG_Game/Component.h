@@ -2,6 +2,15 @@
 #include <Windows.h>
 #include <string>
 
+enum eComponentType
+{
+	CT_PLAYER,
+	CT_MONSTER,
+	CT_NPC,
+	CT_TILEOBJECT,
+	CT_NONE
+};
+
 class Component
 {
 public:
@@ -29,6 +38,9 @@ public:
 	float GetMoveDeltaX();
 	float GetMoveDeltaY();
 
+
+	eComponentType GetType();
+
 	//Message
 	virtual void receiveMessage(Component* sendComponent, std::wstring message);
 protected:
@@ -40,4 +52,6 @@ protected:
 
 	float _moveDistanceperTimeX;
 	float _moveDistanceperTimeY;
+
+	eComponentType _type;
 };

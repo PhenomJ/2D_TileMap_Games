@@ -139,16 +139,16 @@ void Character::MoveStart(eDirection direction)
 	int newTileY = _tileY;
 	switch (direction)
 	{
-	case eDirection::LEFT: // left
+	case eDirection::LEFT: 
 		newTileX--;
 		break;
-	case eDirection::RIGHT: // right
+	case eDirection::RIGHT: 
 		newTileX++;
 		break;
-	case eDirection::UP: // up
+	case eDirection::UP: 
 		newTileY--;
 		break;
-	case eDirection::DOWN: // down
+	case eDirection::DOWN: 
 		newTileY++;
 		break;
 	}
@@ -170,18 +170,15 @@ void Character::MoveStart(eDirection direction)
 	_tileX = newTileX;
 	_tileY = newTileY;
 
-	// 이동을 위한 보간작업.
 		{
 			map->SetTileComponent(_tileX, _tileY, this,false);
 
-			// 이동 거리를 구하기 위한 목적지.
 			_targetX = map->GetPositionX(_tileX, _tileY);
 			_targetY = map->GetPositionY(_tileX, _tileY);
 
 			float distanceX = _targetX - _x;
 			float distanceY = _targetY - _y;
 
-			//최소 이동거리
 			_moveDistanceperTimeX = distanceX / _moveSpeed;
 			_moveDistanceperTimeY = distanceY / _moveSpeed;	
 		}

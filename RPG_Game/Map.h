@@ -34,9 +34,8 @@ public:
 	bool CanMoveTileMap(int newTileX, int newTileY);
 
 
-	//Collision
 	bool GetTileCollisionList(int tileX, int tileY, std::list<Component*> &collisionList);
-	//Viewer
+	
 	void InitViewer(Component* viewer);
 
 	int GetWidth();

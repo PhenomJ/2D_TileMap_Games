@@ -93,69 +93,55 @@ void Map::Init()
 	}
 
 
-	////Load Map Layer2
-	//{
-	//	int line = 0;
-	//	int row = 0;
-	//	char record[1024];
-	//	std::ifstream infile("MapData_layer2.csv");
-	//	while (!infile.eof())
-	//	{
-	//		infile.getline(record, 1024);
-
-	//		char* token = strtok(record, ",");
-
-	//		switch (line)
-	//		{
-	//		case 0:
-	//			break;
-
-	//		case 1:
-	//			break;
-
-	//		default:
-	//			//Read Map data
-	//			if (NULL != token)
-	//			{
-	//				std::vector<TileCell*> rowList = _tileMap[row];
-	//				for (int x = 0; x < _width; x++)
-	//				{
-	//					int index = atoi(token);
-	//					if (index >= 0)
-	//					{
-	//						TileCell* tileCell = rowList[x];
-	//						WCHAR componentName[256];
-	//						wsprintf(componentName, L"map_layer2_%d_%d", line, x);
-	//						TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
-	//						//tileObject->SetCanMove(false);
-	//						tileCell->AddComponent(tileObject, true);
-	//					}
-	//					token = strtok(NULL, ",");
-	//				}
-
-	//				row++;
-	//			}
-	//			break;
-	//		}
-	//		line++;
-	//	}
-	//}
-
-	/*_startX += _deltaX;
-	_startY += _deltaY;
-	float posX = _startX;
-	float posY = _startY;
-
-	for (int y = 0; y < _height; y++)
+	//Load Map Layer2
 	{
-		for (int x = 0; x < _width; x++)
+		int line = 0;
+		int row = 0;
+		char record[1024];
+		std::ifstream infile("MapData_layer2.csv");
+		while (!infile.eof())
 		{
-			_tileMap[y][x]->SetPosition(posX, posY);
-			posX += _tileSize;
+			infile.getline(record, 1024);
+
+			char* token = strtok(record, ",");
+
+			switch (line)
+			{
+			case 0:
+				break;
+
+			case 1:
+				break;
+
+			default:
+				//Read Map data
+				if (NULL != token)
+				{
+					std::vector<TileCell*> rowList = _tileMap[row];
+					for (int x = 0; x < _width; x++)
+					{
+						int index = atoi(token);
+						if (index >= 0)
+						{
+							TileCell* tileCell = rowList[x];
+							WCHAR componentName[256];
+							wsprintf(componentName, L"map_layer2_%d_%d", line, x);
+							TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+							tileObject->SetCanMove(false);
+							tileCell->AddComponent(tileObject, true);
+						}
+						token = strtok(NULL, ",");
+					}
+
+					row++;
+				}
+				break;
+			}
+			line++;
 		}
-		posX = _startX;
-		posY += _tileSize;
-	}*/
+	}
+
+	
 }
 
 void Map::Deinit()
@@ -197,13 +183,11 @@ void Map::Render()
 	int tileXCount = midX / _tileSize;
 	int tileYCount = midY / _tileSize;
 
-	// 최대 최소 렌더링 영역
 	int minX = _viewer->GetTileX() - tileXCount - 1;
 	int maxX = _viewer->GetTileX() + tileXCount + 1;
 	int minY = _viewer->GetTileY() - tileYCount - 1;
 	int maxY = _viewer->GetTileY() + tileYCount + 1;
 
-	// 범위 보정
 	if (minX < 0)
 		minX = 0;
 
@@ -312,10 +296,6 @@ void Map::InitViewer(Component* viewer)
 {
 	_viewer = viewer;
 	
-	// 뷰어 중심 렌더링 영역
-	// outOfSize 보정
-	// 뷰어의 위치를 기준으로 시작 픽셀 위치 계산
-
 	int midX = GameSystem::GetInstance()->GetClientWidth() / 2;
 	int midY = GameSystem::GetInstance()->GetClientHeight() / 2;
 	

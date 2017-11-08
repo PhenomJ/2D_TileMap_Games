@@ -29,7 +29,6 @@ private:
 	LPD3DXSPRITE _sprite;
 	LPDIRECT3DDEVICE9 _device3d;
 private:
-	// Frame* _frame;
 	std::vector<Frame*> _frameList;
 	int _currnetFrame;
 	float _frameTime;

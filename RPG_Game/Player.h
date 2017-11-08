@@ -11,7 +11,6 @@ public:
 	void UpdateAI(float deltaTime);
 
 	//MOVE
-	void UpdateMove(float deltaTime);
-
-	void MoveDeltaPosition(float deltaX, float deltaY);
+	//void UpdateMove(float deltaTime);
+	//void MoveDeltaPosition(float deltaX, float deltaY);
 };

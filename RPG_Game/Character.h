@@ -15,7 +15,7 @@ public:
 
 	enum eDirection
 	{
-		LEFT, RIGHT, UP, DOWN
+		LEFT, RIGHT, UP, DOWN, NONE
 	};
 
 public:
@@ -40,7 +40,6 @@ protected:
 	
 	int _map;
 
-	// AI
 protected:
 	bool _isMoving;
 	float _moveSpeed;
@@ -49,20 +48,14 @@ protected:
 	eDirection _currentDirection;
 	
 public:
-	//virtual void UpdateAI(float deltaTime) {};
 	void InitMove();
 	void MoveStart(eDirection direction);
 	virtual void UpdateMove(float deltaTime);
-	
 	virtual void MoveDeltaPosition(float deltaX, float deltaY);
-
 	virtual void UpdateAI(float deltaTime);
 
-	//Move
 protected:
 	float _targetX;
 	float _targetY;
 
-	/*float _moveDistanceperTimeX;
-	float _moveDistanceperTimeY;*/
 };
