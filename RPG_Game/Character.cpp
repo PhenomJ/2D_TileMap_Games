@@ -12,7 +12,7 @@ Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Com
 	_targetY = 0;
 	_moveDistanceperTimeX = 0;
 	_moveDistanceperTimeY = 0;
-	_moveSpeed = 0.5f;
+	_moveSpeed = 1.0f;
 	_spriteName = spriteName;
 	_scriptName = scriptName;
 }
@@ -58,13 +58,23 @@ void Character::Init()
 	
 	{
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-		
-		_tileX = rand() % (map->GetWidth() -1) +1;
-		_tileY = rand() % (map->GetHeight() -1) +1;
-		
-		_x = map->GetPositionX(_tileX, _tileY);
-		_y = map->GetPositionY(_tileX, _tileY);
 
+		
+		while (true)
+		{
+			if (map->CanMoveTileMap(_tileX, _tileY) == false)
+			{
+				_tileX = rand() % (map->GetWidth() - 1) + 1;
+				_tileY = rand() % (map->GetHeight() - 1) + 1;
+			}
+
+			else
+			{
+				_x = map->GetPositionX(_tileX, _tileY);
+				_y = map->GetPositionY(_tileX, _tileY);
+				break;
+			}
+		}
 		map->SetTileComponent(_tileX, _tileY, this, false);
 	}
 

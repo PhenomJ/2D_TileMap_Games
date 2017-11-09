@@ -8,7 +8,7 @@ Component::Component(LPCWSTR name)
 	ComponentSystem::GetInstance()->AddComponent(_name, this);
 	_moveDistanceperTimeX = 0;
 	_moveDistanceperTimeY = 0;
-	_type = eComponentType::CT_PLAYER;
+	_type = eComponentType::CT_NONE;
 }
 
 Component::~Component()

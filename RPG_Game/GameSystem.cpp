@@ -123,11 +123,10 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	Character* player = new Player(L"testCharacter", L"testCharacter", L"testCharacter");
 	_componentList.push_back(player);
 
-	NPC* npc = new NPC(L"npc", L"npc", L"npc");
+	NPC* npc = new NPC(L"npc_%d", L"npc", L"npc");
 	_componentList.push_back(npc);
 
 	Monster* monster = new Monster(L"testCharacter", L"testCharacter", L"testCharacter");
-	
 	_componentList.push_back(monster);
 	
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)

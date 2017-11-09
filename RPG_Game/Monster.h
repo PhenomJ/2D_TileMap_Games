@@ -9,5 +9,5 @@ public:
 	void UpdateAI(float deltaTime);
 
 private:
-	Component* component;
+	
 };
