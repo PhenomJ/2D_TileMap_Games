@@ -57,5 +57,6 @@ public:
 protected:
 	float _targetX;
 	float _targetY;
-
+	int _attackPoint;
+	int _hp;
 };

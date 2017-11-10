@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Map.h"
 #include "ComponentSystem.h"
+#include "ComponentMessage.h"
 #include <time.h>
 
 Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
@@ -15,6 +16,7 @@ Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Com
 	_moveSpeed = 1.0f;
 	_spriteName = spriteName;
 	_scriptName = scriptName;
+	_attackPoint = 1;
 }
 
 Character::~Character()
@@ -58,7 +60,6 @@ void Character::Init()
 	
 	{
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-
 		
 		while (true)
 		{
@@ -75,6 +76,7 @@ void Character::Init()
 				break;
 			}
 		}
+
 		map->SetTileComponent(_tileX, _tileY, this, false);
 	}
 
@@ -168,9 +170,21 @@ void Character::MoveStart(eDirection direction)
 
 	if (canMove == false)
 	{
-		for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
+		if (eComponentType::CT_MONSTER == _type)
 		{
-			ComponentSystem::GetInstance()->SendMessage(this, (*itr), L"Collision Event");
+			for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
+			{
+				Component* com = (*itr);
+
+				if (com->GetType() == eComponentType::CT_NPC || eComponentType::CT_PLAYER)
+				{
+					sComponentMsgParam msgParam;
+					msgParam.sender = this;
+					msgParam.attackPoint = _attackPoint;
+
+					ComponentSystem::GetInstance()->SendMsg(L"Attack", (*itr), msgParam);
+				}
+			}
 		}
 
 		return;
@@ -198,6 +212,9 @@ void Character::MoveStart(eDirection direction)
 
 void Character::UpdateMove(float deltaTime)
 {
+	if (_isLive == false)
+		return;
+
 	if (_isMoving == false)
 		return;
 

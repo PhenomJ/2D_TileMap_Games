@@ -10,7 +10,6 @@ public:
 	//AI
 	void UpdateAI(float deltaTime);
 
-	//MOVE
-	//void UpdateMove(float deltaTime);
-	//void MoveDeltaPosition(float deltaX, float deltaY);
+	//Message Check
+	void ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam);
 };

@@ -1,13 +1,15 @@
 #include "NPC.h"
 #include "Map.h"
 #include "ComponentSystem.h"
+#include "ComponentMessage.h"
 #include <list>
 
 NPC::NPC(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
 {
 	_type = eComponentType::CT_NPC;
-	int speed = (rand() % 1500) + 400;
+	int speed = (rand() % 1500) + 200;
 	_moveSpeed = (float)speed / 1000.0f;
+	_hp = 10;
 }
 
 NPC::~NPC()
@@ -17,47 +19,18 @@ NPC::~NPC()
 
 void NPC::UpdateAI(float deltaTime)
 {
+	if (_isLive == false)
+		return;
+
 	if (_isMoving == false)
 	{
 		// 타일 범위
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 
-		int range = 1; // 시야같은거
-		int minX = _tileX - range;
-		int maxX = _tileX + range;
-		int minY = _tileY - range;
-		int maxY = _tileY + range;
+		std::vector<eComponentType> typeList;
+		typeList.push_back(eComponentType::CT_MONSTER);
+		Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(this, 2, typeList);
 
-		if (minX < 0)
-			minX = 0;
-		if (maxX >= map->GetWidth())
-			maxX = map->GetWidth() - 1;
-		if (minY < 0)
-			minY = 0;
-		if (maxY >= map->GetHeight())
-			maxY = map->GetHeight() - 1;
-
-		Component* findEnemy = NULL;
-
-		for (int y = minY; y <= maxY; y++)
-		{
-			for (int x = minX; x <= maxX; x++)
-			{
-				std::list<Component*> componentList;
-				if (map->GetTileCollisionList(x, y, componentList) == false)
-				{
-					for (std::list<Component*>::iterator itr = componentList.begin(); itr != componentList.end(); itr++)
-					{
-						Component* component = (*itr);
-						if (component->GetType() == eComponentType::CT_MONSTER)
-						{
-							findEnemy = component;
-							break;
-						}
-					}
-				}
-			}
-		}
 
 		// 탐색 범위에 적 확인
 
@@ -106,5 +79,25 @@ void NPC::UpdateAI(float deltaTime)
 			Character::UpdateAI(deltaTime);
 		}
 		//
+	}
+}
+
+void NPC::ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam)
+{
+	if (msg == L"Attack")
+	{
+		int attackPoint = msgParam.attackPoint;
+		_hp -= attackPoint;
+
+		if (_hp < 0)
+		{
+			//dead
+			_isLive = false;
+			SetCanMove(true);
+
+			//stop
+			_moveDistanceperTimeX = 0;
+			_moveDistanceperTimeY = 0;
+		}
 	}
 }

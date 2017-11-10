@@ -41,15 +41,12 @@ float Component::GetMoveDeltaY()
 	return _moveDistanceperTimeY;
 }
 
-void Component::receiveMessage(Component* sendComponent, std::wstring message)
-{
-	if (message == L"Collision Event")
-	{
-		
-	}
-}
-
 eComponentType Component::GetType()
 {
 	return _type;
+}
+
+bool Component::IsLive()
+{
+	return _isLive;
 }

@@ -1,5 +1,7 @@
 #include "ComponentSystem.h"
 #include "Component.h"
+#include "ComponentMessage.h"
+#include "Map.h"
 
 ComponentSystem* ComponentSystem::_instance = NULL;
 
@@ -55,7 +57,53 @@ Component* ComponentSystem::FindComponent(std::wstring name)
 	return 0;
 }
 
-void ComponentSystem::SendMessage(Component* sendComponent, Component* receiveComponent, std::wstring message)
+Component* ComponentSystem::FindComponentInRange(Component* thisComponent, int range, std::vector<eComponentType> typeList)
 {
-	receiveComponent->receiveMessage(sendComponent, message);
+	// 타일 범위
+	Map* map = (Map*)FindComponent(L"tileMap");
+
+	int minX = thisComponent->GetTileX() - range;
+	int maxX = thisComponent->GetTileX() + range;
+	int minY = thisComponent->GetTileY() - range;
+	int maxY = thisComponent->GetTileY() + range;
+
+	if (minX < 0)
+		minX = 0;
+	if (maxX >= map->GetWidth())
+		maxX = map->GetWidth() - 1;
+	if (minY < 0)
+		minY = 0;
+	if (maxY >= map->GetHeight())
+		maxY = map->GetHeight() - 1;
+
+	for (int y = minY; y <= maxY; y++)
+	{
+		for (int x = minX; x <= maxX; x++)
+		{
+			std::list<Component*> componentList;
+			if (map->GetTileCollisionList(x, y, componentList) == false)
+			{
+				for (std::list<Component*>::iterator itr = componentList.begin(); itr != componentList.end(); itr++)
+				{
+					Component* component = (*itr);
+					if (component->IsLive() == true)
+					{
+						for (int i = 0; i < typeList.size(); i++)
+						{
+							if (typeList[i] == component->GetType())
+							{
+								return component;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+void ComponentSystem::SendMsg(std::wstring message, Component* receiver,const sComponentMsgParam &msgParam)
+{
+	receiver->ReceiveMessage(message, msgParam);
 }

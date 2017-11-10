@@ -7,5 +7,8 @@ public:
 	NPC(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName);
 	~NPC();
 	void UpdateAI(float deltaTime);
-public:
+	void ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam);
+
+private:
+	
 };

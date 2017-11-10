@@ -1,7 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "ComponentMessage.h"
 
+//struct sComponentMsgParam;
 enum eComponentType
 {
 	CT_PLAYER,
@@ -42,7 +44,9 @@ public:
 	eComponentType GetType();
 
 	//Message
-	virtual void receiveMessage(Component* sendComponent, std::wstring message);
+	virtual void ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam) {};
+
+	bool IsLive();
 protected:
 	LPCWSTR _name;
 	
@@ -52,6 +56,6 @@ protected:
 
 	float _moveDistanceperTimeX;
 	float _moveDistanceperTimeY;
-
+	bool _isLive = true;
 	eComponentType _type;
 };

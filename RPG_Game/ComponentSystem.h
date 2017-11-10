@@ -2,9 +2,11 @@
 #include <Windows.h>
 #include <map>
 #include <string>
+#include <vector>
 
-
+struct sComponentMsgParam;
 class Component;
+enum eComponentType;
 
 class ComponentSystem
 {
@@ -18,10 +20,12 @@ public:
 
 	void AddComponent(std::wstring name, Component* thisComponent);
 	void RemoveAllComponents();
-	Component* FindComponent(std::wstring name);
 	
+	Component* FindComponent(std::wstring name);
+	Component* FindComponentInRange(Component* chaser, int range, std::vector<eComponentType> typeList);
+
 	//Message
-	void SendMessage(Component* sendComponent, Component* receiveComponent, std::wstring message);
+	void SendMsg(std::wstring message, Component* receiver, const sComponentMsgParam &msgParam);
 private:
 	std::map<std::wstring, Component*> _componentMap;
 };
