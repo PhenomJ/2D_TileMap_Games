@@ -6,6 +6,7 @@ Monster::Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Charact
 {
 	int speed = (rand() % 1500) + 200;
 	_moveSpeed = (float)speed / 1000.0f;
+	_type = eComponentType::CT_MONSTER;
 }
 
 Monster::~Monster()
@@ -58,5 +59,23 @@ void Monster::UpdateAI(float deltaTime)
 			Character::UpdateAI(deltaTime);
 		}
 		//
+	}
+}
+
+void Monster::Collision(std::list<Component*> &collisionList)
+{
+	for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
+	{
+		Component* component = (*itr);
+
+		if (component->GetType() == eComponentType::CT_NPC || component->GetType() == eComponentType::CT_PLAYER)
+		{
+			sComponentMsgParam msgParam;
+			msgParam.sender = this;
+			msgParam.receiver = (*itr);
+			msgParam.message = L"Attack";
+			msgParam.attackPoint = _attackPoint;
+			ComponentSystem::GetInstance()->SendMsg(msgParam);
+		}
 	}
 }

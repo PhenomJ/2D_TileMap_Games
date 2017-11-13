@@ -44,7 +44,7 @@ public:
 	eComponentType GetType();
 
 	//Message
-	virtual void ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam) {};
+	virtual void ReceiveMessage(const sComponentMsgParam &msgParam);
 
 	bool IsLive();
 protected:
@@ -53,7 +53,7 @@ protected:
 	bool _canMove = false;
 	int _tileX;
 	int _tileY;
-
+	int _hp;
 	float _moveDistanceperTimeX;
 	float _moveDistanceperTimeY;
 	bool _isLive = true;

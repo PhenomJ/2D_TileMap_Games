@@ -7,9 +7,8 @@
 NPC::NPC(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
 {
 	_type = eComponentType::CT_NPC;
-	int speed = (rand() % 1500) + 200;
+	int speed = (rand() % 1500) + 400;
 	_moveSpeed = (float)speed / 1000.0f;
-	_hp = 10;
 }
 
 NPC::~NPC()
@@ -81,8 +80,8 @@ void NPC::UpdateAI(float deltaTime)
 		//
 	}
 }
-
-void NPC::ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam)
+/*
+void NPC::receiveMessage(std::wstring msg, const sComponentMsgParam &msgParam)
 {
 	if (msg == L"Attack")
 	{
@@ -101,3 +100,4 @@ void NPC::ReceiveMessage(std::wstring msg, const sComponentMsgParam &msgParam)
 		}
 	}
 }
+*/

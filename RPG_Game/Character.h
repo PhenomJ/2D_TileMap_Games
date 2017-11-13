@@ -53,10 +53,12 @@ public:
 	virtual void UpdateMove(float deltaTime);
 	virtual void MoveDeltaPosition(float deltaX, float deltaY);
 	virtual void UpdateAI(float deltaTime);
+	void ReceiveMessage(const sComponentMsgParam &msgParam);
+	virtual void Collision(std::list<Component*>& collisionList);
 
 protected:
 	float _targetX;
 	float _targetY;
 	int _attackPoint;
-	int _hp;
+	
 };

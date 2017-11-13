@@ -3,8 +3,9 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <queue>
+#include "ComponentMessage.h"
 
-struct sComponentMsgParam;
 class Component;
 enum eComponentType;
 
@@ -23,9 +24,11 @@ public:
 	
 	Component* FindComponent(std::wstring name);
 	Component* FindComponentInRange(Component* chaser, int range, std::vector<eComponentType> typeList);
-
+	void ProcessMessageQueue();
+	void Update(float deltaTime);
 	//Message
-	void SendMsg(std::wstring message, Component* receiver, const sComponentMsgParam &msgParam);
+	void SendMsg(const sComponentMsgParam &msgParam);
 private:
 	std::map<std::wstring, Component*> _componentMap;
+	std::queue<sComponentMsgParam> _msgQueue;
 };

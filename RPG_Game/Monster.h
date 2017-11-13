@@ -9,5 +9,5 @@ public:
 	void UpdateAI(float deltaTime);
 
 private:
-	
+	void Collision(std::list<Component*> &collisionList);
 };

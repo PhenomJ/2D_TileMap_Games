@@ -41,6 +41,14 @@ float Component::GetMoveDeltaY()
 	return _moveDistanceperTimeY;
 }
 
+void Component::ReceiveMessage(const sComponentMsgParam &msgParam)
+{
+	if (msgParam.message == L"Collision")
+	{
+
+	}
+}
+
 eComponentType Component::GetType()
 {
 	return _type;

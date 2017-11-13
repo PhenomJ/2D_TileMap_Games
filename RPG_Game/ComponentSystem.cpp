@@ -1,6 +1,6 @@
 #include "ComponentSystem.h"
 #include "Component.h"
-#include "ComponentMessage.h"
+
 #include "Map.h"
 
 ComponentSystem* ComponentSystem::_instance = NULL;
@@ -103,7 +103,24 @@ Component* ComponentSystem::FindComponentInRange(Component* thisComponent, int r
 	return NULL;
 }
 
-void ComponentSystem::SendMsg(std::wstring message, Component* receiver,const sComponentMsgParam &msgParam)
+void ComponentSystem::SendMsg(const sComponentMsgParam &msgParam)
 {
-	receiver->ReceiveMessage(message, msgParam);
+	_msgQueue.push(msgParam);
+	//msgParam.receiver->ReceiveMessage(msgParam);
+	//receiver->receiveMessage(message, msgParam);
+}
+
+void ComponentSystem::ProcessMessageQueue()
+{
+	while (_msgQueue.size() > 0)
+	{
+		sComponentMsgParam msgParam = _msgQueue.front();
+		_msgQueue.pop();
+		msgParam.receiver->ReceiveMessage(msgParam);
+	}
+}
+
+void ComponentSystem::Update(float deltaTime)
+{
+	ProcessMessageQueue();
 }

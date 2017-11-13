@@ -43,7 +43,6 @@ void Character::Init()
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
-
 	{
 		wsprintf(scriptFilename, L"%s_03.json", _scriptName.c_str());
 		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
@@ -170,23 +169,7 @@ void Character::MoveStart(eDirection direction)
 
 	if (canMove == false)
 	{
-		if (eComponentType::CT_MONSTER == _type)
-		{
-			for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
-			{
-				Component* com = (*itr);
-
-				if (com->GetType() == eComponentType::CT_NPC || eComponentType::CT_PLAYER)
-				{
-					sComponentMsgParam msgParam;
-					msgParam.sender = this;
-					msgParam.attackPoint = _attackPoint;
-
-					ComponentSystem::GetInstance()->SendMsg(L"Attack", (*itr), msgParam);
-				}
-			}
-		}
-
+		Collision(collisionList);
 		return;
 	}
 
@@ -255,5 +238,37 @@ void Character::UpdateAI(float deltaTime)
 	{
 		int direction = rand() % 4;
 		MoveStart((eDirection)direction);
+	}
+}
+
+void Character::ReceiveMessage(const sComponentMsgParam &msgParam)
+{
+	if (msgParam.message == L"Attack")
+	{
+		int attackPoint = msgParam.attackPoint;
+		_hp -= attackPoint;
+
+		if (_hp < 0)
+		{
+			//dead
+			_isLive = false;
+			SetCanMove(false);
+
+			//stop
+			_moveDistanceperTimeX = 0;
+			_moveDistanceperTimeY = 0;
+		}
+	}
+}
+
+void Character::Collision(std::list<Component*>& collisionList)
+{
+	for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
+	{
+		sComponentMsgParam msgParam;
+		msgParam.sender = this;
+		msgParam.receiver = (*itr);
+		msgParam.message = L"Collision";
+		ComponentSystem::GetInstance()->SendMsg(msgParam);
 	}
 }
