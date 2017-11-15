@@ -169,9 +169,9 @@ void Map::Update(float deltaTime)
 
 	if (_viewer != NULL)
 	{
-		float deltaX = _viewer->GetMoveDeltaX() * deltaTime;
-		float deltaY = _viewer->GetMoveDeltaY() * deltaTime;
-		Scroll(-deltaX, -deltaY);
+		_deltaX = _viewer->GetMoveDeltaX() * deltaTime;
+		_deltaY = _viewer->GetMoveDeltaY() * deltaTime;
+		Scroll(-_deltaX, -_deltaY);
 	}
 }
 

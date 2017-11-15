@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "ComponentSystem.h"
 #include "ComponentMessage.h"
+#include "MoveState.h"
 #include <list>
 
 NPC::NPC(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
@@ -18,18 +19,45 @@ NPC::~NPC()
 
 void NPC::UpdateAI(float deltaTime)
 {
-	if (_isLive == false)
-		return;
-
-	if (_isMoving == false)
-	{
 		// 타일 범위
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 
-		std::vector<eComponentType> typeList;
-		typeList.push_back(eComponentType::CT_MONSTER);
-		Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(this, 2, typeList);
+		int _range = 2;
+		int minTileX = _tileX - _range;
+		int minTileY = _tileY - _range;
+		int maxTileX = _tileX + _range;
+		int maxTileY = _tileY + _range;
 
+		if (minTileX < 0)
+			minTileX = 0;
+		if (map->GetWidth() <= maxTileX)
+			maxTileX = map->GetWidth() - 1;
+		if (minTileY < 0)
+			minTileY = 0;
+		if (map->GetHeight() <= maxTileY)
+			maxTileY = map->GetHeight() - 1;
+
+		Component* findEnemy = NULL;
+
+		for (int y = minTileY; y <= maxTileY; y++)
+		{
+			for (int x = minTileX; x <= maxTileX; x++)
+			{
+				std::list<Component*>componentList;
+				if (false == map->GetTileCollisionList(x, y, componentList))
+				{
+					for (std::list<Component*>::iterator it = componentList.begin(); it != componentList.end(); it++)
+					{
+						_component = (*it);
+						if (_component->GetType() == eComponentType::CT_MONSTER)
+						{
+							findEnemy = _component;
+							break;
+						}
+					}
+				}
+			}
+		}
 
 		// 탐색 범위에 적 확인
 
@@ -65,9 +93,11 @@ void NPC::UpdateAI(float deltaTime)
 
 				if (map->CanMoveTileMap(newtileX, newtileY))
 				{
-					_moveSpeed = 0.3f;
-					direction = (eDirection)findDir;
-					MoveStart(direction);
+					if (direction != eDirection::NONE)
+					{
+						_currentDirection = (eDirection)findDir;
+						ChangeState(eStateType::ET_MOVE);
+					}
 					break;
 				}
 			}
@@ -77,27 +107,4 @@ void NPC::UpdateAI(float deltaTime)
 		{
 			Character::UpdateAI(deltaTime);
 		}
-		//
-	}
 }
-/*
-void NPC::receiveMessage(std::wstring msg, const sComponentMsgParam &msgParam)
-{
-	if (msg == L"Attack")
-	{
-		int attackPoint = msgParam.attackPoint;
-		_hp -= attackPoint;
-
-		if (_hp < 0)
-		{
-			//dead
-			_isLive = false;
-			SetCanMove(true);
-
-			//stop
-			_moveDistanceperTimeX = 0;
-			_moveDistanceperTimeY = 0;
-		}
-	}
-}
-*/

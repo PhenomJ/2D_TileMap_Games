@@ -1,6 +1,7 @@
 #include "Monster.h"
 #include "Map.h"
 #include "ComponentSystem.h"
+#include "MoveState.h"
 
 Monster::Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName ,spriteName)
 {
@@ -16,16 +17,10 @@ Monster::~Monster()
 
 void Monster::UpdateAI(float deltaTime)
 {
-	if (_isLive == false)
-		return;
-
-	if (_isMoving == false)
-	{
 		std::vector<eComponentType> typeList;
 		typeList.push_back(eComponentType::CT_NPC);
 		typeList.push_back(eComponentType::CT_PLAYER);
 		Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(this, 4, typeList);
-
 
 		if (findEnemy != NULL)
 		{
@@ -51,15 +46,18 @@ void Monster::UpdateAI(float deltaTime)
 			{
 				direction = eDirection::DOWN;
 			}
-			MoveStart(direction);
+
+			if (eDirection::NONE != direction)
+			{
+				_currentDirection = direction;
+				ChangeState(eStateType::ET_MOVE);
+			}
 		}
 
 		else
 		{
 			Character::UpdateAI(deltaTime);
 		}
-		//
-	}
 }
 
 void Monster::Collision(std::list<Component*> &collisionList)

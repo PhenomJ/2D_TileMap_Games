@@ -4,11 +4,14 @@
 #include "Map.h"
 #include "ComponentSystem.h"
 #include "ComponentMessage.h"
+#include "State.h"
+#include "MoveState.h"
+#include "IdleState.h"
 #include <time.h>
 
 Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Component(name), _spriteList(NULL), _x(0.0f), _y(0.0f)
 {
-	_map = 32;
+	_state = new IdleState();
 	_targetX = 0;
 	_targetY = 0;
 	_moveDistanceperTimeX = 0;
@@ -21,7 +24,7 @@ Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Com
 
 Character::~Character()
 {
-
+	delete _state;
 }
 
 void Character::Init()
@@ -79,6 +82,7 @@ void Character::Init()
 		map->SetTileComponent(_tileX, _tileY, this, false);
 	}
 
+	_state->Init(this);
 	InitMove();
 }
 
@@ -95,8 +99,7 @@ void Character::Deinit()
 void Character::Update(float deltaTime)
 {
 	_spriteList[(int)_currentDirection]->Update(deltaTime);
-	UpdateAI(deltaTime);
-	UpdateMove(deltaTime);
+	_state->Update(deltaTime);
 }
 
 void Character::Render()
@@ -132,47 +135,12 @@ void Character::SetPosition(float tileX, float tileY)
 void Character::InitMove()
 {
 	_isMoving = false;
-	
-	_movingDuration = 0.0f;
 	_currentDirection = eDirection::DOWN;
 }
 
-void Character::MoveStart(eDirection direction)
+void Character::MoveStart(int newTileX, int newTileY)
 {
-	if (_isMoving == true)
-		return;
-
-	_currentDirection = direction;
-
 	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-	
-	int newTileX = _tileX;
-	int newTileY = _tileY;
-	switch (direction)
-	{
-	case eDirection::LEFT: 
-		newTileX--;
-		break;
-	case eDirection::RIGHT: 
-		newTileX++;
-		break;
-	case eDirection::UP: 
-		newTileY--;
-		break;
-	case eDirection::DOWN: 
-		newTileY++;
-		break;
-	}
-
-	std::list<Component*> collisionList;
-	bool canMove = map->GetTileCollisionList(newTileX, newTileY, collisionList);
-
-	if (canMove == false)
-	{
-		Collision(collisionList);
-		return;
-	}
-
 	map->ResetTileComponent(_tileX, _tileY, this);
 	_tileX = newTileX;
 	_tileY = newTileY;
@@ -190,40 +158,7 @@ void Character::MoveStart(eDirection direction)
 			_moveDistanceperTimeY = distanceY / _moveSpeed;	
 		}
 
-		_isMoving = true;
-}
-
-void Character::UpdateMove(float deltaTime)
-{
-	if (_isLive == false)
-		return;
-
-	if (_isMoving == false)
-		return;
-
-	if (_moveSpeed <= _movingDuration)
-	{
-		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
-		_movingDuration = 0.0f;
-		_isMoving = false;
-		
-		_x = map->GetPositionX(_tileX, _tileY);
-		_y = map->GetPositionY(_tileX, _tileY);
-
-		_moveDistanceperTimeX = 0.0f;
-		_moveDistanceperTimeY = 0.0f;
-	}
-
-	else
-	{
-		_movingDuration += deltaTime;
-
-		float moveDistanceX = _moveDistanceperTimeX * deltaTime;
-		float moveDistanceY = _moveDistanceperTimeY * deltaTime;
-
-		_x += moveDistanceX;
-		_y += moveDistanceY;
-	}
+	_isMoving = true;
 }
 
 void Character::MoveDeltaPosition(float deltaX, float deltaY)
@@ -234,11 +169,31 @@ void Character::MoveDeltaPosition(float deltaX, float deltaY)
 
 void Character::UpdateAI(float deltaTime)
 {
-	if (_isMoving == false)
+	_currentDirection = (eDirection)(rand() % 4);
+	ChangeState(eStateType::ET_MOVE);
+}
+
+void Character::ChangeState(eStateType stateType)
+{
+	if (_state != NULL)
 	{
-		int direction = rand() % 4;
-		MoveStart((eDirection)direction);
+		_state->Stop();
+		delete _state;
 	}
+
+	switch (stateType)
+	{
+	case eStateType::ET_IDLE:
+		_state = new IdleState();
+		break;
+
+	case eStateType::ET_MOVE:
+		_state = new MoveState();
+		break;
+	}
+
+	_state->Init(this);
+	_state->Start();
 }
 
 void Character::ReceiveMessage(const sComponentMsgParam &msgParam)
@@ -271,4 +226,30 @@ void Character::Collision(std::list<Component*>& collisionList)
 		msgParam.message = L"Collision";
 		ComponentSystem::GetInstance()->SendMsg(msgParam);
 	}
+}
+
+void Character::MoveStop()
+{
+	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+	
+	_x = map->GetPositionX(_tileX, _tileY);
+	_y = map->GetPositionY(_tileX, _tileY);
+
+	_moveDistanceperTimeX = 0.0f;
+	_moveDistanceperTimeY = 0.0f;
+
+	_isMoving = false;
+}
+
+void Character::Moving(float deltaTime)
+{
+	float moveDistanceX = _moveDistanceperTimeX * deltaTime;
+	float moveDistanceY = _moveDistanceperTimeY * deltaTime;
+
+	_x += moveDistanceX;
+	_y += moveDistanceY;
+}
+bool Character::IsMoving()
+{
+	return _isMoving;
 }

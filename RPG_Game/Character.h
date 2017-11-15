@@ -6,17 +6,25 @@
 #include <string>
 
 class Sprite;
+class State;
+
+enum eStateType
+{
+	ET_IDLE,
+	ET_MOVE,
+};
+
+enum eDirection
+{
+	LEFT, RIGHT, UP, DOWN, NONE
+};
+
 class Character : public Component
 {
 public:
 	Character(LPCWSTR name, LPCWSTR scriptName ,LPCWSTR spriteName);
 	Character() {}
 	~Character();
-
-	enum eDirection
-	{
-		LEFT, RIGHT, UP, DOWN, NONE
-	};
 
 public:
 	void Init();
@@ -33,32 +41,32 @@ protected:
 	std::vector<Sprite*> _spriteList;
 	float _x;
 	float _y;
-
+	State* _state;
 	std::wstring _spriteName;
 	std::wstring _scriptName;
-protected:
-	
-	int _map;
 
 protected:
-	bool _isMoving;
 	float _moveSpeed;
-	float _movingDuration;
+	
 
 	eDirection _currentDirection;
 	
 public:
 	void InitMove();
-	void MoveStart(eDirection direction);
-	virtual void UpdateMove(float deltaTime);
+	void MoveStart(int newTileX, int newTileY);
 	virtual void MoveDeltaPosition(float deltaX, float deltaY);
 	virtual void UpdateAI(float deltaTime);
+	eDirection GetDirection() {	return _currentDirection; };
 	void ReceiveMessage(const sComponentMsgParam &msgParam);
 	virtual void Collision(std::list<Component*>& collisionList);
-
+	float GetMoveTime() { return _moveSpeed; };
+	void MoveStop();
+	void Moving(float deltaTime);
+	bool IsMoving();
+	void ChangeState(eStateType stateType);
 protected:
 	float _targetX;
 	float _targetY;
 	int _attackPoint;
-	
+	bool _isMoving;
 };
