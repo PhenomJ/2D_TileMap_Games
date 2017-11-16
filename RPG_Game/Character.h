@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <map>
 
 class Sprite;
 class State;
@@ -12,6 +13,7 @@ enum eStateType
 {
 	ET_IDLE,
 	ET_MOVE,
+	ET_ATTACK,
 };
 
 enum eDirection
@@ -38,7 +40,6 @@ public:
 
 
 protected:
-	std::vector<Sprite*> _spriteList;
 	float _x;
 	float _y;
 	State* _state;
@@ -59,14 +60,28 @@ public:
 	eDirection GetDirection() {	return _currentDirection; };
 	void ReceiveMessage(const sComponentMsgParam &msgParam);
 	virtual void Collision(std::list<Component*>& collisionList);
-	float GetMoveTime() { return _moveSpeed; };
+	float GetMoveTime() { return _moveSpeed; }
 	void MoveStop();
 	void Moving(float deltaTime);
 	bool IsMoving();
 	void ChangeState(eStateType stateType);
+
+	std::wstring GetTextureFileName();
+	std::wstring GetScriptFileName();
+
+	float GetX() { return _x; }
+	float GetY() { return _y; }
+
+	Component* GetTarget() { return _target; }
+	int GetAttackPoint() { return _attackPoint; }
+	void ResetTarget() { _target = NULL; }
 protected:
 	float _targetX;
 	float _targetY;
 	int _attackPoint;
 	bool _isMoving;
+	Component* _target;
+
+private:
+	std::map<eStateType, State*> _stateMap;
 };

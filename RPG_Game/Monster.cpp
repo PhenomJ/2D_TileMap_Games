@@ -58,6 +58,7 @@ void Monster::UpdateAI(float deltaTime)
 		{
 			Character::UpdateAI(deltaTime);
 		}
+	
 }
 
 void Monster::Collision(std::list<Component*> &collisionList)
@@ -68,12 +69,10 @@ void Monster::Collision(std::list<Component*> &collisionList)
 
 		if (component->GetType() == eComponentType::CT_NPC || component->GetType() == eComponentType::CT_PLAYER)
 		{
-			sComponentMsgParam msgParam;
-			msgParam.sender = this;
-			msgParam.receiver = (*itr);
-			msgParam.message = L"Attack";
-			msgParam.attackPoint = _attackPoint;
-			ComponentSystem::GetInstance()->SendMsg(msgParam);
+			_target = (*itr);
+			ChangeState(eStateType::ET_ATTACK);
+			return;
 		}
 	}
+	ChangeState(eStateType::ET_IDLE);
 }

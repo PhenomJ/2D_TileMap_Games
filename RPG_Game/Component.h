@@ -3,7 +3,6 @@
 #include <string>
 #include "ComponentMessage.h"
 
-//struct sComponentMsgParam;
 enum eComponentType
 {
 	CT_PLAYER,
@@ -36,6 +35,8 @@ public:
 	//
 	int GetTileX();
 	int GetTileY();
+
+
 
 	float GetMoveDeltaX();
 	float GetMoveDeltaY();

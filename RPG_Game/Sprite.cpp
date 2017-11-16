@@ -9,7 +9,7 @@
 
 
 Sprite::Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName) : _currnetFrame(0), _frameTime(0.0f), _srcTexture(NULL),
-																	_texturefileName(texturefileName), _scriptfileName(scriptfileName)
+_texturefileName(texturefileName), _scriptfileName(scriptfileName)
 {
 	
 }

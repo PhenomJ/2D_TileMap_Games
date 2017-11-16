@@ -15,12 +15,13 @@ MoveState::~MoveState()
 
 void MoveState::Init(Character* character)
 {
-	_character = character;
+	State::Init(character);
 	_moveDuration = 0.0f;
 }
 
 void MoveState::Start()
 {
+	State::Start();
 	if (_character->IsMoving() == true)
 		return;
 	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
@@ -63,6 +64,7 @@ void MoveState::Start()
 
 void MoveState::Update(float deltaTime)
 {
+	State::Update(deltaTime);
 	if (_character->IsLive() == false)
 		return;
 
@@ -72,6 +74,8 @@ void MoveState::Update(float deltaTime)
 	if (_character->GetMoveTime() <= _moveDuration)
 	{
 		_moveDuration = 0.0f;
+		
+		
 		_character->MoveStop();
 		_character->ChangeState(eStateType::ET_IDLE);
 	}
@@ -85,5 +89,5 @@ void MoveState::Update(float deltaTime)
 
 void MoveState::Stop()
 {
-
+	State::Stop();
 }
