@@ -4,7 +4,7 @@
 
 State::State()
 {
-
+	_nextState = eStateType::ET_NONE;
 }
 
 State::~State()
@@ -20,39 +20,7 @@ State::~State()
 void State::Init(Character* character)
 {
 	_character = character;
-	_spriteList.clear();
-
-	WCHAR textureFilename[256];
-	wsprintf(textureFilename, L"%s.png", _character->GetTextureFileName().c_str());
-
-	WCHAR scriptFilename[256];
-	{
-	wsprintf(scriptFilename, L"%s_01.json", _character->GetScriptFileName().c_str());
-	Sprite* sprite = new Sprite(textureFilename, scriptFilename);
-	sprite->Init();
-	_spriteList.push_back(sprite);
-	}
-
-	{
-	wsprintf(scriptFilename, L"%s_02.json", _character->GetScriptFileName().c_str());
-	Sprite* sprite = new Sprite(textureFilename, scriptFilename);
-	sprite->Init();
-	_spriteList.push_back(sprite);
-	}
-	{
-	wsprintf(scriptFilename, L"%s_03.json", _character->GetScriptFileName().c_str());
-	Sprite* sprite = new Sprite(textureFilename, scriptFilename);
-	sprite->Init();
-	_spriteList.push_back(sprite);
-	}
-
-	{
-	wsprintf(scriptFilename, L"%s_04.json", _character->GetScriptFileName().c_str());
-	Sprite* sprite = new Sprite(textureFilename, scriptFilename);
-	sprite->Init();
-	_spriteList.push_back(sprite);
-	}
-	
+	CreateSprite();
 }
 
 void State::Update(float deltaTime)
@@ -92,4 +60,40 @@ void State::Reset()
 		_spriteList[i]->Reset();
 	}
 	_spriteList.clear();
+}
+
+void State::CreateSprite()
+{
+	_spriteList.clear();
+
+	WCHAR textureFilename[256];
+	wsprintf(textureFilename, L"%s.png", _character->GetTextureFileName().c_str());
+
+	WCHAR scriptFilename[256];
+	{
+		wsprintf(scriptFilename, L"%s_01.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
+		sprite->Init();
+		_spriteList.push_back(sprite);
+	}
+
+	{
+		wsprintf(scriptFilename, L"%s_02.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
+		sprite->Init();
+		_spriteList.push_back(sprite);
+	}
+	{
+		wsprintf(scriptFilename, L"%s_03.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
+		sprite->Init();
+		_spriteList.push_back(sprite);
+	}
+
+	{
+		wsprintf(scriptFilename, L"%s_04.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
+		sprite->Init();
+		_spriteList.push_back(sprite);
+	}
 }

@@ -7,5 +7,7 @@ public:
 	Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName);
 	~Monster();
 	void UpdateAI(float deltaTime);
-	void Collision(std::list<Component*> &collisionList);
+
+private:
+	Component* Collision(std::list<Component*> &collisionList);
 };

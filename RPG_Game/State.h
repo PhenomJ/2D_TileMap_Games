@@ -3,6 +3,8 @@
 
 class Sprite;
 class Character;
+enum eStateType;
+
 class State
 {
 public:
@@ -20,7 +22,12 @@ public:
 	virtual void Render();
 	virtual void Reset();
 
+
+	virtual void CreateSprite();
+
 protected:
 	std::vector<Sprite*> _spriteList;
 	Character* _character;
+	eStateType _nextState;
+
 };

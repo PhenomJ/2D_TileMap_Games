@@ -53,6 +53,18 @@ void MoveState::Start()
 	{
 		_character->Collision(collisionList);
 		_character->ChangeState(eStateType::ET_IDLE);
+
+		Component* target = _character->Collision(collisionList);
+		if (target != NULL)
+		{
+			_character->SetTarget(target);
+			_nextState = eStateType::ET_ATTACK;
+		}
+
+		else
+		{
+			_nextState = eStateType::ET_IDLE;
+		}
 		return;
 	}
 
@@ -65,6 +77,13 @@ void MoveState::Start()
 void MoveState::Update(float deltaTime)
 {
 	State::Update(deltaTime);
+
+	if (eStateType::ET_NONE != _nextState)
+	{
+		_character->ChangeState(_nextState);
+		return;
+	}
+
 	if (_character->IsLive() == false)
 		return;
 
@@ -77,7 +96,7 @@ void MoveState::Update(float deltaTime)
 		
 		
 		_character->MoveStop();
-		_character->ChangeState(eStateType::ET_IDLE);
+		_nextState = eStateType::ET_IDLE;
 	}
 
 	else

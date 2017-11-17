@@ -14,6 +14,9 @@ enum eStateType
 	ET_IDLE,
 	ET_MOVE,
 	ET_ATTACK,
+	ET_DEFENCE,
+	ET_DEAD,
+	ET_NONE
 };
 
 enum eDirection
@@ -59,7 +62,7 @@ public:
 	virtual void UpdateAI(float deltaTime);
 	eDirection GetDirection() {	return _currentDirection; };
 	void ReceiveMessage(const sComponentMsgParam &msgParam);
-	virtual void Collision(std::list<Component*>& collisionList);
+	virtual Component* Collision(std::list<Component*>& collisionList);
 	float GetMoveTime() { return _moveSpeed; }
 	void MoveStop();
 	void Moving(float deltaTime);
@@ -75,10 +78,16 @@ public:
 	Component* GetTarget() { return _target; }
 	int GetAttackPoint() { return _attackPoint; }
 	void ResetTarget() { _target = NULL; }
+	
+	// Common
+	void DecreaseHP(int attackPoint);
+	int GetAttackedPoint() { return _attackedPoint; }
+	void SetTarget(Component* target);
 protected:
 	float _targetX;
 	float _targetY;
 	int _attackPoint;
+	int _attackedPoint;
 	bool _isMoving;
 	Component* _target;
 

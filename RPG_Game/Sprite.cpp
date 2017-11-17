@@ -8,8 +8,8 @@
 #include "ResourceManager.h"
 
 
-Sprite::Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName) : _currnetFrame(0), _frameTime(0.0f), _srcTexture(NULL),
-_texturefileName(texturefileName), _scriptfileName(scriptfileName)
+Sprite::Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName, float rotate) : _currnetFrame(0), _frameTime(0.0f), _srcTexture(NULL),
+_texturefileName(texturefileName), _scriptfileName(scriptfileName), _rotate(rotate)
 {
 	
 }
@@ -27,7 +27,7 @@ void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay)
 
 	{
 		Frame* frame = new Frame();
-		frame->Init(_srcTexture, srcX, srcY, x, y, frameDelay);
+		frame->Init(_srcTexture, srcX, srcY, x, y, _rotate,frameDelay);
 		_frameList.push_back(frame);
 	}
 
@@ -64,7 +64,7 @@ void Sprite::Init()
 				double framedelay = root["framedelay"].asDouble();
 
 				Frame* frame = new Frame();
-				frame->Init(_srcTexture, x, y, width, height, framedelay);
+				frame->Init(_srcTexture, x, y, width, height, _rotate,framedelay);
 				_frameList.push_back(frame);
 			}
 		}

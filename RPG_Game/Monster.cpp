@@ -61,7 +61,7 @@ void Monster::UpdateAI(float deltaTime)
 	
 }
 
-void Monster::Collision(std::list<Component*> &collisionList)
+Component* Monster::Collision(std::list<Component*> &collisionList)
 {
 	for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
 	{
@@ -69,10 +69,11 @@ void Monster::Collision(std::list<Component*> &collisionList)
 
 		if (component->GetType() == eComponentType::CT_NPC || component->GetType() == eComponentType::CT_PLAYER)
 		{
-			_target = (*itr);
+			//_target = (*itr);
 			ChangeState(eStateType::ET_ATTACK);
-			return;
+			return (*itr);
 		}
 	}
+	return NULL;
 	ChangeState(eStateType::ET_IDLE);
 }

@@ -8,7 +8,7 @@ class Frame;
 class Sprite
 {
 public:
-	Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName);
+	Sprite(LPCWSTR texturefileName, LPCWSTR scriptfileName, float rotate = 0.0f);
 	~Sprite();
 
 public:
@@ -39,4 +39,5 @@ private:
 
 	float _x;
 	float _y;
+	float _rotate;
 };
