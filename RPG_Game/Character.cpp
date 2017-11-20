@@ -22,7 +22,9 @@ Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Com
 	_moveSpeed = 1.0f;
 	_spriteName = spriteName;
 	_scriptName = scriptName;
-	_attackPoint = 1;
+	_attackPoint = 5;
+	_attackCoolDownDuration = 0.0f;
+	_attackCoolDown = 2.0f;
 }
 
 Character::~Character()
@@ -105,6 +107,7 @@ void Character::Deinit()
 
 void Character::Update(float deltaTime)
 {
+	UpdateAttackCoolDown(deltaTime);
 	_state->Update(deltaTime);
 }
 
@@ -170,7 +173,7 @@ void Character::MoveDeltaPosition(float deltaX, float deltaY)
 void Character::UpdateAI(float deltaTime)
 {
 	_currentDirection = (eDirection)(rand() % 4);
-	ChangeState(eStateType::ET_MOVE);
+	_state->NextState(eStateType::ET_MOVE);
 }
 
 void Character::ChangeState(eStateType stateType)
@@ -187,7 +190,7 @@ void Character::ReceiveMessage(const sComponentMsgParam &msgParam)
 	if (msgParam.message == L"Attack")
 	{
 		_attackedPoint = msgParam.attackPoint;
-		ChangeState(eStateType::ET_DEFENCE);
+		_state->NextState(eStateType::ET_DEFENCE);
 	}
 }
 
@@ -243,4 +246,27 @@ void Character::DecreaseHP(int attackPoint)
 void Character::SetTarget(Component* target)
 {
 	_target = target;
+}
+
+bool Character::IsCoolDown()
+{
+	if (_attackCoolDown <= _attackCoolDownDuration)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void Character::ResetCoolDown()
+{
+	_attackCoolDownDuration = 0.0f;
+}
+
+void Character::UpdateAttackCoolDown(float deltaTime)
+{
+	if (_attackCoolDownDuration < _attackCoolDown)
+	{
+		_attackCoolDownDuration += deltaTime;
+	}
 }

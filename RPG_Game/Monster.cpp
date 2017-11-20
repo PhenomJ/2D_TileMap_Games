@@ -8,6 +8,7 @@ Monster::Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Charact
 	int speed = (rand() % 1500) + 200;
 	_moveSpeed = (float)speed / 1000.0f;
 	_type = eComponentType::CT_MONSTER;
+	_hp = 10;
 }
 
 Monster::~Monster()
@@ -50,7 +51,7 @@ void Monster::UpdateAI(float deltaTime)
 			if (eDirection::NONE != direction)
 			{
 				_currentDirection = direction;
-				ChangeState(eStateType::ET_MOVE);
+				_state->NextState(eStateType::ET_MOVE);
 			}
 		}
 
@@ -69,11 +70,8 @@ Component* Monster::Collision(std::list<Component*> &collisionList)
 
 		if (component->GetType() == eComponentType::CT_NPC || component->GetType() == eComponentType::CT_PLAYER)
 		{
-			//_target = (*itr);
-			ChangeState(eStateType::ET_ATTACK);
 			return (*itr);
 		}
 	}
 	return NULL;
-	ChangeState(eStateType::ET_IDLE);
 }

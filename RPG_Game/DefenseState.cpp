@@ -21,6 +21,7 @@ void DefenseState::Init(Character* character)
 void DefenseState::Update(float deltaTime)
 {
 	State::Update(deltaTime);
+
 	if (eStateType::ET_NONE != _nextState)
 	{
 		_character->ChangeState(_nextState);
@@ -46,7 +47,7 @@ void DefenseState::Start()
 	else
 	{
 		//_character->ChangeState(eStateType::ET_IDLE);
-		_nextState = eStateType::ET_IDLE;
+		_nextState = eStateType::ET_MOVE;
 	}
 }
 

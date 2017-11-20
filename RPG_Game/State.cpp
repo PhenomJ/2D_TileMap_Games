@@ -4,7 +4,7 @@
 
 State::State()
 {
-	_nextState = eStateType::ET_NONE;
+	//_nextState = eStateType::ET_NONE;
 }
 
 State::~State()
@@ -30,7 +30,7 @@ void State::Update(float deltaTime)
 
 void State::Start()
 {
-
+	_nextState = eStateType::ET_NONE;
 }
 
 void State::Stop()
@@ -96,4 +96,9 @@ void State::CreateSprite()
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
+}
+
+void State::NextState(eStateType type)
+{
+	_nextState = type;
 }

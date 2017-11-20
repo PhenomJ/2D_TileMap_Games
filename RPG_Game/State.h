@@ -24,6 +24,8 @@ public:
 
 
 	virtual void CreateSprite();
+	void NextState(eStateType type);
+
 
 protected:
 	std::vector<Sprite*> _spriteList;

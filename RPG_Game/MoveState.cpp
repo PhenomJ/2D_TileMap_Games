@@ -22,8 +22,13 @@ void MoveState::Init(Character* character)
 void MoveState::Start()
 {
 	State::Start();
+
 	if (_character->IsMoving() == true)
+	{
+		_nextState = eStateType::ET_IDLE;
 		return;
+	}
+		
 	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 
 	int newTileX = _character->GetTileX();
@@ -51,12 +56,11 @@ void MoveState::Start()
 
 	if (canMove == false)
 	{
-		_character->Collision(collisionList);
-		_character->ChangeState(eStateType::ET_IDLE);
-
 		Component* target = _character->Collision(collisionList);
-		if (target != NULL)
+
+		if (target != NULL && _character->IsCoolDown())
 		{
+			_character->ResetCoolDown();
 			_character->SetTarget(target);
 			_nextState = eStateType::ET_ATTACK;
 		}
@@ -65,9 +69,7 @@ void MoveState::Start()
 		{
 			_nextState = eStateType::ET_IDLE;
 		}
-		return;
 	}
-
 	else
 	{
 		_character->MoveStart(newTileX, newTileY);
@@ -93,8 +95,6 @@ void MoveState::Update(float deltaTime)
 	if (_character->GetMoveTime() <= _moveDuration)
 	{
 		_moveDuration = 0.0f;
-		
-		
 		_character->MoveStop();
 		_nextState = eStateType::ET_IDLE;
 	}

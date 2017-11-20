@@ -83,6 +83,17 @@ public:
 	void DecreaseHP(int attackPoint);
 	int GetAttackedPoint() { return _attackedPoint; }
 	void SetTarget(Component* target);
+
+	//CoolDown
+public:
+	bool IsCoolDown();
+	void ResetCoolDown();
+	void UpdateAttackCoolDown(float deltaTime);
+
+protected:
+	float _attackCoolDownDuration;
+	float _attackCoolDown;
+
 protected:
 	float _targetX;
 	float _targetY;
