@@ -29,7 +29,7 @@ void AttackState::Update(float deltaTime)
 	}
 
 	_character->ResetTarget();
-	_character->ChangeState(eStateType::ET_IDLE);
+	_nextState = eStateType::ET_IDLE;
 }
 
 void AttackState::Start()

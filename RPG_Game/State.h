@@ -22,6 +22,7 @@ public:
 	virtual void Render();
 	virtual void Reset();
 
+	virtual eStateType GetState();
 
 	virtual void CreateSprite();
 	void NextState(eStateType type);
@@ -31,5 +32,5 @@ protected:
 	std::vector<Sprite*> _spriteList;
 	Character* _character;
 	eStateType _nextState;
-
+	eStateType _getState;
 };

@@ -10,6 +10,7 @@
 #include "AttackState.h"
 #include "DefenseState.h"
 #include "DeadState.h"
+#include "Font.h"
 #include <time.h>
 
 Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Component(name), _x(0.0f), _y(0.0f)
@@ -29,11 +30,18 @@ Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Com
 
 Character::~Character()
 {
-	
+	delete _font;
 }
 
 void Character::Init()
 {
+	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
+
+	_font = new Font(L"Arial", 15, color);
+	_font->SetRect(100, 100, 400, 100);
+	//_font->SetText(L" ");
+	UpdateText();
+
 	{
 		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
 		
@@ -109,12 +117,14 @@ void Character::Update(float deltaTime)
 {
 	UpdateAttackCoolDown(deltaTime);
 	_state->Update(deltaTime);
+	UpdateText();
 }
 
 void Character::Render()
 {
-	
 	_state->Render();
+	_font->SetPosition(_x - 200 , _y - 50);
+	_font->Render();
 }
 
 void Character::Release()
@@ -239,8 +249,11 @@ void Character::DecreaseHP(int attackPoint)
 {
 	_hp -= attackPoint;
 
-	if (_hp < 0)
+	if (_hp <= 0)
+	{
+		_hp = 0;
 		_isLive = false;
+	}
 }
 
 void Character::SetTarget(Component* target)
@@ -269,4 +282,18 @@ void Character::UpdateAttackCoolDown(float deltaTime)
 	{
 		_attackCoolDownDuration += deltaTime;
 	}
+
+	else
+	{
+		_attackCoolDownDuration = _attackCoolDown;
+	}
+}
+
+void Character::UpdateText()
+{
+	int coolDown = (int)(_attackCoolDownDuration * 1000.0f);
+
+	WCHAR text[256];
+	wsprintf(text, L"HP : %d\n Attack : %d \n State : %d", _hp, coolDown, _state);
+	_font->SetText(text);
 }

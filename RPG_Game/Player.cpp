@@ -6,7 +6,7 @@
 
 Player::Player(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
 {
-	_moveSpeed = 0.3f;
+	_moveSpeed = 0.2f;
 	_type = eComponentType::CT_PLAYER;
 	_hp = 10;
 	_attackPoint = 5;
@@ -40,7 +40,6 @@ void Player::UpdateAI(float deltaTime)
 	{
 		direction = eDirection::RIGHT;
 	}
-
 	if (direction != eDirection::NONE)
 	{
 		_currentDirection = direction;

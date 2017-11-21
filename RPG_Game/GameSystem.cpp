@@ -7,6 +7,7 @@
 #include "Monster.h"
 #include "ComponentSystem.h"
 #include "Component.h"
+#include "Font.h"
 #include <stdio.h>
 #include <string>
 
@@ -130,7 +131,6 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		NPC* npc = new NPC(name, L"npc", L"npc");
 		_componentList.push_back(npc);
 	}
-
 	Monster* monster = new Monster(L"testCharacter", L"testCharacter", L"testCharacter");
 	_componentList.push_back(monster);
 	
@@ -142,6 +142,21 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	map->InitViewer(player);
 
 	InitInput();
+
+	//FONT
+
+	{
+		/*
+		HRESULT hr = D3DXCreateFont(_device3d, 35, 0, FW_NORMAL, 1, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &_dxTestFont);
+
+		if (FAILED(hr))
+		{
+			MessageBox(0, L"Failed Create Font", 0, 0);
+			return false;
+		}
+		*/
+		
+	}
 
 	return true;
 }

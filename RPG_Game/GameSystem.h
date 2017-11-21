@@ -12,6 +12,7 @@ class GameTimer;
 class Map;
 class Character;
 class Component;
+class Font;
 
 class GameSystem
 {
@@ -70,4 +71,9 @@ public:
 
 private:
 	eKeyState _keyState[256];
+
+	//Font Test
+private:
+	//ID3DXFont* _dxTestFont;
+	
 };

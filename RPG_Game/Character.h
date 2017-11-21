@@ -8,6 +8,7 @@
 
 class Sprite;
 class State;
+class Font;
 
 enum eStateType
 {
@@ -104,4 +105,12 @@ protected:
 
 private:
 	std::map<eStateType, State*> _stateMap;
+
+	//Font
+
+protected:
+	Font* _font;
+
+public:
+	void UpdateText();
 };

@@ -4,7 +4,7 @@
 
 State::State()
 {
-	//_nextState = eStateType::ET_NONE;
+
 }
 
 State::~State()
@@ -101,4 +101,11 @@ void State::CreateSprite()
 void State::NextState(eStateType type)
 {
 	_nextState = type;
+}
+
+eStateType State::GetState()
+{
+
+
+	return _getState;
 }

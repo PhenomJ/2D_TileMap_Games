@@ -22,7 +22,6 @@ void MoveState::Init(Character* character)
 void MoveState::Start()
 {
 	State::Start();
-
 	if (_character->IsMoving() == true)
 	{
 		_nextState = eStateType::ET_IDLE;
