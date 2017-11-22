@@ -45,7 +45,8 @@ void DefenseState::Start()
 
 	else
 	{
-		_nextState = eStateType::ET_MOVE;
+		_character->MoveStop();
+		_nextState = eStateType::ET_IDLE;
 	}
 }
 

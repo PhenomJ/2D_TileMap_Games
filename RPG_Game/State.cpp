@@ -102,10 +102,3 @@ void State::NextState(eStateType type)
 {
 	_nextState = type;
 }
-
-eStateType State::GetState()
-{
-
-
-	return _getState;
-}

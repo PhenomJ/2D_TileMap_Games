@@ -3,13 +3,15 @@
 #include <string>
 #include "ComponentMessage.h"
 
+//struct sComponentMsgParam;
 enum eComponentType
 {
 	CT_PLAYER,
 	CT_MONSTER,
 	CT_NPC,
 	CT_TILEOBJECT,
-	CT_NONE
+	CT_NONE,
+	CT_ITEM,
 };
 
 class Component

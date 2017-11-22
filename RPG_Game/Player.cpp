@@ -52,7 +52,7 @@ Component* Player::Collision(std::list<Component*> &collisionList)
 	for (std::list<Component*>::iterator itr = collisionList.begin(); itr != collisionList.end(); itr++)
 	{
 		Component* component = (*itr);
-
+		
 		if (component->GetType() == eComponentType::CT_MONSTER || component->GetType() == eComponentType::CT_NPC)
 		{
 			return (*itr);

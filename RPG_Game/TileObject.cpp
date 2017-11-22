@@ -3,6 +3,7 @@
 
 TileObject::TileObject(LPCWSTR name, Sprite* sprite) : Component(name)
 {
+	_type = eComponentType::CT_TILEOBJECT;
 	_sprite = sprite;
 }
 

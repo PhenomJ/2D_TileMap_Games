@@ -8,9 +8,10 @@
 NPC::NPC(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
 {
 	_type = eComponentType::CT_NPC;
+	_hp = 5;
+	_attackPoint = 1;
 	int speed = (rand() % 1500) + 400;
 	_moveSpeed = (float)speed / 1000.0f;
-	_hp = 1;
 }
 
 NPC::~NPC()

@@ -39,7 +39,7 @@ void Character::Init()
 
 	_font = new Font(L"Arial", 15, color);
 	_font->SetRect(100, 100, 400, 100);
-	//_font->SetText(L" ");
+	
 	UpdateText();
 
 	{
@@ -294,6 +294,6 @@ void Character::UpdateText()
 	int coolDown = (int)(_attackCoolDownDuration * 1000.0f);
 
 	WCHAR text[256];
-	wsprintf(text, L"HP : %d\n Attack : %d \n State : %d", _hp, coolDown, _state);
+	wsprintf(text, L"HP : %d\n Attack : %d \n", _hp, coolDown );
 	_font->SetText(text);
 }

@@ -22,8 +22,6 @@ public:
 	virtual void Render();
 	virtual void Reset();
 
-	virtual eStateType GetState();
-
 	virtual void CreateSprite();
 	void NextState(eStateType type);
 

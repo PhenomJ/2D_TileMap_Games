@@ -8,6 +8,7 @@
 #include "ComponentSystem.h"
 #include "Component.h"
 #include "Font.h"
+#include "RecoveryItem.h"
 #include <stdio.h>
 #include <string>
 
@@ -120,20 +121,35 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	Map* map = new Map(L"tileMap");
 	_componentList.push_back(map);
 	
+	for (int i = 0; i < 10; i++)
+	{
+		WCHAR name[256];
+		wsprintf(name, L"Recovery_%d", i);
+		RecoveryItem* item = new RecoveryItem(name, L"item", L"item");
+		_componentList.push_back(item);
+	}
 
 	Character* player = new Player(L"testCharacter", L"testCharacter", L"testCharacter");
 	_componentList.push_back(player);
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		WCHAR name[256];
 		wsprintf(name, L"npc_%d", i);
 		NPC* npc = new NPC(name, L"npc", L"npc");
 		_componentList.push_back(npc);
 	}
-	Monster* monster = new Monster(L"testCharacter", L"testCharacter", L"testCharacter");
-	_componentList.push_back(monster);
+
+	for (int i = 0; i < 10; i++)
+	{
+		WCHAR name[256];
+		wsprintf(name, L"monster_%d", i);
+		Monster* monster = new Monster(name, L"testCharacter", L"testCharacter");
+		_componentList.push_back(monster);
+	}
+
 	
+
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 	{
 		(*itr)->Init();
@@ -142,22 +158,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	map->InitViewer(player);
 
 	InitInput();
-
-	//FONT
-
-	{
-		/*
-		HRESULT hr = D3DXCreateFont(_device3d, 35, 0, FW_NORMAL, 1, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &_dxTestFont);
-
-		if (FAILED(hr))
-		{
-			MessageBox(0, L"Failed Create Font", 0, 0);
-			return false;
-		}
-		*/
 		
-	}
-
 	return true;
 }
 

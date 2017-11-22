@@ -106,8 +106,6 @@ Component* ComponentSystem::FindComponentInRange(Component* thisComponent, int r
 void ComponentSystem::SendMsg(const sComponentMsgParam &msgParam)
 {
 	_msgQueue.push(msgParam);
-	//msgParam.receiver->ReceiveMessage(msgParam);
-	//receiver->receiveMessage(message, msgParam);
 }
 
 void ComponentSystem::ProcessMessageQueue()

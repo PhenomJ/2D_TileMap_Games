@@ -14,6 +14,4 @@ public:
 	//Collision
 	Component* Collision(std::list<Component*> &collisionList);
 	//MOVE
-	//void UpdateMove(float deltaTime);
-	//void MoveDeltaPosition(float deltaX, float deltaY);
 };
