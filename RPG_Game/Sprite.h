@@ -23,7 +23,6 @@ public:
 	void Update(float deltaTime);
 	void SetPosition(float posX, float posY);
 
-
 	//Direct X
 private:
 	LPD3DXSPRITE _sprite;

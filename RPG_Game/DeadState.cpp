@@ -61,30 +61,31 @@ void DeadState::CreateSprite()
 	wsprintf(textureFilename, L"%s.png", _character->GetTextureFileName().c_str());
 
 	WCHAR scriptFilename[256];
+
 	{
-		wsprintf(scriptFilename, L"%s_01_dead.json", _character->GetScriptFileName().c_str());
-		Sprite* sprite = new Sprite(textureFilename, scriptFilename, 1.5f);
+		wsprintf(scriptFilename, L"%s_Right_dead.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
 
 	{
-		wsprintf(scriptFilename, L"%s_02_dead.json", _character->GetScriptFileName().c_str());
-		Sprite* sprite = new Sprite(textureFilename, scriptFilename, 1.5f);
+		wsprintf(scriptFilename, L"%s_Left_dead.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
 
 	{
-		wsprintf(scriptFilename, L"%s_03_dead.json", _character->GetScriptFileName().c_str());
-		Sprite* sprite = new Sprite(textureFilename, scriptFilename, 1.5f);
+		wsprintf(scriptFilename, L"%s_Up_dead.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}
 
 	{
-		wsprintf(scriptFilename, L"%s_04_dead.json", _character->GetScriptFileName().c_str());
-		Sprite* sprite = new Sprite(textureFilename, scriptFilename, 1.5f);
+		wsprintf(scriptFilename, L"%s_Down_dead.json", _character->GetScriptFileName().c_str());
+		Sprite* sprite = new Sprite(textureFilename, scriptFilename);
 		sprite->Init();
 		_spriteList.push_back(sprite);
 	}

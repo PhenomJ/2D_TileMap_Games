@@ -3,7 +3,6 @@
 #include <string>
 #include "ComponentMessage.h"
 
-//struct sComponentMsgParam;
 enum eComponentType
 {
 	CT_PLAYER,
@@ -31,6 +30,8 @@ public:
 	virtual void MoveDeltaPosition(float deltaX, float deltaY) {}
 	virtual void SetPosition(float posX, float posY) {}
 
+
+	void SetLive(bool isLive) { _isLive = isLive;  };
 	void SetCanMove(bool canMove) { _canMove = canMove; }
 	bool CanMove();
 

@@ -4,11 +4,11 @@
 
 class Sprite;
 
-class RecoveryItem : public Component
+class PosionItem : public Component
 {
 public:
-	RecoveryItem(LPCWSTR name, LPCWSTR scriptName, LPCWSTR textureFilename);
-	~RecoveryItem();
+	PosionItem(LPCWSTR name, LPCWSTR scriptName, LPCWSTR textureFilename);
+	~PosionItem();
 
 	void Init();
 	void Deinit();
@@ -19,7 +19,7 @@ public:
 
 	void MoveDeltaPosition(float deltaX, float deltaY);
 	void SetPosition(float posX, float posY);
-	
+
 	void ReceiveMessage(const sComponentMsgParam &msgParam);
 
 private:

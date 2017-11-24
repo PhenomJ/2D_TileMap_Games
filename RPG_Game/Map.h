@@ -35,7 +35,7 @@ public:
 
 
 	bool GetTileCollisionList(int tileX, int tileY, std::list<Component*> &collisionList);
-	
+	std::list<Component*> GetTileComponentList(int tileX, int tileY);
 	void InitViewer(Component* viewer);
 
 	int GetWidth();

@@ -57,10 +57,10 @@ Component* ComponentSystem::FindComponent(std::wstring name)
 	return 0;
 }
 
-Component* ComponentSystem::FindComponentInRange(Component* thisComponent, int range, std::vector<eComponentType> typeList)
+Component* ComponentSystem::FindComponentInRange(Component* mapComp ,Component* thisComponent, int range, std::vector<eComponentType> typeList)
 {
 	// 타일 범위
-	Map* map = (Map*)FindComponent(L"tileMap");
+	Map* map = (Map*)mapComp;
 
 	int minX = thisComponent->GetTileX() - range;
 	int maxX = thisComponent->GetTileX() + range;
@@ -115,6 +115,14 @@ void ComponentSystem::ProcessMessageQueue()
 		sComponentMsgParam msgParam = _msgQueue.front();
 		_msgQueue.pop();
 		msgParam.receiver->ReceiveMessage(msgParam);
+	}
+}
+
+void ComponentSystem::ClearMessageQueue()
+{
+	while (0 < _msgQueue.size())
+	{
+		_msgQueue.pop();
 	}
 }
 

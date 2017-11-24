@@ -2,6 +2,8 @@
 #include "Map.h"
 #include "ComponentSystem.h"
 #include "Character.h"
+#include "GameSystem.h"
+#include "Stage.h"
 
 MoveState::MoveState()
 {
@@ -28,7 +30,7 @@ void MoveState::Start()
 		return;
 	}
 		
-	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 
 	int newTileX = _character->GetTileX();
 	int newTileY = _character->GetTileY();

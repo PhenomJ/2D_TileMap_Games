@@ -2,6 +2,8 @@
 #include "Map.h"
 #include "ComponentSystem.h"
 #include "ComponentMessage.h"
+#include "GameSystem.h"
+#include "Stage.h"
 #include "MoveState.h"
 #include <list>
 
@@ -22,7 +24,7 @@ NPC::~NPC()
 void NPC::UpdateAI(float deltaTime)
 {
 	// 타일 범위
-	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 
 	int _range = 2;
 	int minTileX = _tileX - _range;

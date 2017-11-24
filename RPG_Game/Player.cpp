@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "GameSystem.h"
 #include "ComponentSystem.h"
+#include "GameSystem.h"
+#include "Stage.h"
 #include "Map.h"
 #include "MoveState.h"
 
@@ -39,6 +41,28 @@ void Player::UpdateAI(float deltaTime)
 	if (GameSystem::GetInstance()->IsKeyDown(VK_RIGHT))
 	{
 		direction = eDirection::RIGHT;
+	}
+
+	if (GameSystem::GetInstance()->IsKeyDown(VK_SPACE))
+	{
+		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+		std::list<Component*> componentList = map->GetTileComponentList(_tileX, _tileY);
+
+		for (std::list<Component*>::iterator itr = componentList.begin(); itr != componentList.end(); itr++)
+		{
+			Component* component = (*itr);
+
+			if (eComponentType::CT_ITEM == component->GetType())
+			{
+				sComponentMsgParam msg;
+				msg.message = L"use";
+				msg.sender = (Component*)this;
+				msg.receiver = component;
+				ComponentSystem::GetInstance()->SendMsg(msg);
+
+			}
+		}
+
 	}
 	if (direction != eDirection::NONE)
 	{

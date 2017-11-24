@@ -63,6 +63,9 @@ void Sprite::Init()
 				int height = root["height"].asInt();
 				double framedelay = root["framedelay"].asDouble();
 
+				if (_rotate == 0)
+					_rotate = root["rotate"].asInt();
+
 				Frame* frame = new Frame();
 				frame->Init(_srcTexture, x, y, width, height, _rotate,framedelay);
 				_frameList.push_back(frame);

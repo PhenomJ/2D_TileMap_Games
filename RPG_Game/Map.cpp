@@ -40,11 +40,21 @@ void Map::Init()
 	_width = 16;
 	_height = 16;
 
+	std::wstring wname = _name;
+	std::string name = "";
+	name.assign(wname.begin(), wname.end());
+
+	char layer01Name[256];
+	sprintf(layer01Name, "MapData%s_layer1.csv", name.c_str());
+
+	char layer02Name[256];
+	sprintf(layer02Name, "MapData%s_layer2.csv", name.c_str());
+
 	// Load Map Script layer1
 	{
 		int line = 0;
 		char record[1024];
-		std::ifstream infile("MapData_layer1.csv");
+		std::ifstream infile(layer01Name);
 		while (!infile.eof())
 		{
 			infile.getline(record, 1024);
@@ -98,7 +108,7 @@ void Map::Init()
 		int line = 0;
 		int row = 0;
 		char record[1024];
-		std::ifstream infile("MapData_layer2.csv");
+		std::ifstream infile(layer02Name);
 		while (!infile.eof())
 		{
 			infile.getline(record, 1024);
@@ -290,6 +300,11 @@ bool Map::GetTileCollisionList(int tileX, int tileY, std::list<Component*> &coll
 		return false;
 
 	return _tileMap[tileY][tileX]->GetCollisionList(collisionList);
+}
+
+std::list<Component*> Map::GetTileComponentList(int tileX, int tileY)
+{
+	return _tileMap[tileY][tileX]->GetComponentList();
 }
 
 void Map::InitViewer(Component* viewer)

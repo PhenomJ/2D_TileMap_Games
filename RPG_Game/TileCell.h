@@ -28,6 +28,9 @@ public:
 	//Collision
 	bool CanMove();
 	bool GetCollisionList(std::list<Component*> &collisionList);
+
+	std::list<Component*> GetComponentList();
+
 private:
 	std::list<Component*> _componentList;
 	std::list<Component*> _renderList;

@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "GameSystem.h"
+#include "Stage.h"
 #include "Sprite.h"
 #include "Map.h"
 #include "ComponentSystem.h"
@@ -43,7 +44,7 @@ void Character::Init()
 	UpdateText();
 
 	{
-		Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 		
 		while (true)
 		{
@@ -153,7 +154,7 @@ void Character::InitMove()
 
 void Character::MoveStart(int newTileX, int newTileY)
 {
-	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 	map->ResetTileComponent(_tileX, _tileY, this);
 	_tileX = newTileX;
 	_tileY = newTileY;
@@ -211,7 +212,7 @@ Component* Character::Collision(std::list<Component*>& collisionList)
 
 void Character::MoveStop()
 {
-	Map* map = (Map*)ComponentSystem::GetInstance()->FindComponent(L"tileMap");
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 	
 	_x = map->GetPositionX(_tileX, _tileY);
 	_y = map->GetPositionY(_tileX, _tileY);
@@ -296,4 +297,13 @@ void Character::UpdateText()
 	WCHAR text[256];
 	wsprintf(text, L"HP : %d\n Attack : %d \n", _hp, coolDown );
 	_font->SetText(text);
+}
+
+void Character::IncreaseHP(int recovery)
+{
+	_hp += recovery;
+	if (_hp >= 100)
+	{
+		_hp = 100;
+	}
 }

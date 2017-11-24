@@ -1,14 +1,8 @@
 #include "GameSystem.h"
 #include "GameTimer.h"
 #include "Sprite.h"
-#include "Map.h"
-#include "Player.h"
-#include "NPC.h"
-#include "Monster.h"
 #include "ComponentSystem.h"
-#include "Component.h"
-#include "Font.h"
-#include "RecoveryItem.h"
+#include "Stage.h"
 #include <stdio.h>
 #include <string>
 
@@ -51,6 +45,7 @@ GameSystem::GameSystem()
 
 GameSystem::~GameSystem()
 {
+	delete _stage;
 	RELEASE_COM(_device3d);
 	RELEASE_COM(_sprite);
 }
@@ -93,7 +88,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		style = WS_OVERLAPPEDWINDOW;
 	}
 
-	_hMainWnd = CreateWindow(L"Base", L"Test", style, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, hInstance, 0);
+	_hMainWnd = CreateWindow(L"Base", L"2D TileMap Game", style, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, hInstance, 0);
 
 	if (_isFullScreen == false)
 	{
@@ -116,49 +111,11 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		return false;
 	}
 
-	_componentList.clear();
-
-	Map* map = new Map(L"tileMap");
-	_componentList.push_back(map);
-	
-	for (int i = 0; i < 10; i++)
-	{
-		WCHAR name[256];
-		wsprintf(name, L"Recovery_%d", i);
-		RecoveryItem* item = new RecoveryItem(name, L"item", L"item");
-		_componentList.push_back(item);
-	}
-
-	Character* player = new Player(L"testCharacter", L"testCharacter", L"testCharacter");
-	_componentList.push_back(player);
-
-	for (int i = 0; i < 10; i++)
-	{
-		WCHAR name[256];
-		wsprintf(name, L"npc_%d", i);
-		NPC* npc = new NPC(name, L"npc", L"npc");
-		_componentList.push_back(npc);
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		WCHAR name[256];
-		wsprintf(name, L"monster_%d", i);
-		Monster* monster = new Monster(name, L"testCharacter", L"testCharacter");
-		_componentList.push_back(monster);
-	}
-
-	
-
-	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
-	{
-		(*itr)->Init();
-	}
-
-	map->InitViewer(player);
+	_stage = new Stage();
+	_stage->Init(L"1");
 
 	InitInput();
-		
+
 	return true;
 }
 
@@ -188,11 +145,9 @@ int GameSystem::UpdateSystem()
 			
 			_frameduration += deltaTime;
 			ComponentSystem::GetInstance()->Update(deltaTime);
-			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
-			{
-				(*itr)->Update(deltaTime);
-			}
-			
+
+			_stage->Update(deltaTime);
+
 			if (frameTime <= _frameduration)
 			{
 				wchar_t time[256];
@@ -204,12 +159,9 @@ int GameSystem::UpdateSystem()
 				_device3d->BeginScene();
 				
 				_sprite->Begin(D3DXSPRITE_ALPHABLEND);
-				
-				for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
-				{
-					(*itr)->Render();
-				}
-				
+
+				_stage->Render();
+
 				_sprite->End();
 				
 
@@ -218,6 +170,17 @@ int GameSystem::UpdateSystem()
 				CheckDeviceLost();
 				_device3d->Present(NULL, NULL, NULL, NULL);
 			}	
+
+			//Stage Change test
+			{
+				if (IsKeyDown(VK_F1))
+				{
+					ComponentSystem::GetInstance()->ClearMessageQueue();
+					delete _stage;
+					_stage = new Stage;
+					_stage->Init(L"2");
+				}
+			}
 		}
 	}
 
@@ -302,18 +265,10 @@ void GameSystem::CheckDeviceLost()
 
 		else if (hr == D3DERR_DEVICENOTRESET)
 		{
-			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
-			{
-				(*itr)->Release();
-			}
-			
+			_stage->Release();
 			InitDirect3D();
 			hr = _device3d->Reset(&_d3dpp);			
-
-			for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
-			{
-				(*itr)->Reset();
-			}
+			_stage->Reset();
 		}
 	}
 }

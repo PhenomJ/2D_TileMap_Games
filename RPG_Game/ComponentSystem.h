@@ -23,11 +23,13 @@ public:
 	void RemoveAllComponents();
 	
 	Component* FindComponent(std::wstring name);
-	Component* FindComponentInRange(Component* chaser, int range, std::vector<eComponentType> typeList);
+	Component* FindComponentInRange(Component* mapComp,Component* chaser, int range, std::vector<eComponentType> typeList);
 	void ProcessMessageQueue();
 	void Update(float deltaTime);
 	//Message
 	void SendMsg(const sComponentMsgParam &msgParam);
+	void ClearMessageQueue();
+
 private:
 	std::map<std::wstring, Component*> _componentMap;
 	std::queue<sComponentMsgParam> _msgQueue;

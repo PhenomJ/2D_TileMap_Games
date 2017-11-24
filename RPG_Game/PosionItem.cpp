@@ -1,12 +1,12 @@
-#include "RecoveryItem.h"
-#include "Stage.h"
-#include "GameSystem.h"
+#include "PosionItem.h"
 #include "Sprite.h"
 #include "Map.h"
 #include "ComponentSystem.h"
+#include "GameSystem.h"
+#include "Stage.h"
 #include "Character.h"
 
-RecoveryItem::RecoveryItem(LPCWSTR name, LPCWSTR scriptName, LPCWSTR textureFilename) : Component(name)
+PosionItem::PosionItem(LPCWSTR name, LPCWSTR scriptName, LPCWSTR textureFilename) : Component(name)
 {
 	_type = eComponentType::CT_ITEM;
 	_sprite = NULL;
@@ -14,12 +14,12 @@ RecoveryItem::RecoveryItem(LPCWSTR name, LPCWSTR scriptName, LPCWSTR textureFile
 	_textureFilename = textureFilename;
 }
 
-RecoveryItem::~RecoveryItem()
+PosionItem::~PosionItem()
 {
 
 }
 
-void RecoveryItem::Init()
+void PosionItem::Init()
 {
 	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 
@@ -30,7 +30,7 @@ void RecoveryItem::Init()
 			_tileX = rand() % (map->GetWidth() - 1) + 1;
 			_tileY = rand() % (map->GetHeight() - 1) + 1;
 		}
-			else
+		else
 		{
 			_posX = map->GetPositionX(_tileX, _tileY);
 			_posY = map->GetPositionY(_tileX, _tileY);
@@ -53,12 +53,12 @@ void RecoveryItem::Init()
 	SetCanMove(true);
 }
 
-void RecoveryItem::Deinit()
+void PosionItem::Deinit()
 {
 	_sprite->Deinit();
 }
 
-void RecoveryItem::Update(float deltaTime)
+void PosionItem::Update(float deltaTime)
 {
 	if (_isLive == true)
 	{
@@ -66,7 +66,7 @@ void RecoveryItem::Update(float deltaTime)
 	}
 }
 
-void RecoveryItem::Render()
+void PosionItem::Render()
 {
 	if (_isLive == true)
 	{
@@ -75,29 +75,29 @@ void RecoveryItem::Render()
 	}
 }
 
-void RecoveryItem::Release()
+void PosionItem::Release()
 {
 	_sprite->Release();
 }
 
-void RecoveryItem::Reset()
+void PosionItem::Reset()
 {
 	_sprite->Reset();
 }
 
-void RecoveryItem::MoveDeltaPosition(float deltaX, float deltaY)
+void PosionItem::MoveDeltaPosition(float deltaX, float deltaY)
 {
 	_posX += deltaX;
 	_posY += deltaY;
 }
 
-void RecoveryItem::SetPosition(float posX, float posY)
+void PosionItem::SetPosition(float posX, float posY)
 {
 	_posX = posX;
 	_posY = posY;
 }
 
-void RecoveryItem::ReceiveMessage(const sComponentMsgParam &msgParam)
+void PosionItem::ReceiveMessage(const sComponentMsgParam &msgParam)
 {
 	if (msgParam.message == L"use")
 	{
@@ -106,8 +106,7 @@ void RecoveryItem::ReceiveMessage(const sComponentMsgParam &msgParam)
 		switch (sender->GetType())
 		{
 		case eComponentType::CT_PLAYER:
-			((Character*)sender)->IncreaseHP(100);
-			
+			((Character*)sender)->DecreaseHP(1000);
 			map->ResetTileComponent(_tileX, _tileY, this);
 			_isLive = false;
 			break;

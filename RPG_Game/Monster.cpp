@@ -1,6 +1,8 @@
 #include "Monster.h"
 #include "Map.h"
 #include "ComponentSystem.h"
+#include "GameSystem.h"
+#include "Stage.h"
 #include "MoveState.h"
 
 Monster::Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName ,spriteName)
@@ -18,47 +20,48 @@ Monster::~Monster()
 
 void Monster::UpdateAI(float deltaTime)
 {
-		std::vector<eComponentType> typeList;
-		typeList.push_back(eComponentType::CT_NPC);
-		typeList.push_back(eComponentType::CT_PLAYER);
-		Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(this, 4, typeList);
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+	std::vector<eComponentType> typeList;
+	typeList.push_back(eComponentType::CT_NPC);
+	typeList.push_back(eComponentType::CT_PLAYER);
+	Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(map,this, 4, typeList);
 
-		if (findEnemy != NULL)
+	if (findEnemy != NULL)
+	{
+		// 추격 방향 설정
+		eDirection direction = eDirection::NONE;
+
+		if (findEnemy->GetTileX() < _tileX)
 		{
-			// 추격 방향 설정
-			eDirection direction = eDirection::NONE;
-
-			if (findEnemy->GetTileX() < _tileX)
-			{
-				direction = eDirection::LEFT;
-			}
-
-			else if (findEnemy->GetTileX() > _tileX)
-			{
-				direction = eDirection::RIGHT;
-			}
-
-			else if (findEnemy->GetTileY() < _tileY)
-			{
-				direction = eDirection::UP;
-			}
-
-			else if (findEnemy->GetTileY() > _tileY)
-			{
-				direction = eDirection::DOWN;
-			}
-
-			if (eDirection::NONE != direction)
-			{
-				_currentDirection = direction;
-				_state->NextState(eStateType::ET_MOVE);
-			}
+			direction = eDirection::LEFT;
 		}
 
-		else
+		else if (findEnemy->GetTileX() > _tileX)
 		{
-			Character::UpdateAI(deltaTime);
+			direction = eDirection::RIGHT;
 		}
+
+		else if (findEnemy->GetTileY() < _tileY)
+		{
+			direction = eDirection::UP;
+		}
+
+		else if (findEnemy->GetTileY() > _tileY)
+		{
+			direction = eDirection::DOWN;
+		}
+
+		if (eDirection::NONE != direction)
+		{
+			_currentDirection = direction;
+			_state->NextState(eStateType::ET_MOVE);
+		}
+	}
+
+	else
+	{
+		Character::UpdateAI(deltaTime);
+	}
 	
 }
 

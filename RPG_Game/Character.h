@@ -22,7 +22,7 @@ enum eStateType
 
 enum eDirection
 {
-	LEFT, RIGHT, UP, DOWN, NONE
+	UP, DOWN, LEFT, RIGHT, NONE
 };
 
 class Character : public Component
@@ -40,48 +40,70 @@ public:
 	void Release();
 	void Reset();	
 
-	void SetPosition(float tileX, float tileY);
-
-
 protected:
-	float _x;
-	float _y;
 	State* _state;
-	std::wstring _spriteName;
-	std::wstring _scriptName;
 
+	//Move
 protected:
 	float _moveSpeed;
-	
-
 	eDirection _currentDirection;
-	
+	bool _isMoving;
+
 public:
 	void InitMove();
 	void MoveStart(int newTileX, int newTileY);
-	virtual void MoveDeltaPosition(float deltaX, float deltaY);
-	virtual void UpdateAI(float deltaTime);
-	eDirection GetDirection() {	return _currentDirection; };
-	void ReceiveMessage(const sComponentMsgParam &msgParam);
-	virtual Component* Collision(std::list<Component*>& collisionList);
+	
 	float GetMoveTime() { return _moveSpeed; }
 	void MoveStop();
 	void Moving(float deltaTime);
 	bool IsMoving();
+
+	virtual void MoveDeltaPosition(float deltaX, float deltaY);
+	virtual void UpdateAI(float deltaTime);
+
+	eDirection GetDirection() {	return _currentDirection; };
+
+	//Message
+public:
+	void ReceiveMessage(const sComponentMsgParam &msgParam);
+	virtual Component* Collision(std::list<Component*>& collisionList);
 	void ChangeState(eStateType stateType);
 
+
+public:
+	//Input Name
 	std::wstring GetTextureFileName();
 	std::wstring GetScriptFileName();
 
+protected:
+	std::wstring _spriteName;
+	std::wstring _scriptName;
+
+public:
+	//Position
+	float _x;
+	float _y;
 	float GetX() { return _x; }
 	float GetY() { return _y; }
+	void SetPosition(float tileX, float tileY);
 
+	//Attack
+public:
 	Component* GetTarget() { return _target; }
 	int GetAttackPoint() { return _attackPoint; }
 	void ResetTarget() { _target = NULL; }
-	
+
+protected:
+	int _attackPoint;
+	int _attackedPoint;
+	Component* _target;
+	float _targetX;
+	float _targetY;
+
 	// Common
+public:
 	void DecreaseHP(int attackPoint);
+	void IncreaseHP(int recovery);
 	int GetAttackedPoint() { return _attackedPoint; }
 	void SetTarget(Component* target);
 
@@ -95,19 +117,10 @@ protected:
 	float _attackCoolDownDuration;
 	float _attackCoolDown;
 
-protected:
-	float _targetX;
-	float _targetY;
-	int _attackPoint;
-	int _attackedPoint;
-	bool _isMoving;
-	Component* _target;
-
 private:
 	std::map<eStateType, State*> _stateMap;
 
 	//Font
-
 protected:
 	Font* _font;
 

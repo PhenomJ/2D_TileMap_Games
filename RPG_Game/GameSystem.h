@@ -13,6 +13,7 @@ class Map;
 class Character;
 class Component;
 class Font;
+class Stage;
 
 class GameSystem
 {
@@ -55,7 +56,6 @@ public:
 
 
 private:
-	std::list<Component*> _componentList;
 
 public:
 	void InitInput();
@@ -72,8 +72,11 @@ public:
 private:
 	eKeyState _keyState[256];
 
-	//Font Test
+	//Stage
 private:
-	//ID3DXFont* _dxTestFont;
-	
+	Stage* _stage;
+
+public:
+	Stage* GetStage() { return _stage; }
+
 };
