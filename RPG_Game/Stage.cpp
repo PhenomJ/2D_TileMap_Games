@@ -6,6 +6,7 @@
 #include "PosionItem.h"
 #include "Character.h"
 #include "NPC.h"
+#include "LifeNPC.h"
 #include "Monster.h"
 #include "Player.h"
 
@@ -26,40 +27,53 @@ void Stage::Init(std::wstring mapName)
 	_map = new Map(mapName.c_str());
 	_componentList.push_back(_map);
 
-	for (int i = 0; i < 10; i++)
+	if (mapName != L"3")
 	{
-		WCHAR name[256];
-		wsprintf(name, L"Recovery_%d", i);
-		RecoveryItem* item = new RecoveryItem(name, L"Recovery_Item", L"item");
-		_componentList.push_back(item);
+		for (int i = 0; i < 10; i++)
+		{
+			WCHAR name[256];
+			wsprintf(name, L"Recovery_%d", i);
+			RecoveryItem* item = new RecoveryItem(name, L"Recovery_Item", L"item");
+			_componentList.push_back(item);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			WCHAR name[256];
+			wsprintf(name, L"Poision_%d", i);
+			PosionItem* item = new PosionItem(name, L"Poision_item", L"item");
+			_componentList.push_back(item);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			WCHAR name[256];
+			wsprintf(name, L"npc_%d", i);
+			NPC* npc = new NPC(name, L"npc", L"npc");
+			_componentList.push_back(npc);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			WCHAR name[256];
+			wsprintf(name, L"monster_%d", i);
+			Monster* monster = new Monster(name, L"monster", L"monster");
+			_componentList.push_back(monster);
+		}
 	}
 
-	for (int i = 0; i < 10; i++)
+	else if (mapName == L"3")
 	{
-		WCHAR name[256];
-		wsprintf(name, L"Poision_%d", i);
-		PosionItem* item = new PosionItem(name, L"Poision_item", L"item");
-		_componentList.push_back(item);
+		for (int i = 0; i < 30; i++)
+		{
+			WCHAR name[256];
+			wsprintf(name, L"monster_%d", i);
+			LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
+			_componentList.push_back(npc);
+		}
 	}
-
 	Character* player = new Player(L"player", L"player", L"player");
 	_componentList.push_back(player);
-
-	for (int i = 0; i < 10; i++)
-	{
-		WCHAR name[256];
-		wsprintf(name, L"npc_%d", i);
-		NPC* npc = new NPC(name, L"npc", L"npc");
-		_componentList.push_back(npc);
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		WCHAR name[256];
-		wsprintf(name, L"monster_%d", i);
-		Monster* monster = new Monster(name, L"monster", L"monster");
-		_componentList.push_back(monster);
-	}
 
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 	{

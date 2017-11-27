@@ -180,6 +180,14 @@ int GameSystem::UpdateSystem()
 					_stage = new Stage;
 					_stage->Init(L"2");
 				}
+
+				if (IsKeyDown(VK_F2))
+				{
+					ComponentSystem::GetInstance()->ClearMessageQueue();
+					delete _stage;
+					_stage = new Stage;
+					_stage->Init(L"3");
+				}
 			}
 		}
 	}

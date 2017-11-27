@@ -8,11 +8,11 @@ class TileObject : public Component
 {
 public:
 	TileObject(LPCWSTR componentName, Sprite* sprite);
-	~TileObject();
+	virtual ~TileObject();
 
 	void Init();
 	void Deinit();
-	void Update(float deltaTime);
+	virtual void Update(float deltaTime);
 	void Render();
 	void Release();
 	void Reset();

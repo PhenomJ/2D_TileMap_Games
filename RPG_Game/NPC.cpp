@@ -25,6 +25,9 @@ void NPC::UpdateAI(float deltaTime)
 {
 	// 타일 범위
 	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+	std::vector<eComponentType> typeList;
+	typeList.push_back(eComponentType::CT_MONSTER);
+	Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(map, this, 2, typeList);
 
 	int _range = 2;
 	int minTileX = _tileX - _range;
@@ -41,7 +44,7 @@ void NPC::UpdateAI(float deltaTime)
 	if (map->GetHeight() <= maxTileY)
 		maxTileY = map->GetHeight() - 1;
 
-	Component* findEnemy = NULL;
+	//Component* findEnemy = NULL;
 
 	for (int y = minTileY; y <= maxTileY; y++)
 	{

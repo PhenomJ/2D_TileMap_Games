@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "TileCell.h"
 #include "TileObject.h"
+#include "LifeTileObject.h"
 
 Map::Map(LPCWSTR name) : Component(name)
 {
@@ -130,15 +131,25 @@ void Map::Init()
 					std::vector<TileCell*> rowList = _tileMap[row];
 					for (int x = 0; x < _width; x++)
 					{
+						TileCell* tileCell = rowList[x];
+						WCHAR componentName[256];
+						wsprintf(componentName, L"map_layer2_%d_%d", line, x);
 						int index = atoi(token);
 						if (index >= 0)
 						{
-							TileCell* tileCell = rowList[x];
-							WCHAR componentName[256];
-							wsprintf(componentName, L"map_layer2_%d_%d", line, x);
-							TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
-							tileObject->SetCanMove(false);
-							tileCell->AddComponent(tileObject, true);
+							if (index == 100100)
+							{
+								LifeTileObject* tileObject = new LifeTileObject(componentName, _spriteList[163]);
+								tileObject->SetCanMove(true);
+								tileCell->AddComponent(tileObject, true);
+							}
+
+							else
+							{
+								TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+								tileObject->SetCanMove(false);
+								tileCell->AddComponent(tileObject, true);
+							}
 						}
 						token = strtok(NULL, ",");
 					}
