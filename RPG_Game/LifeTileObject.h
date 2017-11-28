@@ -8,10 +8,12 @@ class Sprite;
 class LifeTileObject : public TileObject
 {
 public:
-	LifeTileObject(LPCWSTR componentName, Sprite* sprite);
+	LifeTileObject(int tileX, int tileY, LPCWSTR componentName, Sprite* sprite);
 	~LifeTileObject();
 	void Update(float deltaTime);
 
-public:
+private:
+	int _tileX;
+	int _tileY;
 
 };

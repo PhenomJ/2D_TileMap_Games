@@ -139,7 +139,7 @@ void Map::Init()
 						{
 							if (index == 100100)
 							{
-								LifeTileObject* tileObject = new LifeTileObject(componentName, _spriteList[163]);
+								LifeTileObject* tileObject = new LifeTileObject(x, row, componentName, _spriteList[163]);
 								tileObject->SetCanMove(true);
 								tileCell->AddComponent(tileObject, true);
 							}

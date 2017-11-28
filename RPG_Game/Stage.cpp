@@ -64,10 +64,13 @@ void Stage::Init(std::wstring mapName)
 
 	else if (mapName == L"3")
 	{
-		for (int i = 0; i < 30; i++)
+		_lifeNpcCount = 0;
+		for (int i = 0; i < 50; i++)
 		{
 			WCHAR name[256];
-			wsprintf(name, L"monster_%d", i);
+			wsprintf(name, L"lifenpc_%d", _lifeNpcCount);
+			_lifeNpcCount++;
+
 			LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
 			_componentList.push_back(npc);
 		}
@@ -113,4 +116,21 @@ void Stage::Reset()
 	{
 		(*itr)->Reset();
 	}
+}
+
+void Stage::CreateLifeNPC(int tileX, int tileY)
+{
+	WCHAR name[256];
+	wsprintf(name, L"npc_%d", _lifeNpcCount);
+	_lifeNpcCount++;
+	LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
+	npc->Init(tileX, tileY);
+	_componentList.push_back(npc);
+}
+
+void Stage::DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter)
+{
+	_map->ResetTileComponent(tileX, tileY, tileCharacter);
+	tileCharacter->SetCanMove(true);
+	tileCharacter->SetLive(false);
 }

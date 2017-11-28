@@ -22,4 +22,14 @@ public:
 private:
 	std::list<Component*> _componentList;
 	Map* _map;
+
+	//Game of Life
+public:
+	void CreateLifeNPC(int tileX, int tileY);
+
+	void DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter);
+
+private:
+	int _lifeNpcCount;
+
 };

@@ -126,4 +126,8 @@ protected:
 
 public:
 	void UpdateText();
+
+	//Game of Life
+public:
+	void Init(int tileX, int tileY);
 };

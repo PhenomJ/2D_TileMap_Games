@@ -9,5 +9,4 @@ public:
 
 public:
 	void UpdateAI(float deltaTime);
-
 };

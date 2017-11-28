@@ -116,15 +116,21 @@ void Character::Deinit()
 
 void Character::Update(float deltaTime)
 {
+	if (_isLive == false)
+		return;
 	UpdateAttackCoolDown(deltaTime);
 	_state->Update(deltaTime);
 	UpdateText();
+	
 }
 
 void Character::Render()
 {
+	if (_isLive == false)
+		return;
+
 	_state->Render();
-	_font->SetPosition(_x - 200 , _y - 50);
+	_font->SetPosition(_x - 200, _y - 50);
 	_font->Render();
 }
 
@@ -306,4 +312,60 @@ void Character::IncreaseHP(int recovery)
 	{
 		_hp = 100;
 	}
+}
+
+void Character::Init(int tileX, int tileY)
+{
+	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
+
+	_font = new Font(L"Arial", 15, color);
+	_font->SetRect(100, 100, 400, 100);
+
+	UpdateText();
+
+	{
+		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+
+		_tileX = tileX;
+		_tileY = tileY;
+
+		_x = map->GetPositionX(_tileX, _tileY);
+		_y = map->GetPositionY(_tileX, _tileY);
+
+		map->SetTileComponent(_tileX, _tileY, this, false);
+	}
+
+
+	InitMove();
+	{
+		State* state = new IdleState();
+		state->Init(this);
+		_stateMap[eStateType::ET_IDLE] = state;
+	}
+
+	{
+		State* state = new MoveState();
+		state->Init(this);
+		_stateMap[eStateType::ET_MOVE] = state;
+	}
+
+	{
+		State* state = new AttackState();
+		state->Init(this);
+		_stateMap[eStateType::ET_ATTACK] = state;
+	}
+
+	{
+		State* state = new DefenseState();
+		state->Init(this);
+		_stateMap[eStateType::ET_DEFENCE] = state;
+	}
+
+	{
+		State* state = new DeadState();
+		state->Init(this);
+		_stateMap[eStateType::ET_DEAD] = state;
+	}
+
+	ChangeState(eStateType::ET_IDLE);
 }
