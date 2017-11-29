@@ -1,6 +1,5 @@
 #include "ComponentSystem.h"
 #include "Component.h"
-
 #include "Map.h"
 
 ComponentSystem* ComponentSystem::_instance = NULL;
@@ -129,4 +128,10 @@ void ComponentSystem::ClearMessageQueue()
 void ComponentSystem::Update(float deltaTime)
 {
 	ProcessMessageQueue();
+}
+
+void ComponentSystem::RemoveComponent(Component* tileCharacter)
+{
+	_componentMap.erase(tileCharacter->GetName());
+	delete tileCharacter;
 }

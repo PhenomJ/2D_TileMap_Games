@@ -15,5 +15,4 @@ public:
 private:
 	int _tileX;
 	int _tileY;
-
 };

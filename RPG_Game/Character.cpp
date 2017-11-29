@@ -120,8 +120,7 @@ void Character::Update(float deltaTime)
 		return;
 	UpdateAttackCoolDown(deltaTime);
 	_state->Update(deltaTime);
-	UpdateText();
-	
+	//UpdateText();
 }
 
 void Character::Render()
@@ -131,7 +130,7 @@ void Character::Render()
 
 	_state->Render();
 	_font->SetPosition(_x - 200, _y - 50);
-	_font->Render();
+	//_font->Render();
 }
 
 void Character::Release()
@@ -308,6 +307,7 @@ void Character::UpdateText()
 void Character::IncreaseHP(int recovery)
 {
 	_hp += recovery;
+
 	if (_hp >= 100)
 	{
 		_hp = 100;
@@ -321,7 +321,7 @@ void Character::Init(int tileX, int tileY)
 	_font = new Font(L"Arial", 15, color);
 	_font->SetRect(100, 100, 400, 100);
 
-	UpdateText();
+	//UpdateText();
 
 	{
 		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();

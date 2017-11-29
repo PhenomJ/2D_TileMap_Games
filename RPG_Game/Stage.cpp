@@ -65,7 +65,7 @@ void Stage::Init(std::wstring mapName)
 	else if (mapName == L"3")
 	{
 		_lifeNpcCount = 0;
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			WCHAR name[256];
 			wsprintf(name, L"lifenpc_%d", _lifeNpcCount);
@@ -75,6 +75,7 @@ void Stage::Init(std::wstring mapName)
 			_componentList.push_back(npc);
 		}
 	}
+
 	Character* player = new Player(L"player", L"player", L"player");
 	_componentList.push_back(player);
 
@@ -133,4 +134,7 @@ void Stage::DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter)
 	_map->ResetTileComponent(tileX, tileY, tileCharacter);
 	tileCharacter->SetCanMove(true);
 	tileCharacter->SetLive(false);
+
+	_componentList.remove(tileCharacter);
+	ComponentSystem::GetInstance()->RemoveComponent(tileCharacter);
 }

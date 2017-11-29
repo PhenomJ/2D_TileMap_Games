@@ -1,7 +1,7 @@
 #include "Component.h"
 #include "ComponentSystem.h"
 
-Component::Component(LPCWSTR name)
+Component::Component(std::wstring name)
 {
 	_name = name;
 	_canMove = false;

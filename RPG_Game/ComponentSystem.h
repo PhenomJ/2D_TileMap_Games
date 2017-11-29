@@ -30,6 +30,9 @@ public:
 	void SendMsg(const sComponentMsgParam &msgParam);
 	void ClearMessageQueue();
 
+	//Game of Life
+	void RemoveComponent(Component* tileCharacter);
+
 private:
 	std::map<std::wstring, Component*> _componentMap;
 	std::queue<sComponentMsgParam> _msgQueue;

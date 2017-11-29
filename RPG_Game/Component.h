@@ -17,7 +17,7 @@ class Component
 {
 public:
 	Component() {}
-	Component (LPCWSTR name);
+	Component (std::wstring name);
 	virtual ~Component();
 
 public:
@@ -51,8 +51,10 @@ public:
 	virtual void ReceiveMessage(const sComponentMsgParam &msgParam);
 
 	bool IsLive();
+
+	std::wstring GetName() { return _name; }
 protected:
-	LPCWSTR _name;
+	std::wstring _name;
 	
 	bool _canMove = false;
 	int _tileX;
