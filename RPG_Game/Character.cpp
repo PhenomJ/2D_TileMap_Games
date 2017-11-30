@@ -21,7 +21,7 @@ Character::Character(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Com
 	_targetY = 0;
 	_moveDistanceperTimeX = 0;
 	_moveDistanceperTimeY = 0;
-	_moveSpeed = 1.0f;
+	_moveSpeed = 0.3f;
 	_spriteName = spriteName;
 	_scriptName = scriptName;
 	_attackPoint = 5;

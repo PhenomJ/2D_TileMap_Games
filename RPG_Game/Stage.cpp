@@ -65,7 +65,7 @@ void Stage::Init(std::wstring mapName)
 	else if (mapName == L"3")
 	{
 		_lifeNpcCount = 0;
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 400; i++)
 		{
 			WCHAR name[256];
 			wsprintf(name, L"lifenpc_%d", _lifeNpcCount);
@@ -101,6 +101,8 @@ void Stage::Update(float deltaTime)
 	{
 		(*itr)->Update(deltaTime);
 	}
+	UpdateCreateComponentList();
+	UpdateRemoveComponentList();
 }
 
 void Stage::Render()
@@ -119,14 +121,33 @@ void Stage::Reset()
 	}
 }
 
-void Stage::CreateLifeNPC(int tileX, int tileY)
+void Stage::CreateLifeNPC(Component* comp)
 {
-	WCHAR name[256];
+	/*WCHAR name[256];
 	wsprintf(name, L"npc_%d", _lifeNpcCount);
 	_lifeNpcCount++;
 	LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
 	npc->Init(tileX, tileY);
-	_componentList.push_back(npc);
+	_componentList.push_back(npc);*/
+	comp->GetTileX();
+	comp->GetTileY();
+	_createBaseComponentList.push_back(comp);
+}
+
+void Stage::UpdateCreateComponentList()
+{
+	for (std::list<Component*>::iterator itr = _createBaseComponentList.begin(); itr != _createBaseComponentList.end(); itr++)
+	{
+		Component* baseComponent = (*itr);
+		WCHAR name[256];
+		wsprintf(name, L"npc_%d", _lifeNpcCount);
+		_lifeNpcCount++;
+		LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
+		npc->Init(baseComponent->GetTileX(), baseComponent->GetTileY());
+		_componentList.push_back(npc);
+	}
+
+	_createBaseComponentList.clear();
 }
 
 void Stage::DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter)
@@ -137,4 +158,19 @@ void Stage::DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter)
 
 	_componentList.remove(tileCharacter);
 	ComponentSystem::GetInstance()->RemoveComponent(tileCharacter);
+}
+
+void Stage::CheckDestoryNPC(Component* tileCharacter)
+{
+	_removeComponentList.push_back(tileCharacter);
+}
+
+void Stage::UpdateRemoveComponentList()
+{
+	for (std::list<Component*>::iterator itr = _removeComponentList.begin(); itr != _removeComponentList.end(); itr++)
+	{
+		Component* component = (*itr);
+		DestroyLifeNpc(component->GetTileX(), component->GetTileY(), component);
+	}
+	_removeComponentList.clear();
 }

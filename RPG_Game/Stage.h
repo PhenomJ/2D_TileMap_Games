@@ -25,11 +25,14 @@ private:
 
 	//Game of Life
 public:
-	void CreateLifeNPC(int tileX, int tileY);
+	void CreateLifeNPC(Component* comp);
 
 	void DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter);
-
+	void CheckDestoryNPC(Component* tileCharacter);
+	void UpdateRemoveComponentList();
+	void UpdateCreateComponentList();
 private:
 	int _lifeNpcCount;
-
+	std::list<Component*> _removeComponentList;
+	std::list<Component*> _createBaseComponentList;
 };

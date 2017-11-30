@@ -147,7 +147,7 @@ void Map::Init()
 							else
 							{
 								TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
-								tileObject->SetCanMove(false);
+								tileObject->SetCanMove(true);
 								tileCell->AddComponent(tileObject, true);
 							}
 						}
@@ -179,7 +179,7 @@ void Map::Deinit()
 
 void Map::Update(float deltaTime)
 {
-	for (int y = 0; y < _height; y++)
+	/*for (int y = 0; y < _height; y++)
 	{
 		for (int x = 0; x < _width; x++)
 		{
@@ -193,6 +193,27 @@ void Map::Update(float deltaTime)
 		_deltaX = _viewer->GetMoveDeltaX() * deltaTime;
 		_deltaY = _viewer->GetMoveDeltaY() * deltaTime;
 		Scroll(-_deltaX, -_deltaY);
+	}*/
+	int midX = GameSystem::GetInstance()->GetClientWidth() / 2;
+	int midY = GameSystem::GetInstance()->GetClientHeight() / 2;
+
+	_startX = (-_viewer->GetTileX() * _tileSize) + midX - _tileSize / 2;
+	_startY = (-_viewer->GetTileY() * _tileSize) + midY - _tileSize / 2;
+
+
+	float posX = _startX;
+	float posY = _startY;
+
+	for (int y = 0; y < _height; y++)
+	{
+		for (int x = 0; x < _width; x++)
+		{
+			_tileMap[y][x]->SetPosition(posX, posY);
+			_tileMap[y][x]->Update(deltaTime);
+			posX += _tileSize;
+		}
+		posX = _startX;
+		posY += _tileSize;
 	}
 }
 

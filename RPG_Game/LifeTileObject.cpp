@@ -90,7 +90,8 @@ void LifeTileObject::Update(float deltaTime)
 	{
 		if (tileCharacter == NULL)
 		{
-			GameSystem::GetInstance()->GetStage()->CreateLifeNPC(_tileX, _tileY);
+			//GameSystem::GetInstance()->GetStage()->CreateLifeNPC(_tileX, _tileY);
+			GameSystem::GetInstance()->GetStage()->CreateLifeNPC(this);
 		}
 	}
 
@@ -105,7 +106,8 @@ void LifeTileObject::Update(float deltaTime)
 		{
 			if (eComponentType::CT_PLAYER != tileCharacter->GetType())
 			{
-				GameSystem::GetInstance()->GetStage()->DestroyLifeNpc(_tileX, _tileY, tileCharacter);
+				GameSystem::GetInstance()->GetStage()->CheckDestoryNPC(tileCharacter);
+				//GameSystem::GetInstance()->GetStage()->DestroyLifeNpc(_tileX, _tileY, tileCharacter);
 				tileCharacter = NULL;
 			}
 		}

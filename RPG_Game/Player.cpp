@@ -8,7 +8,7 @@
 
 Player::Player(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
 {
-	_moveSpeed = 0.2f;
+	_moveSpeed = 0.1f;
 	_type = eComponentType::CT_PLAYER;
 	_hp = 10;
 	_attackPoint = 5;
