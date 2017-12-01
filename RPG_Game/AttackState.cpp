@@ -41,7 +41,7 @@ void AttackState::Start()
 	msgParam.receiver = _character->GetTarget();
 	msgParam.message = L"Attack";
 	msgParam.attackPoint = _character->GetAttackPoint();
-	//ComponentSystem::GetInstance()->SendMsg(msgParam);
+	ComponentSystem::GetInstance()->SendMsg(msgParam);
 }
 
 void AttackState::Stop()

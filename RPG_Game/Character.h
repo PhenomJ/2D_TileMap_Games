@@ -117,7 +117,7 @@ protected:
 	float _attackCoolDownDuration;
 	float _attackCoolDown;
 
-private:
+protected:
 	std::map<eStateType, State*> _stateMap;
 
 	//Font
@@ -127,7 +127,15 @@ protected:
 public:
 	void UpdateText();
 
+	//InitState
+public:
+	virtual void InitState();
+
 	//Game of Life
 public:
 	void Init(int tileX, int tileY);
+	void ReplaceState(eStateType type, State* replaceState);
+
+private:
+	eStateType _changeType;
 };

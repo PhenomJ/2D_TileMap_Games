@@ -8,6 +8,7 @@
 #include "NPC.h"
 #include "LifeNPC.h"
 #include "Monster.h"
+#include "LifePlayer.h"
 #include "Player.h"
 
 Stage::Stage()
@@ -27,6 +28,7 @@ void Stage::Init(std::wstring mapName)
 	_map = new Map(mapName.c_str());
 	_componentList.push_back(_map);
 
+	Player* player = NULL;
 	if (mapName != L"3")
 	{
 		for (int i = 0; i < 10; i++)
@@ -60,12 +62,14 @@ void Stage::Init(std::wstring mapName)
 			Monster* monster = new Monster(name, L"monster", L"monster");
 			_componentList.push_back(monster);
 		}
+
+		player = new Player(L"player", L"player", L"player");
 	}
 
 	else if (mapName == L"3")
 	{
 		_lifeNpcCount = 0;
-		for (int i = 0; i < 400; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			WCHAR name[256];
 			wsprintf(name, L"lifenpc_%d", _lifeNpcCount);
@@ -74,9 +78,11 @@ void Stage::Init(std::wstring mapName)
 			LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
 			_componentList.push_back(npc);
 		}
+
+		player = new LifePlayer(L"player", L"player", L"player");
 	}
 
-	Character* player = new Player(L"player", L"player", L"player");
+	
 	_componentList.push_back(player);
 
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
@@ -123,12 +129,6 @@ void Stage::Reset()
 
 void Stage::CreateLifeNPC(Component* comp)
 {
-	/*WCHAR name[256];
-	wsprintf(name, L"npc_%d", _lifeNpcCount);
-	_lifeNpcCount++;
-	LifeNPC* npc = new LifeNPC(name, L"npc", L"npc");
-	npc->Init(tileX, tileY);
-	_componentList.push_back(npc);*/
 	comp->GetTileX();
 	comp->GetTileY();
 	_createBaseComponentList.push_back(comp);

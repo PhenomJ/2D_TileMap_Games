@@ -13,5 +13,8 @@ public:
 
 	//Collision
 	Component* Collision(std::list<Component*> &collisionList);
+
 	//MOVE
+
+	//State
 };

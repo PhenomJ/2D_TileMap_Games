@@ -88,13 +88,13 @@ void Sprite::Deinit()
 	}
 	_frameList.clear();
 
-	if (_srcTexture != NULL)
+	/*if (_srcTexture != NULL)
 	{
 		_srcTexture->Deinit();
 		delete _srcTexture;
 		_srcTexture = NULL;
-	}
-	
+	}*/
+	_srcTexture = NULL;
 }
 
 void Sprite::Render()

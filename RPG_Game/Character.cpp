@@ -67,35 +67,7 @@ void Character::Init()
 
 	
 	InitMove();
-	{
-		State* state = new IdleState();
-		state->Init(this);
-		_stateMap[eStateType::ET_IDLE] = state;
-	}
-
-	{
-		State* state = new MoveState();
-		state->Init(this);
-		_stateMap[eStateType::ET_MOVE] = state;
-	}
-
-	{
-		State* state = new AttackState();
-		state->Init(this);
-		_stateMap[eStateType::ET_ATTACK] = state;
-	}
-
-	{
-		State* state = new DefenseState();
-		state->Init(this);
-		_stateMap[eStateType::ET_DEFENCE] = state;
-	}
-
-	{
-		State* state = new DeadState();
-		state->Init(this);
-		_stateMap[eStateType::ET_DEAD] = state;
-	}
+	InitState();
 
 	ChangeState(eStateType::ET_IDLE);
 }
@@ -337,35 +309,34 @@ void Character::Init(int tileX, int tileY)
 
 
 	InitMove();
-	{
-		State* state = new IdleState();
-		state->Init(this);
-		_stateMap[eStateType::ET_IDLE] = state;
-	}
-
-	{
-		State* state = new MoveState();
-		state->Init(this);
-		_stateMap[eStateType::ET_MOVE] = state;
-	}
-
-	{
-		State* state = new AttackState();
-		state->Init(this);
-		_stateMap[eStateType::ET_ATTACK] = state;
-	}
-
-	{
-		State* state = new DefenseState();
-		state->Init(this);
-		_stateMap[eStateType::ET_DEFENCE] = state;
-	}
-
-	{
-		State* state = new DeadState();
-		state->Init(this);
-		_stateMap[eStateType::ET_DEAD] = state;
-	}
+	InitState();
 
 	ChangeState(eStateType::ET_IDLE);
+}
+
+void Character::InitState()
+{
+	ReplaceState(eStateType::ET_IDLE, new IdleState());
+	ReplaceState(eStateType::ET_ATTACK, new AttackState());
+	ReplaceState(eStateType::ET_DEAD, new DeadState());
+	ReplaceState(eStateType::ET_DEFENCE, new DefenseState());
+	ReplaceState(eStateType::ET_MOVE, new MoveState());
+}
+
+void Character::ReplaceState(eStateType type, State* replaceState)
+{
+	_changeType = type;
+
+	{
+		std::map<eStateType, State*>::iterator itr = _stateMap.find(_changeType);
+		if (itr != _stateMap.end())
+		{
+			delete itr->second;
+			_stateMap.erase(_changeType);
+		}
+
+		State* state = replaceState;
+		state->Init(this);
+		_stateMap[_changeType] = state;
+	}
 }

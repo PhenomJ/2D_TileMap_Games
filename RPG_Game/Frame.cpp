@@ -31,12 +31,15 @@ void Frame::Init(Texture* texture, int x, int y, int width, int height, float ro
 
 void Frame::Deinit()
 {
+	/*
 	if (_texture != NULL)
 	{
 		_texture->Deinit();
 		delete _texture;
 		_texture = NULL;
 	}
+	*/
+	_texture = NULL;
 }
 
 void Frame::Render()

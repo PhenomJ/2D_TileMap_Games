@@ -5,6 +5,10 @@
 #include "Stage.h"
 #include "Map.h"
 #include "MoveState.h"
+#include "IdleState.h"
+#include "AttackState.h"
+#include "DeadState.h"
+#include "DefenseState.h"
 
 Player::Player(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character(name, scriptName,spriteName)
 {
@@ -84,3 +88,4 @@ Component* Player::Collision(std::list<Component*> &collisionList)
 	}
 	return NULL;
 }
+
