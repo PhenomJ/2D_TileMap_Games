@@ -88,8 +88,9 @@ void Character::Deinit()
 
 void Character::Update(float deltaTime)
 {
-	if (_isLive == false)
-		return;
+	/*if (_isLive == false)
+		return;*/
+
 	UpdateAttackCoolDown(deltaTime);
 	_state->Update(deltaTime);
 	//UpdateText();
@@ -97,8 +98,8 @@ void Character::Update(float deltaTime)
 
 void Character::Render()
 {
-	if (_isLive == false)
-		return;
+	/*if (_isLive == false)
+		return;*/
 
 	_state->Render();
 	_font->SetPosition(_x - 200, _y - 50);

@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 #include <list>
+#include <map>
 
 class Component;
 class Map;
+class GameGen;
 
 class Stage
 {
@@ -31,8 +33,13 @@ public:
 	void CheckDestoryNPC(Component* tileCharacter);
 	void UpdateRemoveComponentList();
 	void UpdateCreateComponentList();
+	void AddStageComponent(Component* component);
+	bool Stage::Find(std::wstring mapName);
+
 private:
-	int _lifeNpcCount;
+	
 	std::list<Component*> _removeComponentList;
 	std::list<Component*> _createBaseComponentList;
+	std::map<std::wstring, GameGen*> _GameGenMap;
+	GameGen* _Game;
 };

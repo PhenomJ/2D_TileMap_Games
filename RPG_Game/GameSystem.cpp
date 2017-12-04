@@ -112,7 +112,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	_stage = new Stage();
-	_stage->Init(L"1");
+	_stage->Init(L"3");
 
 	InitInput();
 
