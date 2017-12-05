@@ -147,7 +147,7 @@ void Map::Init()
 							else
 							{
 								TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
-								tileObject->SetCanMove(true);
+								tileObject->SetCanMove(false);
 								tileCell->AddComponent(tileObject, true);
 							}
 						}

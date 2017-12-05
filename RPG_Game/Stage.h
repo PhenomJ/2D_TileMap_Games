@@ -28,18 +28,18 @@ private:
 	//Game of Life
 public:
 	void CreateLifeNPC(Component* comp);
-
 	void DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter);
 	void CheckDestoryNPC(Component* tileCharacter);
 	void UpdateRemoveComponentList();
 	void UpdateCreateComponentList();
 	void AddStageComponent(Component* component);
-	bool Stage::Find(std::wstring mapName);
+	void SetMap(Map* map) { _map = map; }
+	void GameSet(std::wstring mapName);
+	void Stage::AllComponentInit();
 
 private:
-	
 	std::list<Component*> _removeComponentList;
 	std::list<Component*> _createBaseComponentList;
-	std::map<std::wstring, GameGen*> _GameGenMap;
-	GameGen* _Game;
+	GameGen* _game;
+	std::map<std::wstring, GameGen*> _gameGenMap;
 };

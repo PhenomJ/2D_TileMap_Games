@@ -9,67 +9,39 @@
 #include "LifeNPC.h"
 #include "Monster.h"
 #include "LifePlayer.h"
+#include "GameGen.h"
 #include "LifeGameGen.h"
 #include "DefaultGameGen.h"
 #include "Player.h"
 
 Stage::Stage()
 {
-	_Game = NULL;
+	_game = NULL;
 }
 
 Stage::~Stage()
 {
 	ComponentSystem::GetInstance()->RemoveAllComponents();
 
-	if (_Game != NULL)
+	if (_game != NULL)
 	{
-		delete _Game;
-		_Game = NULL;
-	}{}
+		delete _game;
+		_game = NULL;
+	}
 }
 
 void Stage::Init(std::wstring mapName)
 {
 	_componentList.clear();
 
-	_map = new Map(mapName.c_str());
 	
-	_componentList.push_back(_map);
-
-	Player* player = NULL;
-	WCHAR name[256];
-
-	if (mapName == L"3")
-	{
-		//GameGen »ó¼Ó LifeGameGen
-		_Game = new LifeGameGen(this);
-	}
-
-	else
-	{
+	_gameGenMap[L"Default"] = new DefaultGameGen(this);
+	_gameGenMap[L"3"] = new LifeGameGen(this);
 	
-		_Game = new DefaultGameGen(this);
-		
-	}
 	
-
-	_Game->CreateComponents();
-
-	if (Find(mapName) == true)
-		_GameGenMap[mapName]->CreateComponents();
-
-	else
-		_GameGenMap[L"default"]->CreateComponents();
-
-	_componentList.push_back(player);
-
-	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
-	{
-		(*itr)->Init();
-	}
-
-	_map->InitViewer(player);
+	GameSet(mapName);
+	_game->CreateComponents(mapName);
+	AllComponentInit();
 }
 
 void Stage::Release()
@@ -119,7 +91,7 @@ void Stage::UpdateCreateComponentList()
 	{
 		Component* baseComponent = (*itr);
 
-		LifeNPC* npc = (LifeNPC*)(_Game->CreateLifeNpc(L"npc", L"npc"));
+		LifeNPC* npc = (LifeNPC*)(_game->CreateNpc(L"npc", L"npc"));
 		npc->Init(baseComponent->GetTileX(), baseComponent->GetTileY());
 	}
 
@@ -153,8 +125,22 @@ void Stage::AddStageComponent(Component* component)
 	_componentList.push_back(component);
 }
 
-bool Stage::Find(std::wstring mapName)
+void Stage::GameSet(std::wstring mapName)
 {
+	std::map<std::wstring, GameGen*>::iterator itr = _gameGenMap.find(mapName);
+	if (itr != _gameGenMap.end())
+	{
+	_game = itr->second;
+	}
 
-	return true;
+	else
+	_game = _gameGenMap[L"Default"];
+}
+
+void Stage::AllComponentInit()
+{
+	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+	{
+		(*itr)->Init();
+	}
 }

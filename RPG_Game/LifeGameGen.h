@@ -3,10 +3,8 @@
 #include "GameGen.h"
 
 class Component;
-class Stage;
 
 class LifeGameGen : public GameGen
-
 {
 public: 
 	LifeGameGen(Stage* stage);
@@ -14,8 +12,10 @@ public:
 
 private:
 	int _npcCount;
-
+	std::wstring _name;
+	int _lifeNpcCount;
+	
 public:
-	Component* CreateLifeNpc(std::wstring scriptName, std::wstring textureName);
-	void CreateComponents();
+	Component* CreateNpc(std::wstring scriptName, std::wstring textureName);
+	void CreateComponents(std::wstring mapName);
 };

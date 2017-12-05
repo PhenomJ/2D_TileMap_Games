@@ -88,22 +88,16 @@ void Character::Deinit()
 
 void Character::Update(float deltaTime)
 {
-	/*if (_isLive == false)
-		return;*/
-
 	UpdateAttackCoolDown(deltaTime);
 	_state->Update(deltaTime);
-	//UpdateText();
+	UpdateText();
 }
 
 void Character::Render()
 {
-	/*if (_isLive == false)
-		return;*/
-
 	_state->Render();
 	_font->SetPosition(_x - 200, _y - 50);
-	//_font->Render();
+	_font->Render();
 }
 
 void Character::Release()
@@ -294,7 +288,7 @@ void Character::Init(int tileX, int tileY)
 	_font = new Font(L"Arial", 15, color);
 	_font->SetRect(100, 100, 400, 100);
 
-	//UpdateText();
+	UpdateText();
 
 	{
 		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();

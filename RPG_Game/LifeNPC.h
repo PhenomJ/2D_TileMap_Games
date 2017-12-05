@@ -9,4 +9,8 @@ public:
 
 public:
 	void UpdateAI(float deltaTime);
+
+	void Init(int tileX, int tileY);
+	void Update(float deltaTime);
+	void Render();
 };
