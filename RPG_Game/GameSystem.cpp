@@ -10,8 +10,21 @@ GameSystem* GameSystem::_instance = NULL;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	int mouseX;
+	int mouseY;
+
 	switch (msg)
 	{
+	case WM_LBUTTONDOWN:
+		mouseX = LOWORD(lParam);
+		mouseY = HIWORD(lParam);
+		GameSystem::GetInstance()->MouseDown(mouseX, mouseY);
+		return 0;
+
+	case WM_LBUTTONUP:
+		GameSystem::GetInstance()->MouseUp();
+		return 0;
+
 	case WM_KEYDOWN:
 		GameSystem::GetInstance()->KeyDown(wParam);
 		
@@ -41,6 +54,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 GameSystem::GameSystem()
 {
 	_isFullScreen = false;	
+	_isMouseDown = false;
 }
 
 GameSystem::~GameSystem()
@@ -88,7 +102,7 @@ bool GameSystem::InitSystem(HINSTANCE hInstance, int nCmdShow)
 		style = WS_OVERLAPPEDWINDOW;
 	}
 
-	_hMainWnd = CreateWindow(L"Base", L"2D TileMap Game", style, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, hInstance, 0);
+	_hMainWnd = CreateWindow(L"Base", L"2D TileMap Game", style, CW_USEDEFAULT, CW_USEDEFAULT, _clientWidth, _clientHeight, 0, 0, hInstance, 0);
 
 	if (_isFullScreen == false)
 	{
@@ -150,10 +164,6 @@ int GameSystem::UpdateSystem()
 
 			if (frameTime <= _frameduration)
 			{
-				wchar_t time[256];
-				swprintf(time, L"deltaTime : %f\n", _frameduration);
-				OutputDebugString(time);
-
 				_frameduration = 0.0f;
 				_device3d->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(53, 41, 42), 0.0f, 0);
 				_device3d->BeginScene();
@@ -171,7 +181,6 @@ int GameSystem::UpdateSystem()
 				_device3d->Present(NULL, NULL, NULL, NULL);
 			}	
 
-			//Stage Change test
 			{
 				if (IsKeyDown(VK_F1))
 				{
@@ -181,12 +190,12 @@ int GameSystem::UpdateSystem()
 					_stage->Init(L"2");
 				}
 
-				if (IsKeyDown(VK_F2))
+				if (IsKeyDown(VK_F3))
 				{
 					ComponentSystem::GetInstance()->ClearMessageQueue();
 					delete _stage;
 					_stage = new Stage;
-					_stage->Init(L"3");
+					_stage->Init(L"4");
 				}
 			}
 		}
@@ -312,6 +321,19 @@ void GameSystem::KeyUp(unsigned int KeyCode)
 bool GameSystem::IsKeyDown(unsigned int KeyCode)
 {
 	return (eKeyState::KEY_DOWN == _keyState[KeyCode]);
+}
+
+void GameSystem::MouseDown(int mouseX, int mouseY)
+{
+	_isMouseDown = true;
+
+	_mouseX = mouseX;
+	_mouseY = mouseY;
+}
+
+void GameSystem::MouseUp()
+{
+	_isMouseDown = false;
 }
 
 int GameSystem::GetClientWidth()

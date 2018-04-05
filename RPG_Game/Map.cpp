@@ -3,7 +3,6 @@
 #include "Sprite.h"
 #include "TileCell.h"
 #include "TileObject.h"
-#include "LifeTileObject.h"
 
 Map::Map(LPCWSTR name) : Component(name)
 {
@@ -54,6 +53,8 @@ void Map::Init()
 	// Load Map Script layer1
 	{
 		int line = 0;
+		int row = 0;
+
 		char record[1024];
 		std::ifstream infile(layer01Name);
 		while (!infile.eof())
@@ -85,10 +86,21 @@ void Map::Init()
 					for (int x = 0; x < _width; x++)
 					{
 						int index = atoi(token);
-						TileCell* tileCell = new TileCell();
+						TileCell* tileCell = new TileCell(x, row);
 						WCHAR componentName[256];
 						wsprintf(componentName, L"map_layer1_%d_%d", line, x);
-						TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
+						TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row);
+
+						switch (index)
+						{
+						case 146: // ÀÜµð
+							tileObject->SetDistanceWeight(0.5f);
+							break;
+
+						case 163: // ´Ë
+							tileObject->SetDistanceWeight(1.5f);
+							break;
+						}
 						tileObject->SetCanMove(true);
 						tileCell->AddComponent(tileObject, true);
 						rowList.push_back(tileCell);
@@ -96,6 +108,7 @@ void Map::Init()
 					}
 
 					_tileMap.push_back(rowList);
+					row++;
 				}
 				break;
 			}
@@ -137,19 +150,9 @@ void Map::Init()
 						int index = atoi(token);
 						if (index >= 0)
 						{
-							if (index == 100100)
-							{
-								LifeTileObject* tileObject = new LifeTileObject(x, row, componentName, _spriteList[163]);
-								tileObject->SetCanMove(true);
-								tileCell->AddComponent(tileObject, true);
-							}
-
-							else
-							{
-								TileObject* tileObject = new TileObject(componentName, _spriteList[index]);
-								tileObject->SetCanMove(false);
-								tileCell->AddComponent(tileObject, true);
-							}
+							TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row);
+							tileObject->SetCanMove(false);
+							tileCell->AddComponent(tileObject, true);
 						}
 						token = strtok(NULL, ",");
 					}
@@ -373,4 +376,50 @@ int Map::GetWidth()
 int Map::GetHeight()
 {
 	return _height;
+}
+
+TileCell* Map::FindTileCellWithMousePosition(int mouseX, int mouseY)
+{
+	int midX = GameSystem::GetInstance()->GetClientWidth() / 2;
+	int midY = GameSystem::GetInstance()->GetClientHeight() / 2;
+
+	int tileXCount = midX / _tileSize;
+	int tileYCount = midY / _tileSize;
+
+	int minX = _viewer->GetTileX() - tileXCount - 1;
+	int maxX = _viewer->GetTileX() + tileXCount + 1;
+	int minY = _viewer->GetTileY() - tileYCount - 1;
+	int maxY = _viewer->GetTileY() + tileYCount + 1;
+
+	if (minX < 0)
+		minX = 0;
+
+	if (_width <= maxX)
+		maxX = _width;
+
+	if (minY < 0)
+		minY = 0;
+
+	if (_height <= maxY)
+		maxY = _height;
+
+	// »ç°¢Çü Ãæµ¹ °Ë»ç
+	for (int y = minY; y < maxY; y++)
+	{
+		for (int x = minX; x < maxX; x++)
+		{
+			RECT rect;
+			rect.left = _tileMap[y][x]->GetPositionX() - _tileSize / 2.0f;
+			rect.right = rect.left + _tileSize;
+			rect.top = _tileMap[y][x]->GetPositionY() - _tileSize / 2.0f;
+			rect.bottom = rect.top + _tileSize;
+
+			if (rect.left <= mouseX && mouseX <= rect.right && rect.top <= mouseY && mouseY <= rect.bottom)
+			{
+				return _tileMap[y][x];
+			}
+		}
+	}
+
+	return NULL;
 }

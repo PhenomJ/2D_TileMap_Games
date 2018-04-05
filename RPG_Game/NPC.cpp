@@ -44,8 +44,6 @@ void NPC::UpdateAI(float deltaTime)
 	if (map->GetHeight() <= maxTileY)
 		maxTileY = map->GetHeight() - 1;
 
-	//Component* findEnemy = NULL;
-
 	for (int y = minTileY; y <= maxTileY; y++)
 	{
 		for (int x = minTileX; x <= maxTileX; x++)

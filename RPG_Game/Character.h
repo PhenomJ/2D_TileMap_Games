@@ -1,7 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include "Component.h"
+#include "GlobalType.h"
 #include <vector>
+#include <stack>
 #include <list>
 #include <string>
 #include <map>
@@ -9,6 +11,7 @@
 class Sprite;
 class State;
 class Font;
+class TileCell;
 
 enum eStateType
 {
@@ -17,12 +20,9 @@ enum eStateType
 	ET_ATTACK,
 	ET_DEFENCE,
 	ET_DEAD,
-	ET_NONE
-};
-
-enum eDirection
-{
-	UP, DOWN, LEFT, RIGHT, NONE
+	ET_NONE,
+	ET_FINDINGPATH,
+	ET_MOVECHASE
 };
 
 class Character : public Component
@@ -62,7 +62,7 @@ public:
 	virtual void UpdateAI(float deltaTime);
 
 	eDirection GetDirection() {	return _currentDirection; };
-
+	void SetDirection(eDirection direction) { _currentDirection = direction; }
 	//Message
 public:
 	void ReceiveMessage(const sComponentMsgParam &msgParam);
@@ -138,4 +138,20 @@ public:
 
 private:
 	eStateType _changeType;
+
+	//Set Position
+public:
+	void InitTilePosition(int tileX, int tileY);
+
+	// FindingPath
+protected:
+	TileCell* _targetTileCell;
+	std::stack<TileCell*> _pathTileCellStack;
+
+public:
+	TileCell* GetTargetCell() { return _targetTileCell; }
+	void SetTargetCell(TileCell* tileCell);
+	std::stack<TileCell*> GetPathTileCellStack() { return _pathTileCellStack; }
+	void PushPathTileCellStack(TileCell* tileCell) { _pathTileCellStack.push(tileCell); }
+	void ClearPathTileCellStack() { while (_pathTileCellStack.size() != 0) { _pathTileCellStack.pop(); } }
 };

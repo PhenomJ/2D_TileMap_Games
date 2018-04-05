@@ -12,7 +12,7 @@ Frame::~Frame()
 
 }
 
-void Frame::Init(Texture* texture, int x, int y, int width, int height, float rotate,float frameDelay)
+void Frame::Init(Texture* texture, int x, int y, int width, int height, float rotate,float frameDelay, D3DCOLOR textureColor)
 {
 	_sprite = GameSystem::GetInstance()->GetSprite();
 	_texture = texture;
@@ -24,7 +24,7 @@ void Frame::Init(Texture* texture, int x, int y, int width, int height, float ro
 	_srcTextureRect.top = y;
 	_srcTextureRect.right = x + _width;
 	_srcTextureRect.bottom = y + _height;
-	_textureColor = D3DCOLOR_ARGB(255, 255, 255, 255);
+	_textureColor = textureColor;
 	
 	_frameDelay = frameDelay;
 }

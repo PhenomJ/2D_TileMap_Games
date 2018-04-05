@@ -71,6 +71,7 @@ void MoveState::Start()
 			_nextState = eStateType::ET_IDLE;
 		}
 	}
+
 	else
 	{
 		_character->MoveStart(newTileX, newTileY);
@@ -91,22 +92,6 @@ void MoveState::Update(float deltaTime)
 
 	if (_character->IsLive() == false)
 		return;
-	/*
-	if (_character->IsMoving() == false)
-		return;
-		
-	if (_character->GetMoveTime() <= _moveDuration)
-	{
-		_moveDuration = 0.0f;
-		_character->MoveStop();
-		_nextState = eStateType::ET_IDLE;
-	}
-
-	else
-	{
-		_moveDuration += deltaTime;
-		_character->Moving(deltaTime);
-	}*/
 
 	if (_character->GetMoveTime() <= _moveDuration)
 	{

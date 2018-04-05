@@ -18,6 +18,7 @@ Sprite::~Sprite()
 {
 
 }
+
 void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay)
 {
 	_device3d = GameSystem::GetInstance()->GetDevice3d();
@@ -27,7 +28,7 @@ void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay)
 
 	{
 		Frame* frame = new Frame();
-		frame->Init(_srcTexture, srcX, srcY, x, y, _rotate,frameDelay);
+		frame->Init(_srcTexture, srcX, srcY, x, y, _rotate,frameDelay, D3DCOLOR_ARGB(255, 255, 255, 255));
 		_frameList.push_back(frame);
 	}
 
@@ -67,7 +68,7 @@ void Sprite::Init()
 					_rotate = root["rotate"].asInt();
 
 				Frame* frame = new Frame();
-				frame->Init(_srcTexture, x, y, width, height, _rotate,framedelay);
+				frame->Init(_srcTexture, x, y, width, height, _rotate,framedelay, D3DCOLOR_ARGB(255, 255, 255, 255));
 				_frameList.push_back(frame);
 			}
 		}
@@ -88,12 +89,6 @@ void Sprite::Deinit()
 	}
 	_frameList.clear();
 
-	/*if (_srcTexture != NULL)
-	{
-		_srcTexture->Deinit();
-		delete _srcTexture;
-		_srcTexture = NULL;
-	}*/
 	_srcTexture = NULL;
 }
 

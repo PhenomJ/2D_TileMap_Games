@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "TileCell.h"
 #include "GameSystem.h"
 #include "Stage.h"
 #include "Sprite.h"
@@ -11,6 +12,9 @@
 #include "AttackState.h"
 #include "DefenseState.h"
 #include "DeadState.h"
+#include "FindingPathMoveState.h"
+#include "FindingPathState.h"
+#include "FindingPathImmediateState.h"
 #include "Font.h"
 #include <time.h>
 
@@ -64,7 +68,6 @@ void Character::Init()
 
 		map->SetTileComponent(_tileX, _tileY, this, false);
 	}
-
 	
 	InitMove();
 	InitState();
@@ -102,13 +105,11 @@ void Character::Render()
 
 void Character::Release()
 {
-	
 	_state->Release();
 }
 
 void Character::Reset()
 {
-	
 	_state->Reset();
 }
 
@@ -131,18 +132,18 @@ void Character::MoveStart(int newTileX, int newTileY)
 	_tileX = newTileX;
 	_tileY = newTileY;
 
-		{
-			map->SetTileComponent(_tileX, _tileY, this,false);
+	{
+		map->SetTileComponent(_tileX, _tileY, this,false);
 
-			_targetX = map->GetPositionX(_tileX, _tileY);
-			_targetY = map->GetPositionY(_tileX, _tileY);
+		_targetX = map->GetPositionX(_tileX, _tileY);
+		_targetY = map->GetPositionY(_tileX, _tileY);
 
-			float distanceX = _targetX - _x;
-			float distanceY = _targetY - _y;
+		float distanceX = _targetX - _x;
+		float distanceY = _targetY - _y;
 
-			_moveDistanceperTimeX = distanceX / _moveSpeed;
-			_moveDistanceperTimeY = distanceY / _moveSpeed;	
-		}
+		_moveDistanceperTimeX = distanceX / _moveSpeed;
+		_moveDistanceperTimeY = distanceY / _moveSpeed;	
+	}
 
 	_isMoving = true;
 }
@@ -283,30 +284,7 @@ void Character::IncreaseHP(int recovery)
 
 void Character::Init(int tileX, int tileY)
 {
-	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
-
-	_font = new Font(L"Arial", 15, color);
-	_font->SetRect(100, 100, 400, 100);
-
-	UpdateText();
-
-	{
-		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-
-		_tileX = tileX;
-		_tileY = tileY;
-
-		_x = map->GetPositionX(_tileX, _tileY);
-		_y = map->GetPositionY(_tileX, _tileY);
-
-		map->SetTileComponent(_tileX, _tileY, this, false);
-	}
-
-
-	InitMove();
-	InitState();
-
-	ChangeState(eStateType::ET_IDLE);
+	
 }
 
 void Character::InitState()
@@ -316,6 +294,8 @@ void Character::InitState()
 	ReplaceState(eStateType::ET_DEAD, new DeadState());
 	ReplaceState(eStateType::ET_DEFENCE, new DefenseState());
 	ReplaceState(eStateType::ET_MOVE, new MoveState());
+	ReplaceState(eStateType::ET_MOVECHASE, new FindingPathMoveState());
+	ReplaceState(eStateType::ET_FINDINGPATH, new FindingPathImmediateState());
 }
 
 void Character::ReplaceState(eStateType type, State* replaceState)
@@ -334,4 +314,24 @@ void Character::ReplaceState(eStateType type, State* replaceState)
 		state->Init(this);
 		_stateMap[_changeType] = state;
 	}
+}
+
+void Character::InitTilePosition(int tileX, int tileY)
+{
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+	map->ResetTileComponent(_tileX, _tileY, this);
+
+	_tileX = tileX;
+	_tileY = tileY;
+
+	_x = map->GetPositionX(_tileX, _tileY);
+	_y = map->GetPositionY(_tileX, _tileY);
+
+	map->SetTileComponent(_tileX, _tileY, this, false);
+}
+
+void Character::SetTargetCell(TileCell* tileCell)
+{
+	_targetTileCell = tileCell;
+	_state->NextState(eStateType::ET_FINDINGPATH);
 }

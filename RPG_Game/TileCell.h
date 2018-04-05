@@ -5,12 +5,12 @@ class Component;
 class TileCell
 {
 public:
-	TileCell();
+	TileCell(int tileX, int tileY);
 	~TileCell();
 
 	void Deinit();
 	void Update(float deltaTime);
-	
+
 	void Render();
 	void Release();
 	void Reset();
@@ -37,4 +37,39 @@ private:
 	float _posX;
 	float _posY;
 
+	//FindingPath algorythm
+private:
+	bool _isFindingPathMark;
+	TileCell* _prevCell;
+
+	float _distanceWeight; // 고정값, 맵 로딩시 셋팅
+	float _distanceFromStart; // 계산된 값을 저장하기 위한 변수
+
+	int _tileX;
+	int _tileY;
+
+public:
+	void InitFindingPath();
+	bool IsFindingPathMarked() { return _isFindingPathMark; }
+	void FindingPathMarking() { _isFindingPathMark = true; }
+	int GetTileX() { return _tileX; }
+	int GetTileY() { return _tileY; }
+
+	TileCell* GetPrevCell() { return _prevCell; }
+	void SetPrevCell(TileCell* tilecell) { _prevCell = tilecell; }
+
+	float GetDistanceFromStart() { return _distanceFromStart; };
+	float GetDistanceWeight() { return _distanceWeight; };
+	void SetDistanceFromStart(float distance) { _distanceFromStart = distance; }
+
+	//Heurisitc
+private:
+	float _heuristic;
+
+public:
+	void SetHeuristic(float heuristic) { _heuristic = heuristic; };
+	float GetHeuristic();
+
+	//Test
+	int i = 0;
 };

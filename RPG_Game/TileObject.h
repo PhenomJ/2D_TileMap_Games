@@ -7,7 +7,7 @@ class Sprite;
 class TileObject : public Component
 {
 public:
-	TileObject(LPCWSTR componentName, Sprite* sprite);
+	TileObject(LPCWSTR componentName, Sprite* sprite, int tileX, int tileY);
 	virtual ~TileObject();
 
 	void Init();
@@ -25,4 +25,13 @@ private:
 
 	float _posX;
 	float _posY;
+
+	// °¡ÁßÄ¡
+
+private:
+	float _weight = 1.0f;
+
+public:
+	void SetDistanceWeight(float weight) { _weight = weight; }
+	float GetDistanceWeight() { return _weight; }
 };

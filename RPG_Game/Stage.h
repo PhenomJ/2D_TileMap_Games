@@ -3,6 +3,7 @@
 #include <list>
 #include <map>
 
+class TileCell;
 class Component;
 class Map;
 class GameGen;
@@ -27,9 +28,6 @@ private:
 
 	//Game of Life
 public:
-	void CreateLifeNPC(Component* comp);
-	void DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter);
-	void CheckDestoryNPC(Component* tileCharacter);
 	void UpdateRemoveComponentList();
 	void UpdateCreateComponentList();
 	void AddStageComponent(Component* component);
@@ -41,5 +39,9 @@ private:
 	std::list<Component*> _removeComponentList;
 	std::list<Component*> _createBaseComponentList;
 	GameGen* _game;
-	std::map<std::wstring, GameGen*> _gameGenMap;
+	std::map<std::wstring, GameGen*> _gameMapGen;
+
+	// FindingPath
+public:
+	void CreateFindingPathMark(TileCell* reverseTileCell);
 };

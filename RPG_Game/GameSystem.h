@@ -57,11 +57,17 @@ public:
 
 private:
 
+	// Input
 public:
 	void InitInput();
 	void KeyDown(unsigned int KeyCode);
 	void KeyUp(unsigned int KeyCode);
 	bool IsKeyDown(unsigned int KeyCode);
+	bool IsMouseDown() { return _isMouseDown; }
+	void MouseDown(int mouseX, int mouseY);
+	void MouseUp();
+	int GetMouseX() { return _mouseX; }
+	int GetMouseY() { return _mouseY; }
 
 	enum eKeyState
 	{
@@ -71,7 +77,9 @@ public:
 
 private:
 	eKeyState _keyState[256];
-
+	bool _isMouseDown;
+	int _mouseX;
+	int _mouseY;
 	//Stage
 private:
 	Stage* _stage;

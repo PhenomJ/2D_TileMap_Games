@@ -53,6 +53,7 @@ public:
 	bool IsLive();
 
 	std::wstring GetName() { return _name; }
+
 protected:
 	std::wstring _name;
 	

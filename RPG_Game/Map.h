@@ -4,6 +4,7 @@
 #include <fstream>
 #include <list>
 #include "Component.h"
+#include "GlobalType.h"
 
 class Sprite;
 class TileCell;
@@ -32,6 +33,7 @@ public:
 	
 
 	bool CanMoveTileMap(int newTileX, int newTileY);
+	bool CanMoveTileMap(TilePosition nextTilePosition) { return CanMoveTileMap(nextTilePosition.x, nextTilePosition.y); };
 
 
 	bool GetTileCollisionList(int tileX, int tileY, std::list<Component*> &collisionList);
@@ -53,4 +55,14 @@ private:
 	int _tileSize = 32;
 	std::vector<Sprite*> _spriteList;
 	Component* _viewer;
+
+	// Finding Path
+public:
+	TileCell* GetTileCell(int x, int y) { return _tileMap[y][x]; };
+	TileCell* GetTileCell(TilePosition nextTilePos) { return _tileMap[nextTilePos.y][nextTilePos.x]; };
+
+	//Mouse Input
+
+public:
+	TileCell* FindTileCellWithMousePosition(int mouseX, int mouseY);
 };

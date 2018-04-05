@@ -63,7 +63,6 @@ void Player::UpdateAI(float deltaTime)
 				msg.sender = (Component*)this;
 				msg.receiver = component;
 				ComponentSystem::GetInstance()->SendMsg(msg);
-
 			}
 		}
 
@@ -88,4 +87,3 @@ Component* Player::Collision(std::list<Component*> &collisionList)
 	}
 	return NULL;
 }
-

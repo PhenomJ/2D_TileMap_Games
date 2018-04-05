@@ -10,7 +10,7 @@ public:
 	~Frame();
 
 public:
-	void Init(Texture* _texture, int x, int y, int width, int height, float rotate,float frameDelay);
+	void Init(Texture* _texture, int x, int y, int width, int height, float rotate,float frameDelay, D3DCOLOR textureColor);
 	void Deinit();
 	void Render();
 	void Release();

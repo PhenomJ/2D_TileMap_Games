@@ -4,10 +4,9 @@
 #include "Map.h"
 #include "Stage.h"
 
-LifeTileObject::LifeTileObject(int tileX, int tileY, LPCWSTR componentName, Sprite* sprite) : TileObject(componentName, sprite)
+LifeTileObject::LifeTileObject(int tileX, int tileY, LPCWSTR componentName, Sprite* sprite) : TileObject(componentName, sprite, tileX, tileY)
 {
-	_tileX = tileX;
-	_tileY = tileY;
+	
 }
 
 LifeTileObject::~LifeTileObject()
@@ -18,8 +17,6 @@ LifeTileObject::~LifeTileObject()
 void LifeTileObject::Update(float deltaTime)
 {
 	TileObject::Update(deltaTime);
-	// FindComponentInRange를 통하여 캐릭터의 마리수를 가져 올것.
-	// 주변 8칸 탐색 * 캐릭터가 몇?
 
 	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 	std::vector<eComponentType> typeList;
@@ -57,7 +54,6 @@ void LifeTileObject::Update(float deltaTime)
 						switch (component->GetType())
 						{
 						case eComponentType::CT_NPC:
-						case eComponentType::CT_PLAYER:
 							count++;
 							break;
 						}
@@ -76,7 +72,6 @@ void LifeTileObject::Update(float deltaTime)
 						switch (component->GetType())
 						{
 						case eComponentType::CT_NPC:
-						case eComponentType::CT_PLAYER:
 							tileCharacter = component;
 							break;
 						}
@@ -90,7 +85,6 @@ void LifeTileObject::Update(float deltaTime)
 	{
 		if (tileCharacter == NULL)
 		{
-			//GameSystem::GetInstance()->GetStage()->CreateLifeNPC(_tileX, _tileY);
 			GameSystem::GetInstance()->GetStage()->CreateLifeNPC(this);
 		}
 	}
@@ -107,7 +101,6 @@ void LifeTileObject::Update(float deltaTime)
 			if (eComponentType::CT_PLAYER != tileCharacter->GetType())
 			{
 				GameSystem::GetInstance()->GetStage()->CheckDestoryNPC(tileCharacter);
-				//GameSystem::GetInstance()->GetStage()->DestroyLifeNpc(_tileX, _tileY, tileCharacter);
 				tileCharacter = NULL;
 			}
 		}

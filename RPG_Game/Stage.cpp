@@ -1,18 +1,18 @@
 #include "Stage.h"
 #include "Component.h"
 #include "ComponentSystem.h"
+#include "GameSystem.h"
 #include "Map.h"
 #include "RecoveryItem.h"
 #include "PosionItem.h"
 #include "Character.h"
 #include "NPC.h"
-#include "LifeNPC.h"
 #include "Monster.h"
-#include "LifePlayer.h"
 #include "GameGen.h"
-#include "LifeGameGen.h"
 #include "DefaultGameGen.h"
+#include "FindingPathGen.h"
 #include "Player.h"
+#include "TileCell.h"
 
 Stage::Stage()
 {
@@ -33,15 +33,12 @@ Stage::~Stage()
 void Stage::Init(std::wstring mapName)
 {
 	_componentList.clear();
-
 	
-	_gameGenMap[L"Default"] = new DefaultGameGen(this);
-	_gameGenMap[L"3"] = new LifeGameGen(this);
-	
+	_gameMapGen[L"Default"] = new DefaultGameGen(this);
+	_gameMapGen[L"4"] = new FindingPathGen(this);
 	
 	GameSet(mapName);
 	_game->CreateComponents(mapName);
-	AllComponentInit();
 }
 
 void Stage::Release()
@@ -78,36 +75,17 @@ void Stage::Reset()
 	}
 }
 
-void Stage::CreateLifeNPC(Component* comp)
-{
-	comp->GetTileX();
-	comp->GetTileY();
-	_createBaseComponentList.push_back(comp);
-}
-
 void Stage::UpdateCreateComponentList()
 {
 	for (std::list<Component*>::iterator itr = _createBaseComponentList.begin(); itr != _createBaseComponentList.end(); itr++)
 	{
 		Component* baseComponent = (*itr);
 
-		LifeNPC* npc = (LifeNPC*)(_game->CreateNpc(L"npc", L"npc"));
-		npc->Init(baseComponent->GetTileX(), baseComponent->GetTileY());
+		NPC* npc = (NPC*)(_game->CreateNpc(L"npc", L"npc"));
+		npc->InitTilePosition(baseComponent->GetTileX(), baseComponent->GetTileY());
 	}
 
 	_createBaseComponentList.clear();
-}
-
-void Stage::DestroyLifeNpc(int tileX, int tileY, Component* tileCharacter)
-{
-	_map->ResetTileComponent(tileX, tileY, tileCharacter);
-	_componentList.remove(tileCharacter);
-	ComponentSystem::GetInstance()->RemoveComponent(tileCharacter);
-}
-
-void Stage::CheckDestoryNPC(Component* tileCharacter)
-{
-	_removeComponentList.push_back(tileCharacter);
 }
 
 void Stage::UpdateRemoveComponentList()
@@ -115,26 +93,26 @@ void Stage::UpdateRemoveComponentList()
 	for (std::list<Component*>::iterator itr = _removeComponentList.begin(); itr != _removeComponentList.end(); itr++)
 	{
 		Component* component = (*itr);
-		DestroyLifeNpc(component->GetTileX(), component->GetTileY(), component);
 	}
 	_removeComponentList.clear();
 }
 
 void Stage::AddStageComponent(Component* component)
 {
+	component->Init();
 	_componentList.push_back(component);
 }
 
 void Stage::GameSet(std::wstring mapName)
 {
-	std::map<std::wstring, GameGen*>::iterator itr = _gameGenMap.find(mapName);
-	if (itr != _gameGenMap.end())
+	std::map<std::wstring, GameGen*>::iterator itr = _gameMapGen.find(mapName);
+	if (itr != _gameMapGen.end())
 	{
-	_game = itr->second;
+		_game = itr->second;
 	}
 
 	else
-	_game = _gameGenMap[L"Default"];
+	_game = _gameMapGen[L"Default"];
 }
 
 void Stage::AllComponentInit()
@@ -142,5 +120,37 @@ void Stage::AllComponentInit()
 	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 	{
 		(*itr)->Init();
+	}
+}
+
+void Stage::CreateFindingPathMark(TileCell* tileCell)
+{
+	Character* mark = (Character*)(_game->CreateNpc(L"monster", L"monster"));
+	mark->InitTilePosition(tileCell->GetTileX(), tileCell->GetTileY());
+	mark->SetCanMove(true);
+	_componentList.remove(mark);
+	tileCell->AddComponent(mark, true);
+
+	if (tileCell->GetPrevCell() != NULL) 
+	{
+		if (tileCell->GetTileX() < tileCell->GetPrevCell()->GetTileX())
+		{
+			mark->SetDirection(eDirection::LEFT);
+		}
+
+		else if (tileCell->GetTileX() > tileCell->GetPrevCell()->GetTileX())
+		{
+			mark->SetDirection(eDirection::RIGHT);
+		}
+
+		else if (tileCell->GetTileY() < tileCell->GetPrevCell()->GetTileY())
+		{
+			mark->SetDirection(eDirection::UP);
+		}
+
+		else if (tileCell->GetTileY() > tileCell->GetPrevCell()->GetTileY())
+		{
+			mark->SetDirection(eDirection::DOWN);
+		}
 	}
 }

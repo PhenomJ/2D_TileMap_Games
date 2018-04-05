@@ -33,6 +33,7 @@ void LifeGameGen::CreateComponents(std::wstring mapName)
 	{
 		Component* component = CreateNpc(L"npc", L"npc");
 	}
+
 	LifePlayer* player = new LifePlayer(L"player", L"player", L"player");
 
 	_stage->AddStageComponent(player);

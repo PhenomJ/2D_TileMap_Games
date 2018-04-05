@@ -1,11 +1,12 @@
 #pragma once
 #include "GameGen.h"
 
-class DefaultGameGen : public GameGen
+class Stage;
+class FindingPathGen : public GameGen
 {
 public:
-	DefaultGameGen(Stage* stage);
-	~DefaultGameGen();
+	FindingPathGen(Stage* stage);
+	~FindingPathGen();
 
 public:
 	void CreateComponents(std::wstring mapName);

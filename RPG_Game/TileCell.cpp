@@ -1,9 +1,14 @@
 #include "TileCell.h"
+#include "TileObject.h"
 #include "Component.h"
 
-TileCell::TileCell()
+TileCell::TileCell(int tileX, int tileY)
 {
+	_tileX = tileX;
+	_tileY = tileY;
 	_componentList.clear();
+	_distanceWeight = 1.0f;
+	
 }
 
 TileCell::~TileCell()
@@ -18,9 +23,9 @@ void TileCell::Deinit()
 
 void TileCell::Update(float deltaTime)
 {
-	for (std::list<Component*>::iterator itr = _renderList.begin(); itr != _renderList.end(); itr++)
+	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
 	{
-		(*itr)->Update(deltaTime);
+		(*itr)->Render();
 	}
 }
 
@@ -79,6 +84,11 @@ void TileCell::AddComponent(Component* thisComponent, bool isRender)
 {
 	_componentList.push_back(thisComponent);
 	
+	if (eComponentType::CT_TILEOBJECT == thisComponent->GetType())
+	{
+		_distanceWeight = ((TileObject*)thisComponent)->GetDistanceWeight();
+	}
+
 	if (isRender)
 	{
 		_renderList.push_back(thisComponent);
@@ -123,4 +133,17 @@ bool TileCell::GetCollisionList(std::list<Component*> &collisionList)
 std::list<Component*> TileCell::GetComponentList()
 {
 	return _componentList;
+}
+
+void TileCell::InitFindingPath()
+{
+	_isFindingPathMark = false;
+	_prevCell = NULL;
+	_distanceFromStart = 0.0f;
+	_heuristic = 0.0f;
+}
+
+float TileCell::GetHeuristic()
+{
+	return _heuristic;
 }

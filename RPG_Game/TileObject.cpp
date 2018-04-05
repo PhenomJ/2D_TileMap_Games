@@ -1,10 +1,12 @@
 #include "TileObject.h"
 #include "Sprite.h"
 
-TileObject::TileObject(LPCWSTR name, Sprite* sprite) : Component(name)
+TileObject::TileObject(LPCWSTR name, Sprite* sprite, int tileX, int tileY) : Component(name)
 {
 	_type = eComponentType::CT_TILEOBJECT;
 	_sprite = sprite;
+	_tileX = tileX;
+	_tileY = tileY;
 }
 
 TileObject::~TileObject()
