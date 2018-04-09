@@ -1,12 +1,15 @@
 #pragma once
 #include "Component.h"
+#include <d3d9types.h>
 #include <vector>
+
 
 class Sprite;
 
 class TileObject : public Component
 {
 public:
+	TileObject(Sprite* sprite, int tileX, int tileY);
 	TileObject(LPCWSTR componentName, Sprite* sprite, int tileX, int tileY);
 	virtual ~TileObject();
 
@@ -34,4 +37,11 @@ private:
 public:
 	void SetDistanceWeight(float weight) { _weight = weight; }
 	float GetDistanceWeight() { return _weight; }
+
+	//»ö º¯°æ
+public:
+	void ChangeColor(D3DCOLOR color);
+
+private:
+	D3DCOLOR _color;
 };

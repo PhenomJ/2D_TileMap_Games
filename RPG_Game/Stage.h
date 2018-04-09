@@ -3,6 +3,7 @@
 #include <list>
 #include <map>
 
+
 class TileCell;
 class Component;
 class Map;
@@ -33,7 +34,7 @@ public:
 	void AddStageComponent(Component* component);
 	void SetMap(Map* map) { _map = map; }
 	void GameSet(std::wstring mapName);
-	void Stage::AllComponentInit();
+	void AllComponentInit();
 
 private:
 	std::list<Component*> _removeComponentList;

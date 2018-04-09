@@ -31,14 +31,12 @@ void Frame::Init(Texture* texture, int x, int y, int width, int height, float ro
 
 void Frame::Deinit()
 {
-	/*
-	if (_texture != NULL)
+	/*if (_texture != NULL)
 	{
-		_texture->Deinit();
+		_texture->Release();
 		delete _texture;
 		_texture = NULL;
-	}
-	*/
+	}*/
 	_texture = NULL;
 }
 
@@ -82,4 +80,11 @@ void Frame::SetPosition(float x, float y)
 {
 	_x = x;
 	_y = y;
+}
+
+void Frame::ChangeColor(D3DCOLOR color)
+{
+	_sprite = GameSystem::GetInstance()->GetSprite();
+	_textureColor = color;
+	Render();
 }

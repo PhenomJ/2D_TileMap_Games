@@ -13,7 +13,7 @@ public:
 
 public:
 	void Init();
-	void Init(int srcX, int srcY, int x, int y, float frameDelay);
+	void Init(int srcX, int srcY, int x, int y, float frameDelay, D3DCOLOR color);
 	void Deinit();
 	
 	void Render();
@@ -39,4 +39,12 @@ private:
 	float _x;
 	float _y;
 	float _rotate;
+
+	//Change Color
+public:
+	void ChangeColor(D3DCOLOR color);
+
+private:
+
+
 };

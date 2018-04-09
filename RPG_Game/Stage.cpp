@@ -125,32 +125,5 @@ void Stage::AllComponentInit()
 
 void Stage::CreateFindingPathMark(TileCell* tileCell)
 {
-	Character* mark = (Character*)(_game->CreateNpc(L"monster", L"monster"));
-	mark->InitTilePosition(tileCell->GetTileX(), tileCell->GetTileY());
-	mark->SetCanMove(true);
-	_componentList.remove(mark);
-	tileCell->AddComponent(mark, true);
-
-	if (tileCell->GetPrevCell() != NULL) 
-	{
-		if (tileCell->GetTileX() < tileCell->GetPrevCell()->GetTileX())
-		{
-			mark->SetDirection(eDirection::LEFT);
-		}
-
-		else if (tileCell->GetTileX() > tileCell->GetPrevCell()->GetTileX())
-		{
-			mark->SetDirection(eDirection::RIGHT);
-		}
-
-		else if (tileCell->GetTileY() < tileCell->GetPrevCell()->GetTileY())
-		{
-			mark->SetDirection(eDirection::UP);
-		}
-
-		else if (tileCell->GetTileY() > tileCell->GetPrevCell()->GetTileY())
-		{
-			mark->SetDirection(eDirection::DOWN);
-		}
-	}
+	tileCell->FindingPathMark();
 }

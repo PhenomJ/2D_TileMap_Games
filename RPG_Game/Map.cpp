@@ -29,7 +29,7 @@ void Map::Init()
 		for (int x = 0; x < 16; x++)
 		{
 			Sprite* sprite = new Sprite(L"MapSprite.png", L"MapSprite.json");
-			sprite->Init(srcX, srcY, _tileSize, _tileSize, 1.0f);
+			sprite->Init(srcX, srcY, _tileSize, _tileSize, 1.0f, D3DCOLOR_ARGB (255, 255, 255, 255));
 			_spriteList.push_back(sprite);
 			srcX += _tileSize;
 		}
@@ -86,7 +86,7 @@ void Map::Init()
 					for (int x = 0; x < _width; x++)
 					{
 						int index = atoi(token);
-						TileCell* tileCell = new TileCell(x, row);
+						TileCell* tileCell = new TileCell(x, row, _spriteList[index]);
 						WCHAR componentName[256];
 						wsprintf(componentName, L"map_layer1_%d_%d", line, x);
 						TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row);
@@ -101,6 +101,7 @@ void Map::Init()
 							tileObject->SetDistanceWeight(1.5f);
 							break;
 						}
+
 						tileObject->SetCanMove(true);
 						tileCell->AddComponent(tileObject, true);
 						rowList.push_back(tileCell);

@@ -1,9 +1,17 @@
 #include "TileObject.h"
+#include <d3d9.h>
 #include "Sprite.h"
 
 TileObject::TileObject(LPCWSTR name, Sprite* sprite, int tileX, int tileY) : Component(name)
 {
 	_type = eComponentType::CT_TILEOBJECT;
+	_sprite = sprite;
+	_tileX = tileX;
+	_tileY = tileY;
+}
+
+TileObject::TileObject(Sprite* sprite, int tileX, int tileY)
+{
 	_sprite = sprite;
 	_tileX = tileX;
 	_tileY = tileY;
@@ -55,4 +63,9 @@ void TileObject::SetPosition(float posX, float posY)
 {
 	_posX = posX;
 	_posY = posY;
+}
+
+void TileObject::ChangeColor(D3DCOLOR color)
+{
+	_sprite->ChangeColor(color);
 }

@@ -17,6 +17,8 @@ public:
 	void Reset();
 	float GetFrameDelay();
 	void SetPosition(float _x, float _y);
+	void ChangeColor(D3DCOLOR color);
+
 private:
 	Texture* _texture;
 	RECT _srcTextureRect;

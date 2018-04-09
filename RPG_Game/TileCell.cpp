@@ -1,11 +1,13 @@
 #include "TileCell.h"
 #include "TileObject.h"
 #include "Component.h"
+#include "Sprite.h"
 
-TileCell::TileCell(int tileX, int tileY)
+TileCell::TileCell(int tileX, int tileY, Sprite* sprite)
 {
 	_tileX = tileX;
 	_tileY = tileY;
+	_sprite = sprite;
 	_componentList.clear();
 	_distanceWeight = 1.0f;
 	
@@ -141,6 +143,12 @@ void TileCell::InitFindingPath()
 	_prevCell = NULL;
 	_distanceFromStart = 0.0f;
 	_heuristic = 0.0f;
+}
+
+void TileCell::FindingPathMark()
+{
+	TileObject* tileObject = new TileObject(_sprite, _tileX, _tileY);
+	tileObject->ChangeColor(D3DCOLOR_ARGB(255, 0, 0, 255));
 }
 
 float TileCell::GetHeuristic()

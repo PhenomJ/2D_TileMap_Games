@@ -19,7 +19,7 @@ Sprite::~Sprite()
 
 }
 
-void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay)
+void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay, D3DCOLOR color)
 {
 	_device3d = GameSystem::GetInstance()->GetDevice3d();
 	_sprite = GameSystem::GetInstance()->GetSprite();
@@ -28,7 +28,7 @@ void Sprite::Init(int srcX, int srcY, int x, int y, float frameDelay)
 
 	{
 		Frame* frame = new Frame();
-		frame->Init(_srcTexture, srcX, srcY, x, y, _rotate,frameDelay, D3DCOLOR_ARGB(255, 255, 255, 255));
+		frame->Init(_srcTexture, srcX, srcY, x, y, _rotate,frameDelay, color);
 		_frameList.push_back(frame);
 	}
 
@@ -137,4 +137,15 @@ void Sprite::SetPosition(float posX, float posY)
 {
 	_x = posX;
 	_y = posY;
+}
+
+void Sprite::ChangeColor(D3DCOLOR color)
+{
+	std::vector<Frame*>::iterator itr = _frameList.begin();
+	for (itr = _frameList.begin(); itr != _frameList.end(); itr++)
+	{
+		Frame* frame = (*itr);
+		frame->ChangeColor(color);
+		frame->Render();
+	}
 }

@@ -2,10 +2,12 @@
 #include <list>
 
 class Component;
+class Sprite;
+
 class TileCell
 {
 public:
-	TileCell(int tileX, int tileY);
+	TileCell(int tileX, int tileY, Sprite* sprite);
 	~TileCell();
 
 	void Deinit();
@@ -47,11 +49,14 @@ private:
 
 	int _tileX;
 	int _tileY;
+	Sprite* _sprite;
 
 public:
 	void InitFindingPath();
 	bool IsFindingPathMarked() { return _isFindingPathMark; }
 	void FindingPathMarking() { _isFindingPathMark = true; }
+	void FindingPathMark();
+
 	int GetTileX() { return _tileX; }
 	int GetTileY() { return _tileY; }
 
