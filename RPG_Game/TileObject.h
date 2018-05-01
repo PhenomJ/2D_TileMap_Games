@@ -9,7 +9,6 @@ class Sprite;
 class TileObject : public Component
 {
 public:
-	TileObject(Sprite* sprite, int tileX, int tileY);
 	TileObject(LPCWSTR componentName, Sprite* sprite, int tileX, int tileY);
 	virtual ~TileObject();
 
@@ -41,7 +40,4 @@ public:
 	//»ö º¯°æ
 public:
 	void ChangeColor(D3DCOLOR color);
-
-private:
-	D3DCOLOR _color;
 };

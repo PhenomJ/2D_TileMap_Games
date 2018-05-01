@@ -39,8 +39,6 @@ public:
 	int GetTileX();
 	int GetTileY();
 
-
-
 	float GetMoveDeltaX();
 	float GetMoveDeltaY();
 

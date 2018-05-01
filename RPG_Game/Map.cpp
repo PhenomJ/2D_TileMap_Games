@@ -23,7 +23,6 @@ void Map::Init()
 	int srcX = 0;
 	int srcY = 0;
 
-
 	for (int y = 0; y < 16; y++)
 	{
 		for (int x = 0; x < 16; x++)
@@ -86,9 +85,9 @@ void Map::Init()
 					for (int x = 0; x < _width; x++)
 					{
 						int index = atoi(token);
-						TileCell* tileCell = new TileCell(x, row, _spriteList[index]);
+						TileCell* tileCell = new TileCell(x, row);
 						WCHAR componentName[256];
-						wsprintf(componentName, L"map_layer1_%d_%d", line, x);
+						wsprintf(componentName, L"map_layer1_%d_%d", x, row);
 						TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row);
 
 						switch (index)
@@ -147,11 +146,12 @@ void Map::Init()
 					{
 						TileCell* tileCell = rowList[x];
 						WCHAR componentName[256];
-						wsprintf(componentName, L"map_layer2_%d_%d", line, x);
+						wsprintf(componentName, L"map_layer2_%d_%d", x, row);
 						int index = atoi(token);
 						if (index >= 0)
 						{
-							TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row);
+							TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row
+							);
 							tileObject->SetCanMove(false);
 							tileCell->AddComponent(tileObject, true);
 						}
@@ -183,21 +183,6 @@ void Map::Deinit()
 
 void Map::Update(float deltaTime)
 {
-	/*for (int y = 0; y < _height; y++)
-	{
-		for (int x = 0; x < _width; x++)
-		{
-			_tileMap[y][x]->MoveDeltaPosition(_deltaX, _deltaY);
-			_tileMap[y][x]->Update(deltaTime);
-		}
-	}
-
-	if (_viewer != NULL)
-	{
-		_deltaX = _viewer->GetMoveDeltaX() * deltaTime;
-		_deltaY = _viewer->GetMoveDeltaY() * deltaTime;
-		Scroll(-_deltaX, -_deltaY);
-	}*/
 	int midX = GameSystem::GetInstance()->GetClientWidth() / 2;
 	int midY = GameSystem::GetInstance()->GetClientHeight() / 2;
 

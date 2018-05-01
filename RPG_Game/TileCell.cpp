@@ -2,15 +2,16 @@
 #include "TileObject.h"
 #include "Component.h"
 #include "Sprite.h"
+#include "Map.h"
+#include "Stage.h"
+#include "GameSystem.h"
 
-TileCell::TileCell(int tileX, int tileY, Sprite* sprite)
+TileCell::TileCell(int tileX, int tileY)
 {
 	_tileX = tileX;
 	_tileY = tileY;
-	_sprite = sprite;
 	_componentList.clear();
 	_distanceWeight = 1.0f;
-	
 }
 
 TileCell::~TileCell()
@@ -147,8 +148,14 @@ void TileCell::InitFindingPath()
 
 void TileCell::FindingPathMark()
 {
-	TileObject* tileObject = new TileObject(_sprite, _tileX, _tileY);
-	tileObject->ChangeColor(D3DCOLOR_ARGB(255, 0, 0, 255));
+	for (std::list<Component*>::iterator itr = _componentList.begin(); itr != _componentList.end(); itr++)
+	{
+		if ((*itr)->GetType() == eComponentType::CT_TILEOBJECT)
+		{
+			TileObject* tileObj = (TileObject*)(*itr);
+			tileObj->ChangeColor(D3DCOLOR_ARGB(255, 0, 0, 255));
+		}
+	}
 }
 
 float TileCell::GetHeuristic()

@@ -22,24 +22,24 @@ Monster::~Monster()
 
 void Monster::UpdateAI(float deltaTime)
 {
-	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-	std::vector<eComponentType> typeList;
-	typeList.push_back(eComponentType::CT_NPC);
-	typeList.push_back(eComponentType::CT_PLAYER);
-	Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(map,this, 4, typeList);
-	
-	if (findEnemy != NULL)
-	{
-		// 길찾기
-		TileCell* targetCell = GameSystem::GetInstance()->GetStage()->GetMap()->GetTileCell(findEnemy->GetTileX(), findEnemy->GetTileY());
-		SetTargetCell(targetCell);
-	}
+	//Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+	//std::vector<eComponentType> typeList;
+	//typeList.push_back(eComponentType::CT_NPC);
+	//typeList.push_back(eComponentType::CT_PLAYER);
+	//Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(map,this, 4, typeList);
+	//
+	//if (findEnemy != NULL)
+	//{
+	//	// 길찾기
+	//	TileCell* targetCell = GameSystem::GetInstance()->GetStage()->GetMap()->GetTileCell(findEnemy->GetTileX(), findEnemy->GetTileY());
+	//	SetTargetCell(targetCell);
+	//}
 
-	else
-	{
-		Character::UpdateAI(deltaTime);
-	}
-	
+	//else
+	//{
+	//	Character::UpdateAI(deltaTime);
+	//}
+	//
 }
 
 Component* Monster::Collision(std::list<Component*> &collisionList)

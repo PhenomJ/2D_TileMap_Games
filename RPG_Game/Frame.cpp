@@ -31,21 +31,15 @@ void Frame::Init(Texture* texture, int x, int y, int width, int height, float ro
 
 void Frame::Deinit()
 {
-	/*if (_texture != NULL)
-	{
-		_texture->Release();
-		delete _texture;
-		_texture = NULL;
-	}*/
 	_texture = NULL;
 }
 
 void Frame::Render()
 {
 	D3DXVECTOR2 spriteCenter = D3DXVECTOR2((float)_width / 2.0f, (float)_height / 2.0f);
-	D3DXVECTOR2 translate = D3DXVECTOR2(_x - _width / 2.0f, _y - _height / 2.0f);
+	_translate = D3DXVECTOR2(_x - _width / 2.0f, _y - _height / 2.0f);
 	D3DXVECTOR2 scaling = D3DXVECTOR2(1.0f, 1.0f);
-
+	
 	D3DXMATRIX matrix;
 	D3DXMatrixTransformation2D(
 		&matrix,
@@ -54,7 +48,7 @@ void Frame::Render()
 		&scaling,
 		&spriteCenter,
 		_rotate, // 회전각도
-		&translate
+		&_translate
 	);
 
 	_sprite->SetTransform(&matrix);
@@ -84,7 +78,5 @@ void Frame::SetPosition(float x, float y)
 
 void Frame::ChangeColor(D3DCOLOR color)
 {
-	_sprite = GameSystem::GetInstance()->GetSprite();
 	_textureColor = color;
-	Render();
 }

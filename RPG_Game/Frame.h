@@ -25,6 +25,8 @@ private:
 	D3DCOLOR _textureColor;
 	LPD3DXSPRITE _sprite;
 
+	D3DXVECTOR2 _translate;
+
 	int _width;
 	int _height;
 	float _rotate;
@@ -32,4 +34,8 @@ private:
 
 	float _x;
 	float _y;
+
+public:
+	float GetPositionX() { return _translate.x; }
+	float GetPositionY() { return _translate.y; }
 };

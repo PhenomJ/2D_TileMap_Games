@@ -24,6 +24,7 @@ public:
 private:
 	Texture* _texture;
 	std::map<std::wstring, Texture*> _textureMap;
+	std::map<D3DCOLOR, Texture*> _textureColorMap;
 
 public:
 	std::vector<std::string> LoadScript(std::wstring scriptfileName);

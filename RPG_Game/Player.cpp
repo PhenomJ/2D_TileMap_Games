@@ -17,6 +17,7 @@ Player::Player(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Character
 	_hp = 10;
 	_attackPoint = 5;
 	_attackCoolDown = 1.0f;
+	_movePoint = 5;
 }
 
 Player::~Player()

@@ -19,6 +19,37 @@ void FindingPathState::Init(Character* character)
 	State::Init(character);
 }
 
+void FindingPathState::Start()
+{
+	State::Start();
+
+	_targetTileCell = _character->GetTargetCell();
+
+	// 모든 타일셀 길찾기 속성 초기화 
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+	int height = map->GetHeight();
+	int width = map->GetWidth();
+
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			TileCell* tileCell = map->GetTileCell(x, y);
+			tileCell->InitFindingPath();
+		}
+	}
+
+	TileCell* startTileCell = map->GetTileCell(_character->GetTileX(), _character->GetTileY());
+
+	sPathCommand newCommand;
+	newCommand.heuristic = 0.0f;
+	newCommand.tileCell = startTileCell;
+
+	_findingPathTileQueue.push(newCommand);
+
+	_updateState = eUpdateState::FINDINGPATH;
+}
+
 void FindingPathState::Update(float deltaTime)
 {
 	State::Update(deltaTime);
@@ -41,37 +72,6 @@ void FindingPathState::Update(float deltaTime)
 	}
 }
 
-void FindingPathState::Start()
-{
-	State::Start();
-
-	_targetTileCell = _character->GetTargetCell();
-
-	// 모든 타일셀 길찾기 속성 초기화 
-	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-	int height = map->GetHeight();
-	int width = map->GetWidth();
-
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			TileCell* tileCell = map->GetTileCell(x, y);
-			tileCell->InitFindingPath();
-		}
-	}
-
-	TileCell* startTileCell = map->GetTileCell(_character->GetTileX(), _character->GetTileY());
-	
-	sPathCommand newCommand;
-	newCommand.heuristic = 0.0f;
-	newCommand.tileCell = startTileCell;
-
-	_findingPathTileQueue.push(newCommand);
-
-	_updateState = eUpdateState::FINDINGPATH;
-}
-
 void FindingPathState::Stop()
 {
 	State::Stop();
@@ -83,7 +83,7 @@ void FindingPathState::Stop()
 void FindingPathState::UpdateFindingPath()
 {
 	// 길찾기 시작
-	if (_findingPathTileQueue.size() != 0)
+	if (_findingPathTileQueue.size() >= 0)
 	{
 		// 첫 노드를 꺼내서 검사
 		sPathCommand command = _findingPathTileQueue.top();
@@ -92,69 +92,49 @@ void FindingPathState::UpdateFindingPath()
 		if (command.tileCell->IsFindingPathMarked() == false)
 		{
 			command.tileCell->FindingPathMarking();
-			
-			// 목표 타일이면 종료
-			if (command.tileCell->GetTileX() == _targetTileCell->GetTileX() && command.tileCell->GetTileY() == _targetTileCell->GetTileY())
+
+			if (_character->GetPathFindingType() != ePathFindingType::DISTANCE)
 			{
-				std::list<Component*> componentList = command.tileCell->GetComponentList();
-				for (std::list<Component*>::iterator itr = componentList.begin(); itr != componentList.end(); itr++)
+				// 목표 타일이면 종료
+				if (command.tileCell->GetTileX() == _targetTileCell->GetTileX() && command.tileCell->GetTileY() == _targetTileCell->GetTileY())
 				{
-					if ((*itr)->GetType() == eComponentType::CT_PLAYER)
-					{
-						Character* enemy = (Character*)(*itr);
-						
-						if (command.tileCell->GetPrevCell() != NULL)
-						{
-							if (command.tileCell->GetTileX() < command.tileCell->GetPrevCell()->GetTileX())
-							{
-								enemy->SetDirection(eDirection::RIGHT);
-							}
+					_updateState = eUpdateState::BUILD_PATH;
+					_reverseTileCell = _targetTileCell;
 
-							else if (command.tileCell->GetTileX() > command.tileCell->GetPrevCell()->GetTileX())
-							{
-								enemy->SetDirection(eDirection::LEFT);
-							}
-
-							else if (command.tileCell->GetTileY() < command.tileCell->GetPrevCell()->GetTileY())
-							{
-								enemy->SetDirection(eDirection::UP);
-							}
-
-							else if (command.tileCell->GetTileY() > command.tileCell->GetPrevCell()->GetTileY())
-							{
-								enemy->SetDirection(eDirection::DOWN);
-							}
-						}
-					}
+					return;
 				}
+			}
 
-				_updateState = eUpdateState::BUILD_PATH;
-				_reverseTileCell = _targetTileCell;
-				
+			if (command.tileCell->GetDistanceFromStart() > _character->GetMovePoint())
+			{
+				_reverseTileCell = command.tileCell;
+				_nextState = eStateType::ET_IDLE;
 				return;
 			}
-			
+
 			// 주변 타일 검사
 			for (int direction = 0; direction < eDirection::NONE; direction++)
 			{
 				TilePosition currentTilePosition;
 				currentTilePosition.x = command.tileCell->GetTileX();
 				currentTilePosition.y = command.tileCell->GetTileY();
+
 				TilePosition nextTilePos = GetNextTilePosition(currentTilePosition, (eDirection)direction);
 
 				Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 				TileCell* nextTileCell = map->GetTileCell(nextTilePos);
 
-				Stage* stage = GameSystem::GetInstance()->GetStage();
-				stage->CreateFindingPathMark(nextTileCell);
+				if (_character->GetPathFindingType() == ePathFindingType::DISTANCE)
+				{
+					Stage* stage = GameSystem::GetInstance()->GetStage();
+					stage->CreateMark(nextTileCell);
+				}
 
 				// 검사 한타일인지 && 이동 가능한 타일 인지 && 갈수 없는 노드의 타입이 혹시 몬스터? -> 리팩토링하고싶다ㅏㅏ
-				if ((map->CanMoveTileMap(nextTilePos) == true && nextTileCell->IsFindingPathMarked() == false) ||
-					(nextTileCell->GetTileX() == _targetTileCell->GetTileX() && nextTileCell->GetTileY() == _targetTileCell->GetTileY()))
+				if ((map->CanMoveTileMap(nextTilePos) == true && nextTileCell->IsFindingPathMarked() == false))
 				{
-					float distanceFromStart = command.tileCell->GetDistanceFromStart() + command.tileCell->GetDistanceWeight();
-					//float heuristic = CalcAStarHeuristic(distanceFromStart, nextTileCell, _targetTileCell);
-					float heuristic = distanceFromStart;
+					float distanceFromStart = command.tileCell->GetDistanceFromStart() + command.tileCell->GetDistanceWeight() + 1;
+					float heuristic = CalcHeuristic(_character->GetPathFindingType(), distanceFromStart, command.tileCell, nextTileCell, _targetTileCell);
 
 					if (nextTileCell->GetPrevCell() == NULL)
 					{
@@ -167,20 +147,6 @@ void FindingPathState::UpdateFindingPath()
 						newCommand.tileCell = nextTileCell;
 						_findingPathTileQueue.push(newCommand);
 					}
-
-					else
-					{
-						if (distanceFromStart < nextTileCell->GetDistanceFromStart())
-						{
-							nextTileCell->SetDistanceFromStart(distanceFromStart);
-							nextTileCell->SetPrevCell(command.tileCell);
-							sPathCommand newCommand;
-							newCommand.tileCell = nextTileCell;
-							//newCommand.heuristic = CalcAStarHeuristic(distanceFromStart, nextTileCell, _targetTileCell);
-							newCommand.heuristic = distanceFromStart;
-							_findingPathTileQueue.push(newCommand);
-						}
-					}
 				}
 			}
 		}
@@ -192,7 +158,7 @@ void FindingPathState::UpdateBuildPath()
 	// 거꾸로 길을 도출
 	if (_reverseTileCell != NULL)
 	{
-		if (_targetTileCell->CanMove() == false)
+		if (_targetTileCell != NULL || _targetTileCell->CanMove() == false)
 		{
 			if (_reverseTileCell->GetTileX() != _targetTileCell->GetTileX() || _reverseTileCell->GetTileY() != _targetTileCell->GetTileY())
 			{
@@ -301,4 +267,25 @@ float FindingPathState::CalcComplexHeuristic(TileCell* nextTileCell, TileCell* t
 float FindingPathState::CalcAStarHeuristic(float distanceFromStart, TileCell* nextTileCell, TileCell* targetTileCell)
 {
 	return distanceFromStart + CalcComplexHeuristic(nextTileCell, targetTileCell);
+}
+
+float FindingPathState::CalcHeuristic(ePathFindingType type, float distance, TileCell* tileCell, TileCell* nextTileCell, TileCell* targetTileCell)
+{
+	switch (type)
+	{
+	case ePathFindingType::DISTANCE:
+		return distance;
+
+	case ePathFindingType::SIMPLE:
+		return CalcSimpleHeuristic(tileCell, nextTileCell, targetTileCell);
+
+	case ePathFindingType::COMPLEX:
+		return CalcComplexHeuristic(nextTileCell, targetTileCell);
+
+	case ePathFindingType::ASTAR:
+		return CalcAStarHeuristic(distance, nextTileCell, targetTileCell);
+
+	default:
+		return 0;
+	}
 }

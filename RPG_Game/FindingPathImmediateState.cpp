@@ -22,7 +22,7 @@ void FindingPathImmediateState::Start()
 		UpdateFindingPath();
 	}
 
-	while (_reverseTileCell != NULL)
+	while (_reverseTileCell != NULL && _updateState == eUpdateState::BUILD_PATH)
 	{
 		UpdateBuildPath();
 	}

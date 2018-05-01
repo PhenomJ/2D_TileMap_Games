@@ -333,5 +333,6 @@ void Character::InitTilePosition(int tileX, int tileY)
 void Character::SetTargetCell(TileCell* tileCell)
 {
 	_targetTileCell = tileCell;
+	_pathfindingType = ePathFindingType::ASTAR;
 	_state->NextState(eStateType::ET_FINDINGPATH);
 }

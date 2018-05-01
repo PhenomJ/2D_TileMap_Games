@@ -2,6 +2,7 @@
 #include "FindingPathState.h"
 #include "FindingPathMoveState.h"
 #include "FindingPathImmediateState.h"
+#include "FindingPathMoveRangeState.h"
 #include "IdleState.h"
 #include "GameSystem.h"
 #include "Stage.h"
@@ -11,8 +12,8 @@ FindingPathPlayer::FindingPathPlayer(LPCWSTR name, LPCWSTR scriptName, LPCWSTR s
 {
 	beforeMouseX = 0;
 	beforeMouseY = 0;
-	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-	//_tileCell = map->GetTileCell(_charcter, _tileY);
+	_movableCount = 16;
+	_pathfindingType = ePathFindingType::DISTANCE;
 }
 
 FindingPathPlayer::~FindingPathPlayer()
@@ -28,21 +29,16 @@ void FindingPathPlayer::UpdateAI(float deltaTime)
 		int mouseX = GameSystem::GetInstance()->GetMouseX();
 		int mouseY = GameSystem::GetInstance()->GetMouseY();
 
-		if (beforeMouseX != mouseX && beforeMouseY != mouseY)
+		TileCell* targetTileCell = GameSystem::GetInstance()->GetStage()->GetMap()->FindTileCellWithMousePosition(mouseX, mouseY);
+		
+		if (targetTileCell->GetTileX() == this->GetTileX() && targetTileCell->GetTileY() == this->GetTileY())
 		{
-			TileCell* targetTileCell = GameSystem::GetInstance()->GetStage()->GetMap()->FindTileCellWithMousePosition(mouseX, mouseY);
+			_state->NextState(eStateType::ET_MOVERANGE);
+		}
 
-			if (targetTileCell != NULL)
-			{
-				beforeMouseX = mouseX;
-				beforeMouseY = mouseY;
-				SetTargetCell(targetTileCell);
-			}
-
-			if (targetTileCell == this->GetTileCell())
-			{
-				//CallMoveableRange(targetTileCell);
-			}
+		if (targetTileCell->GetClickable())
+		{
+			SetTargetCell(targetTileCell);
 		}
 	}
 }
@@ -55,6 +51,7 @@ TileCell* FindingPathPlayer::GetTileCell()
 void FindingPathPlayer::InitState()
 {
 	Player::InitState();
+	ReplaceState(eStateType::ET_MOVERANGE, new FindingPathMoveRangeState());
 	ReplaceState(eStateType::ET_MOVE, new FindingPathMoveState());
 	ReplaceState(eStateType::ET_FINDINGPATH, new FindingPathImmediateState());
 }

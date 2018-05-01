@@ -1,7 +1,7 @@
 #pragma once
 #include "State.h"
 #include "TileCell.h"
-
+#include "GlobalType.h"
 #include <queue>
 
 class Character;
@@ -39,16 +39,16 @@ public:
 	void UpdateFindingPath();
 
 protected:
-	//std::priority_queue<TileCell*, std::vector<TileCell*>, compare> _findingPathTileQueue;
 	std::priority_queue<sPathCommand, std::vector<sPathCommand>, compare> _findingPathTileQueue;
 	TileCell* _targetTileCell;
 	TileCell* _reverseTileCell;
 	eUpdateState _updateState;
+	int count = 0;
 
 public:
 	void UpdateBuildPath();
 
-	//float CalcDistanceHeuristic(TileCell)
+	float CalcHeuristic(ePathFindingType type, float distance, TileCell* tileCell, TileCell* nextTileCell, TileCell* targetTileCell);
 
 	// Simple
 	float CalcSimpleHeuristic(TileCell* tileCell, TileCell* nextTileCell, TileCell* targetTileCell);

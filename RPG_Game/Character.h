@@ -22,7 +22,8 @@ enum eStateType
 	ET_DEAD,
 	ET_NONE,
 	ET_FINDINGPATH,
-	ET_MOVECHASE
+	ET_MOVECHASE,
+	ET_MOVERANGE,
 };
 
 class Character : public Component
@@ -48,6 +49,7 @@ protected:
 	float _moveSpeed;
 	eDirection _currentDirection;
 	bool _isMoving;
+	int _movePoint;
 
 public:
 	void InitMove();
@@ -57,12 +59,14 @@ public:
 	void MoveStop();
 	void Moving(float deltaTime);
 	bool IsMoving();
-
+	int GetMovePoint() { return _movePoint; }
+	
 	virtual void MoveDeltaPosition(float deltaX, float deltaY);
 	virtual void UpdateAI(float deltaTime);
 
 	eDirection GetDirection() {	return _currentDirection; };
 	void SetDirection(eDirection direction) { _currentDirection = direction; }
+
 	//Message
 public:
 	void ReceiveMessage(const sComponentMsgParam &msgParam);
@@ -154,4 +158,12 @@ public:
 	std::stack<TileCell*> GetPathTileCellStack() { return _pathTileCellStack; }
 	void PushPathTileCellStack(TileCell* tileCell) { _pathTileCellStack.push(tileCell); }
 	void ClearPathTileCellStack() { while (_pathTileCellStack.size() != 0) { _pathTileCellStack.pop(); } }
+
+	//PathFindingType
+protected:
+	ePathFindingType _pathfindingType;
+
+public:
+	ePathFindingType GetPathFindingType() { return _pathfindingType; }
+	void SetPathFindingType(ePathFindingType type) { _pathfindingType = type; }
 };

@@ -43,8 +43,6 @@ private:
 	//Change Color
 public:
 	void ChangeColor(D3DCOLOR color);
-
-private:
-
-
+	float GetPositionX() { return _x; }
+	float GetPositionY() { return _y; }
 };

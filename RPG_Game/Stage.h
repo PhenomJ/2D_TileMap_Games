@@ -45,4 +45,6 @@ private:
 	// FindingPath
 public:
 	void CreateFindingPathMark(TileCell* reverseTileCell);
+
+	void CreateMark(TileCell* tileCell);
 };

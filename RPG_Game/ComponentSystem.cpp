@@ -130,8 +130,8 @@ void ComponentSystem::Update(float deltaTime)
 	ProcessMessageQueue();
 }
 
-void ComponentSystem::RemoveComponent(Component* tileCharacter)
+void ComponentSystem::RemoveComponent(Component* tileObject)
 {
-	_componentMap.erase(tileCharacter->GetName());
-	delete tileCharacter;
+	_componentMap.erase(tileObject->GetName());
+	delete tileObject;
 }

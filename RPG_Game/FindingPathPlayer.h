@@ -22,7 +22,9 @@ private:
 	//Test
 private:
 	TileCell* _tileCell;
-
+	int _movableCount;
 public:
 	TileCell* GetTileCell();
+
+	void CallMovableRange(TileCell* targetTileCell, int movableCount);
 };

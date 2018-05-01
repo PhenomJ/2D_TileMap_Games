@@ -105,6 +105,7 @@ void Sprite::Reset()
 {
 	Init();
 	std::vector<Frame*>::iterator itr = _frameList.begin();
+
 	for (itr = _frameList.begin(); itr != _frameList.end(); itr++)
 	{
 		Frame* frame = (*itr);
@@ -141,11 +142,11 @@ void Sprite::SetPosition(float posX, float posY)
 
 void Sprite::ChangeColor(D3DCOLOR color)
 {
+	_device3d = GameSystem::GetInstance()->GetDevice3d();
 	std::vector<Frame*>::iterator itr = _frameList.begin();
 	for (itr = _frameList.begin(); itr != _frameList.end(); itr++)
 	{
 		Frame* frame = (*itr);
 		frame->ChangeColor(color);
-		frame->Render();
 	}
 }

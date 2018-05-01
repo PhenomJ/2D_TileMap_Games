@@ -7,7 +7,7 @@ class Sprite;
 class TileCell
 {
 public:
-	TileCell(int tileX, int tileY, Sprite* sprite);
+	TileCell(int tileX, int tileY);
 	~TileCell();
 
 	void Deinit();
@@ -49,7 +49,6 @@ private:
 
 	int _tileX;
 	int _tileY;
-	Sprite* _sprite;
 
 public:
 	void InitFindingPath();
@@ -75,6 +74,11 @@ public:
 	void SetHeuristic(float heuristic) { _heuristic = heuristic; };
 	float GetHeuristic();
 
-	//Test
-	int i = 0;
+
+private:
+	bool _isClickable = false;
+
+public:
+	void SetClickable(bool clickable) { _isClickable = clickable; }
+	bool GetClickable() { return _isClickable; }
 };

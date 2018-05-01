@@ -19,6 +19,13 @@ TilePosition GetNextTilePosition(TilePosition currentTilePos, eDirection directi
 		tilePosition.y++;
 		break;
 	}
+
+	if (tilePosition.x < 0)
+		tilePosition.x = 0;
+
+	if (tilePosition.y < 0)
+		tilePosition.y = 0;
+
 	return tilePosition;
 }
 
