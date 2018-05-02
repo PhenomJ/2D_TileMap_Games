@@ -156,8 +156,8 @@ void Character::MoveDeltaPosition(float deltaX, float deltaY)
 
 void Character::UpdateAI(float deltaTime)
 {
-	_currentDirection = (eDirection)(rand() % 4);
-	_state->NextState(eStateType::ET_MOVE);
+	/*_currentDirection = (eDirection)(rand() % 4);
+	_state->NextState(eStateType::ET_MOVE);*/
 }
 
 void Character::ChangeState(eStateType stateType)

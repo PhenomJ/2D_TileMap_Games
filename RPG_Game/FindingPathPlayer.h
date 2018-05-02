@@ -22,7 +22,7 @@ private:
 	//Test
 private:
 	TileCell* _tileCell;
-	int _movableCount;
+
 public:
 	TileCell* GetTileCell();
 

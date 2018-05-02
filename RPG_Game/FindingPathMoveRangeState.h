@@ -10,5 +10,4 @@ public:
 
 public:
 	void Start();
-	void InputClick();
 };

@@ -51,7 +51,7 @@ void FindingPathMoveState::Update(float deltaTime)
 	if (_character->IsLive() == false)
 		return;
 	
-	if (_character->GetMoveTime() <= _moveDuration)
+	//if (_character->GetMoveTime() <= _moveDuration)
 	{
 		_moveDuration = 0.0f;
 		if (_pathTileCellStack.size() != 0)
@@ -73,29 +73,9 @@ void FindingPathMoveState::Update(float deltaTime)
 			if (direction != eDirection::NONE)
 				_character->SetDirection(direction);
 
-			std::list<Component*> collisionList;
-			Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+			
 
-			bool canMove = map->GetTileCollisionList(tileCell->GetTileX(), tileCell->GetTileY(), collisionList);
-
-			if (canMove == false)
-			{
-				Component* target = _character->Collision(collisionList);
-
-				if (target != NULL && _character->IsCoolDown())
-				{
-					_character->ResetCoolDown();
-					_character->SetTarget(target);
-					_nextState = eStateType::ET_ATTACK;
-				}
-
-				else
-				{
-					_nextState = eStateType::ET_IDLE;
-				}
-			}
-
-			else
+			
 			{
 				_character->MoveStart(tileCell->GetTileX(), tileCell->GetTileY());
 				_character->MoveStop();
@@ -109,10 +89,10 @@ void FindingPathMoveState::Update(float deltaTime)
 		}
 	}
 
-	else
+	/*else
 	{
 		_moveDuration += deltaTime;
-	}
+	}*/
 }
 
 void FindingPathMoveState::Stop()

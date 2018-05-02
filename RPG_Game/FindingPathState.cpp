@@ -8,6 +8,7 @@
 FindingPathState::FindingPathState()
 {
 	_targetTileCell = NULL;
+	_reverseTileCell = NULL;
 }
 
 FindingPathState::~FindingPathState()
@@ -98,20 +99,22 @@ void FindingPathState::UpdateFindingPath()
 				// 목표 타일이면 종료
 				if (command.tileCell->GetTileX() == _targetTileCell->GetTileX() && command.tileCell->GetTileY() == _targetTileCell->GetTileY())
 				{
-					_updateState = eUpdateState::BUILD_PATH;
 					_reverseTileCell = _targetTileCell;
+					_updateState = eUpdateState::BUILD_PATH;
 
 					return;
 				}
 			}
 
-			if (command.tileCell->GetDistanceFromStart() > _character->GetMovePoint())
+			if (_character->GetPathFindingType() == ePathFindingType::DISTANCE)
 			{
-				_reverseTileCell = command.tileCell;
-				_nextState = eStateType::ET_IDLE;
-				return;
+				if (command.tileCell->GetDistanceFromStart() > _character->GetMovePoint())
+				{
+					_reverseTileCell = command.tileCell;
+					_nextState = eStateType::ET_IDLE;
+					return;
+				}
 			}
-
 			// 주변 타일 검사
 			for (int direction = 0; direction < eDirection::NONE; direction++)
 			{
@@ -124,13 +127,12 @@ void FindingPathState::UpdateFindingPath()
 				Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 				TileCell* nextTileCell = map->GetTileCell(nextTilePos);
 
-				if (_character->GetPathFindingType() == ePathFindingType::DISTANCE)
+				if (_character->GetPathFindingType() == ePathFindingType::DISTANCE && nextTileCell->CanMove())
 				{
 					Stage* stage = GameSystem::GetInstance()->GetStage();
 					stage->CreateMark(nextTileCell);
 				}
 
-				// 검사 한타일인지 && 이동 가능한 타일 인지 && 갈수 없는 노드의 타입이 혹시 몬스터? -> 리팩토링하고싶다ㅏㅏ
 				if ((map->CanMoveTileMap(nextTilePos) == true && nextTileCell->IsFindingPathMarked() == false))
 				{
 					float distanceFromStart = command.tileCell->GetDistanceFromStart() + command.tileCell->GetDistanceWeight() + 1;
@@ -158,21 +160,8 @@ void FindingPathState::UpdateBuildPath()
 	// 거꾸로 길을 도출
 	if (_reverseTileCell != NULL)
 	{
-		if (_targetTileCell != NULL || _targetTileCell->CanMove() == false)
-		{
-			if (_reverseTileCell->GetTileX() != _targetTileCell->GetTileX() || _reverseTileCell->GetTileY() != _targetTileCell->GetTileY())
-			{
-				_character->PushPathTileCellStack(_reverseTileCell);
-			}
-		}
-
-		else
-		{
-			_character->PushPathTileCellStack(_reverseTileCell);
-		}
-		
+		_character->PushPathTileCellStack(_reverseTileCell);
 		_reverseTileCell = _reverseTileCell->GetPrevCell();
-		
 	}
 
 	else

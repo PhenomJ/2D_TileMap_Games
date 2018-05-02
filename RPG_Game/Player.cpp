@@ -66,8 +66,8 @@ void Player::UpdateAI(float deltaTime)
 				ComponentSystem::GetInstance()->SendMsg(msg);
 			}
 		}
-
 	}
+
 	if (direction != eDirection::NONE)
 	{
 		_currentDirection = direction;

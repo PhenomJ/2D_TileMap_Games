@@ -20,8 +20,3 @@ void FindingPathMoveRangeState::Start()
 	_character->SetTarget(NULL);
 	_nextState = eStateType::ET_FINDINGPATH;
 }
-
-void FindingPathMoveRangeState::InputClick()
-{
-
-}
