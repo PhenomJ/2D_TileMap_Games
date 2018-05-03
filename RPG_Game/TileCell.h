@@ -79,6 +79,14 @@ private:
 	bool _isClickable = false;
 
 public:
-	void SetClickable(bool clickable) { _isClickable = clickable; }
+	void ChangeClickable() { _isClickable = !_isClickable; }
 	bool GetClickable() { return _isClickable; }
+
+	//Attack judge
+private:
+	bool _isAttackable = false;
+
+public:
+	void ChangeAttackable() { _isAttackable = !_isAttackable; }
+	bool GetAttackable() { return _isAttackable; }
 };

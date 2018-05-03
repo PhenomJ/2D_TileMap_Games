@@ -128,7 +128,11 @@ void Stage::CreateMark(TileCell* tileCell)
 	Character* mark = (Character*)(_game->CreateNpc(L"monster", L"monster"));
 	mark->InitTilePosition(tileCell->GetTileX(), tileCell->GetTileY());
 	mark->SetCanMove(true);
-	tileCell->SetClickable(true);
+
+	if (!tileCell->CanMove())
+		tileCell->ChangeAttackable();
+
+	tileCell->ChangeClickable();
 	_componentList.remove(mark);
 	tileCell->AddComponent(mark, true);
 }

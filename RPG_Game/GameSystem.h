@@ -38,9 +38,6 @@ private:
 
 	LPDIRECT3DDEVICE9 _device3d;
 	LPD3DXSPRITE _sprite;
-
-	
-
 	D3DPRESENT_PARAMETERS _d3dpp;
 
 	bool _isFullScreen;
@@ -86,5 +83,4 @@ private:
 
 public:
 	Stage* GetStage() { return _stage; }
-
 };

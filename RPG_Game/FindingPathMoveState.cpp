@@ -72,9 +72,6 @@ void FindingPathMoveState::Update(float deltaTime)
 			eDirection direction = GetDirection(to, from);
 			if (direction != eDirection::NONE)
 				_character->SetDirection(direction);
-
-			
-
 			
 			{
 				_character->MoveStart(tileCell->GetTileX(), tileCell->GetTileY());
@@ -100,4 +97,5 @@ void FindingPathMoveState::Stop()
 	State::Stop();
 	_character->GetPathTileCellStack();
 	_character->ClearPathTileCellStack();
+	TurnManager::GetInstance()->ChangeTurn();
 }

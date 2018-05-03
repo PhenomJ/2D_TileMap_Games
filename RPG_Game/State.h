@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "TurnManager.h"
 
 class Sprite;
 class Character;

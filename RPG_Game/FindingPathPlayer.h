@@ -19,12 +19,17 @@ private:
 	int beforeMouseX;
 	int beforeMouseY;
 
+	//Attack
+private:
+	TileCell * _targetTileCell;
+
+public:
+	void Attack(TileCell* targetTileCell);
+
 	//Test
 private:
 	TileCell* _tileCell;
 
 public:
 	TileCell* GetTileCell();
-
-	void CallMovableRange(TileCell* targetTileCell, int movableCount);
 };

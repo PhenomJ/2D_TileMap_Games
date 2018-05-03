@@ -42,6 +42,7 @@ void AttackState::Start()
 	msgParam.message = L"Attack";
 	msgParam.attackPoint = _character->GetAttackPoint();
 	ComponentSystem::GetInstance()->SendMsg(msgParam);
+	TurnManager::GetInstance()->ChangeTurn();
 }
 
 void AttackState::Stop()
