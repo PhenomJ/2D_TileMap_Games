@@ -10,4 +10,8 @@ public:
 
 private:
 	Component* Collision(std::list<Component*> &collisionList);
+
+	//Test
+public:
+	TileCell * MinDistanceTileCell(TileCell* targetCell, std::list<TileCell*> tileCellList);
 };

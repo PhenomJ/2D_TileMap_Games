@@ -5,6 +5,7 @@
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int nCmdShow)
 {
+	//srand(8102); // About Test
 	srand(time(NULL));
 	GameSystem::GetInstance()->InitSystem(hInstance, nCmdShow);
 	

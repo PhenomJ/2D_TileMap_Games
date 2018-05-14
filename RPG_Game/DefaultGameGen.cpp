@@ -23,28 +23,7 @@ void DefaultGameGen::CreateComponents(std::wstring mapName)
 {
 	GameGen::CreateComponents(mapName);
 
-	for (int i = 0; i < 0; i++)
-	{
-		SetName(L"Recovery_Item_");
-		RecoveryItem* item = new RecoveryItem(_name.c_str(), L"Recovery_Item", L"item");
-		_stage->AddStageComponent(item);
-	}
-
-	for (int i = 0; i < 0; i++)
-	{
-		SetName(L"Posion_Item_");
-		PosionItem* item = new PosionItem(_name.c_str(), L"Posion_item", L"item");
-		_stage->AddStageComponent(item);
-	}
-
-	for (int i = 0; i < 0; i++)
-	{
-		SetName(L"npc_");
-		NPC* npc = new NPC(_name.c_str(), L"npc", L"npc");
-		_stage->AddStageComponent(npc);
-	}
-
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		SetName(L"monster_");
 		Monster* monster = new Monster(_name.c_str(), L"monster", L"monster");

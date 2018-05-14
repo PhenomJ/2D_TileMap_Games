@@ -84,7 +84,7 @@ void FindingPathState::Stop()
 void FindingPathState::UpdateFindingPath()
 {
 	// 길찾기 시작
-	if (_findingPathTileQueue.size() >= 0)
+	if (_findingPathTileQueue.size() > 0)
 	{
 		// 첫 노드를 꺼내서 검사
 		sPathCommand command = _findingPathTileQueue.top();
@@ -125,11 +125,14 @@ void FindingPathState::UpdateFindingPath()
 				TilePosition nextTilePos = GetNextTilePosition(currentTilePosition, (eDirection)direction);
 
 				Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+				int x = map->GetWidth();
+				int y = map->GetHeight();
 				TileCell* nextTileCell = map->GetTileCell(nextTilePos);
 
 				if (_character->GetPathFindingType() == ePathFindingType::DISTANCE && nextTileCell->CanMove())
 				{
 					Stage* stage = GameSystem::GetInstance()->GetStage();
+					_character->SetTileCellInfo(nextTileCell);
 					stage->CreateMark(nextTileCell);
 				}
 
@@ -148,6 +151,11 @@ void FindingPathState::UpdateFindingPath()
 						newCommand.heuristic = heuristic;
 						newCommand.tileCell = nextTileCell;
 						_findingPathTileQueue.push(newCommand);
+					}
+
+					else if (nextTileCell->GetPrevCell() != NULL)
+					{
+						_findingPathTileQueue.size();
 					}
 				}
 			}
@@ -248,7 +256,7 @@ float FindingPathState::CalcComplexHeuristic(TileCell* nextTileCell, TileCell* t
 	distanceW = distanceW * distanceW;
 	distanceH = distanceH * distanceH;
 
-	float distance = (float)((double)distanceW+ (double)distanceH);
+	float distance = (float)((double)distanceW + (double)distanceH);
 
 	return distance;
 }

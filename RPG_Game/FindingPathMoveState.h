@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include <stack>
+#include <list>
 
 class TileCell;
 class Character;
@@ -20,4 +21,8 @@ public:
 private:
 	float _moveDuration;
 	std::stack<TileCell*> _pathTileCellStack;
+
+	//test
+private:
+	std::list<TileCell*> _changeColorInfo;
 };

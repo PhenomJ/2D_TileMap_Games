@@ -4,7 +4,7 @@ TurnManager* TurnManager::_instance = NULL;
 
 TurnManager::TurnManager()
 {
-
+	_isPlayerTurn = true;
 }
 
 TurnManager::~TurnManager()

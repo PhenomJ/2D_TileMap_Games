@@ -32,9 +32,19 @@ void FindingPathMoveState::Start()
 
 	_pathTileCellStack = _character->GetPathTileCellStack();
 
+	_changeColorInfo = _character->GetTileCellInfo();
+
 	if (_pathTileCellStack.size() != 0)
 	{
 		_pathTileCellStack.pop();
+	}
+
+	if (_changeColorInfo.size() != 0)
+	{
+		for (std::list<TileCell*>::iterator itr = _changeColorInfo.begin(); itr != _changeColorInfo.end(); itr++)
+		{
+		
+		}
 	}
 }
 

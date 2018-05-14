@@ -13,6 +13,7 @@ Monster::Monster(LPCWSTR name, LPCWSTR scriptName, LPCWSTR spriteName) : Charact
 	_type = eComponentType::CT_MONSTER;
 	_hp = 10;
 	_attackPoint = 5;
+	_movePoint = 10;
 }
 
 Monster::~Monster()
@@ -22,24 +23,30 @@ Monster::~Monster()
 
 void Monster::UpdateAI(float deltaTime)
 {
-	//Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-	//std::vector<eComponentType> typeList;
-	//typeList.push_back(eComponentType::CT_NPC);
-	//typeList.push_back(eComponentType::CT_PLAYER);
-	//Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInRange(map,this, 4, typeList);
-	//
-	//if (findEnemy != NULL)
-	//{
-	//	// 길찾기
-	//	TileCell* targetCell = GameSystem::GetInstance()->GetStage()->GetMap()->GetTileCell(findEnemy->GetTileX(), findEnemy->GetTileY());
-	//	SetTargetCell(targetCell);
-	//}
+	if (TurnManager::GetInstance()->IsPlayerTurn() == false)
+	{
+		Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+		std::vector<eComponentType> typeList;
+		typeList.push_back(eComponentType::CT_PLAYER);
+		Component* findEnemy = ComponentSystem::GetInstance()->FindComponentInAllMap(map, this, typeList);
 
-	//else
-	//{
-	//	Character::UpdateAI(deltaTime);
-	//}
-	//
+		if (findEnemy != NULL)
+		{
+			TileCell* targetCell = GameSystem::GetInstance()->GetStage()->GetMap()->GetTileCell(findEnemy->GetTileX(), findEnemy->GetTileY());
+			// 길찾기
+
+			std::list<TileCell*> tileCellRange = ComponentSystem::GetInstance()->FindComponentInRange(map, this, _movePoint, typeList);
+			std::list<TileCell*>::iterator itr = tileCellRange.begin();
+			for (itr ; itr != tileCellRange.end(); itr++)
+			{
+				if ((*itr)->GetTileX() == targetCell->GetTileX() && (*itr)->GetTileY() == targetCell->GetTileY())
+				{
+					Attack(targetCell);
+				}
+			}
+			SetTargetCell(MinDistanceTileCell(targetCell, tileCellRange));
+		}
+	}
 }
 
 Component* Monster::Collision(std::list<Component*> &collisionList)
@@ -54,4 +61,17 @@ Component* Monster::Collision(std::list<Component*> &collisionList)
 		}
 	}
 	return NULL;
+}
+
+TileCell* Monster::MinDistanceTileCell(TileCell* targetCell, std::list<TileCell*> tileCellList)
+{
+	TileCell* minDistanceTileCell;
+
+	for (std::list<TileCell*>::iterator itr = tileCellList.end(); itr != tileCellList.begin(); itr--)
+	{
+		int tileX = (*itr)->GetTileX();
+		int tileY = (*itr)->GetTileY();
+	}
+
+	return minDistanceTileCell;
 }

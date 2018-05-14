@@ -13,7 +13,7 @@ public:
 
 	// TurnManagement
 private:
-	bool _isPlayerTurn = false;
+	bool _isPlayerTurn;
 
 public:
 	void ChangeTurn() { _isPlayerTurn = !_isPlayerTurn; }

@@ -1,8 +1,12 @@
 #include "GlobalType.h"
+#include "Map.h"
+#include "GameSystem.h"
+#include "Stage.h"
 
 TilePosition GetNextTilePosition(TilePosition currentTilePos, eDirection direction)
 {
 	TilePosition tilePosition = currentTilePos;
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
 
 	switch (direction)
 	{
@@ -25,6 +29,12 @@ TilePosition GetNextTilePosition(TilePosition currentTilePos, eDirection directi
 
 	if (tilePosition.y < 0)
 		tilePosition.y = 0;
+
+	if (tilePosition.x >= map->GetWidth())
+		tilePosition.x = map->GetWidth() -1;
+
+	if (tilePosition.y >= map->GetHeight())
+		tilePosition.y = map->GetHeight() -1;
 
 	return tilePosition;
 }

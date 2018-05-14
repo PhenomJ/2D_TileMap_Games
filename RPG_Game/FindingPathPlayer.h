@@ -23,9 +23,6 @@ private:
 private:
 	TileCell * _targetTileCell;
 
-public:
-	void Attack(TileCell* targetTileCell);
-
 	//Test
 private:
 	TileCell* _tileCell;

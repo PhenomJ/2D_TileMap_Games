@@ -15,6 +15,7 @@ FindingPathPlayer::FindingPathPlayer(LPCWSTR name, LPCWSTR scriptName, LPCWSTR s
 	beforeMouseY = 0;
 	_movePoint = 10;
 	_pathfindingType = ePathFindingType::DISTANCE;
+	_type = eComponentType::CT_PLAYER;
 }
 
 FindingPathPlayer::~FindingPathPlayer()
@@ -26,6 +27,7 @@ void FindingPathPlayer::UpdateAI(float deltaTime)
 {
 	// Mouse Input
 	if (TurnManager::GetInstance()->IsPlayerTurn() && GameSystem::GetInstance()->IsMouseDown())
+	//if (GameSystem::GetInstance()->IsMouseDown())
 	{
 		int mouseX = GameSystem::GetInstance()->GetMouseX();
 		int mouseY = GameSystem::GetInstance()->GetMouseY();
@@ -49,6 +51,7 @@ void FindingPathPlayer::UpdateAI(float deltaTime)
 			else if (targetTileCell->GetAttackable())
 			{
 				Attack(targetTileCell);
+				return;
 			}
 		}
 	}
@@ -65,29 +68,4 @@ void FindingPathPlayer::InitState()
 	ReplaceState(eStateType::ET_MOVERANGE, new FindingPathMoveRangeState());
 	ReplaceState(eStateType::ET_MOVE, new FindingPathMoveState());
 	ReplaceState(eStateType::ET_FINDINGPATH, new FindingPathImmediateState());
-}
-
-void FindingPathPlayer::Attack(TileCell* targetTileCell)
-{
-	std::list<Component*> collisionList;
-	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-
-	bool canMove = map->GetTileCollisionList(targetTileCell->GetTileX(), targetTileCell->GetTileY(), collisionList);
-
-	if (canMove == false)
-	{
-		Component* target = Collision(collisionList);
-
-		if (target != NULL && IsCoolDown())
-		{
-			ResetCoolDown();
-			SetTarget(target);
-			_state->NextState(eStateType::ET_ATTACK);
-		}
-
-		else
-		{
-			_state->NextState(eStateType::ET_IDLE);
-		}
-	}
 }

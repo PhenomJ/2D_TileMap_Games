@@ -2,11 +2,13 @@
 #include <Windows.h>
 #include <map>
 #include <string>
+#include <list>
 #include <vector>
 #include <queue>
 #include "ComponentMessage.h"
 
 class Component;
+class TileCell;
 enum eComponentType;
 
 class ComponentSystem
@@ -23,7 +25,8 @@ public:
 	void RemoveAllComponents();
 	
 	Component* FindComponent(std::wstring name);
-	Component* FindComponentInRange(Component* mapComp,Component* chaser, int range, std::vector<eComponentType> typeList);
+	std::list<TileCell*> FindComponentInRange(Component* mapComp, Component* chaser, int range, std::vector<eComponentType> typeList);
+	Component* FindComponentInAllMap(Component* mapComp, Component* chaser, std::vector<eComponentType> typeList);
 	void ProcessMessageQueue();
 	void Update(float deltaTime);
 	//Message

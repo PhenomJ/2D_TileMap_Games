@@ -166,4 +166,19 @@ protected:
 public:
 	ePathFindingType GetPathFindingType() { return _pathfindingType; }
 	void SetPathFindingType(ePathFindingType type) { _pathfindingType = type; }
+
+	//Test1
+private:
+	std::list<TileCell*> _tileCellInfoList;
+
+public:
+	void SetTileCellInfo(TileCell* tileCell) 
+	{
+		_tileCellInfoList.push_back(tileCell);
+	};
+	std::list<TileCell*> GetTileCellInfo() { return _tileCellInfoList; }
+
+	//Attack Test
+protected:
+	void Character::Attack(TileCell* targetTileCell);
 };

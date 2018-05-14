@@ -336,3 +336,29 @@ void Character::SetTargetCell(TileCell* tileCell)
 	_pathfindingType = ePathFindingType::ASTAR;
 	_state->NextState(eStateType::ET_FINDINGPATH);
 }
+
+void Character::Attack(TileCell* targetTileCell)
+{
+	std::list<Component*> collisionList;
+	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
+
+	bool canMove = map->GetTileCollisionList(targetTileCell->GetTileX(), targetTileCell->GetTileY(), collisionList);
+
+	if (canMove == false)
+	{
+		Component* target = Collision(collisionList);
+
+		if (target != NULL && IsCoolDown())
+		{
+			ResetCoolDown();
+			SetTarget(target);
+			_state->NextState(eStateType::ET_ATTACK);
+		}
+
+		else
+		{
+			_state->NextState(eStateType::ET_IDLE);
+		}
+	}
+	TurnManager::GetInstance()->ChangeTurn();
+}

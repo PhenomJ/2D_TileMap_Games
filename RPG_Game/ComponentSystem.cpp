@@ -1,6 +1,8 @@
 #include "ComponentSystem.h"
+#include "GameSystem.h"
 #include "Component.h"
 #include "Map.h"
+#include "TileCell.h"
 
 ComponentSystem* ComponentSystem::_instance = NULL;
 
@@ -56,15 +58,51 @@ Component* ComponentSystem::FindComponent(std::wstring name)
 	return 0;
 }
 
-Component* ComponentSystem::FindComponentInRange(Component* mapComp ,Component* thisComponent, int range, std::vector<eComponentType> typeList)
+std::list<TileCell*> ComponentSystem::FindComponentInRange(Component* mapComp ,Component* thisComponent, int range, std::vector<eComponentType> typeList)
 {
 	// 타일 범위
 	Map* map = (Map*)mapComp;
-
+	std::list<TileCell*> TileCellRange;
 	int minX = thisComponent->GetTileX() - range;
 	int maxX = thisComponent->GetTileX() + range;
 	int minY = thisComponent->GetTileY() - range;
 	int maxY = thisComponent->GetTileY() + range;
+
+	if (minX < 0)
+		minX = 0;
+	if (maxX >= map->GetWidth())
+		maxX = map->GetWidth() - 1;
+	if (minY < 0)
+		minY = 0;
+	if (maxY >= map->GetHeight())
+		maxY = map->GetHeight() - 1;
+	
+	for (int y = minY; y <= maxY; y++)
+	{
+		for (int x = minX; x <= maxX; x++)
+		{
+			std::list<Component*> componentList;
+			if (map->GetTileCollisionList(x, y, componentList) == false)
+			{
+				for (std::list<Component*>::iterator itr = componentList.begin(); itr != componentList.end(); itr++)
+				{
+					TileCellRange.push_back(map->GetTileCell(x, y));
+				}
+			}
+		}
+	}
+	return TileCellRange;
+}
+
+Component* ComponentSystem::FindComponentInAllMap(Component* mapComp, Component* thisComponent, std::vector<eComponentType> typeList)
+{
+	// 타일 범위
+	Map* map = (Map*)mapComp;
+
+	int minX = 0;
+	int maxX = map->GetWidth();
+	int minY = 0;
+	int maxY = map->GetHeight();
 
 	if (minX < 0)
 		minX = 0;

@@ -65,4 +65,6 @@ public:
 
 public:
 	TileCell* FindTileCellWithMousePosition(int mouseX, int mouseY);
+
+	//Test
 };
