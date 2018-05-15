@@ -58,11 +58,11 @@ Component* ComponentSystem::FindComponent(std::wstring name)
 	return 0;
 }
 
-std::list<TileCell*> ComponentSystem::FindComponentInRange(Component* mapComp ,Component* thisComponent, int range, std::vector<eComponentType> typeList)
+std::list<TileCell*> ComponentSystem::FindTileCellInRange(Component* mapComp ,Component* thisComponent, int range, std::vector<eComponentType> typeList)
 {
 	// 타일 범위
 	Map* map = (Map*)mapComp;
-	std::list<TileCell*> TileCellRange;
+	std::list<TileCell*> tileCellRange;
 	int minX = thisComponent->GetTileX() - range;
 	int maxX = thisComponent->GetTileX() + range;
 	int minY = thisComponent->GetTileY() - range;
@@ -81,17 +81,10 @@ std::list<TileCell*> ComponentSystem::FindComponentInRange(Component* mapComp ,C
 	{
 		for (int x = minX; x <= maxX; x++)
 		{
-			std::list<Component*> componentList;
-			if (map->GetTileCollisionList(x, y, componentList) == false)
-			{
-				for (std::list<Component*>::iterator itr = componentList.begin(); itr != componentList.end(); itr++)
-				{
-					TileCellRange.push_back(map->GetTileCell(x, y));
-				}
-			}
+			tileCellRange.push_back(map->GetTileCell(x, y));
 		}
 	}
-	return TileCellRange;
+	return tileCellRange;
 }
 
 Component* ComponentSystem::FindComponentInAllMap(Component* mapComp, Component* thisComponent, std::vector<eComponentType> typeList)

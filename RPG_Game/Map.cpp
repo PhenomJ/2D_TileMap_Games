@@ -150,8 +150,7 @@ void Map::Init()
 						int index = atoi(token);
 						if (index >= 0)
 						{
-							TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row
-							);
+							TileObject* tileObject = new TileObject(componentName, _spriteList[index], x, row);
 							tileObject->SetCanMove(false);
 							tileCell->AddComponent(tileObject, true);
 						}

@@ -1,6 +1,7 @@
 #include "GameGen.h"
 #include "Stage.h"
 #include "Component.h"
+#include "LifeNPC.h"
 #include "Map.h"
 
 GameGen::GameGen(Stage* stage)

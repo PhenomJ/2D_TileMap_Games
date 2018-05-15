@@ -341,7 +341,7 @@ void Character::Attack(TileCell* targetTileCell)
 {
 	std::list<Component*> collisionList;
 	Map* map = GameSystem::GetInstance()->GetStage()->GetMap();
-
+	TurnManager::GetInstance()->ChangeTurn();
 	bool canMove = map->GetTileCollisionList(targetTileCell->GetTileX(), targetTileCell->GetTileY(), collisionList);
 
 	if (canMove == false)
@@ -360,5 +360,4 @@ void Character::Attack(TileCell* targetTileCell)
 			_state->NextState(eStateType::ET_IDLE);
 		}
 	}
-	TurnManager::GetInstance()->ChangeTurn();
 }

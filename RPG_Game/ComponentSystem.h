@@ -25,10 +25,11 @@ public:
 	void RemoveAllComponents();
 	
 	Component* FindComponent(std::wstring name);
-	std::list<TileCell*> FindComponentInRange(Component* mapComp, Component* chaser, int range, std::vector<eComponentType> typeList);
+	std::list<TileCell*> ComponentSystem::FindTileCellInRange(Component* mapComp, Component* thisComponent, int range, std::vector<eComponentType> typeList);
 	Component* FindComponentInAllMap(Component* mapComp, Component* chaser, std::vector<eComponentType> typeList);
 	void ProcessMessageQueue();
 	void Update(float deltaTime);
+
 	//Message
 	void SendMsg(const sComponentMsgParam &msgParam);
 	void ClearMessageQueue();

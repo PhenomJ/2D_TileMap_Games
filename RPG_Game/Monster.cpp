@@ -35,16 +35,20 @@ void Monster::UpdateAI(float deltaTime)
 			TileCell* targetCell = GameSystem::GetInstance()->GetStage()->GetMap()->GetTileCell(findEnemy->GetTileX(), findEnemy->GetTileY());
 			// ±Ê√£±‚
 
-			std::list<TileCell*> tileCellRange = ComponentSystem::GetInstance()->FindComponentInRange(map, this, _movePoint, typeList);
+			std::list<TileCell*> tileCellRange = ComponentSystem::GetInstance()->FindTileCellInRange(map, this, _movePoint, typeList);
 			std::list<TileCell*>::iterator itr = tileCellRange.begin();
 			for (itr ; itr != tileCellRange.end(); itr++)
 			{
 				if ((*itr)->GetTileX() == targetCell->GetTileX() && (*itr)->GetTileY() == targetCell->GetTileY())
 				{
 					Attack(targetCell);
+					targetCell = NULL;
+					return;
 				}
 			}
-			SetTargetCell(MinDistanceTileCell(targetCell, tileCellRange));
+
+			if (targetCell != NULL)
+				SetTargetCell(MinDistanceTileCell(targetCell, tileCellRange));
 		}
 	}
 }
@@ -65,12 +69,26 @@ Component* Monster::Collision(std::list<Component*> &collisionList)
 
 TileCell* Monster::MinDistanceTileCell(TileCell* targetCell, std::list<TileCell*> tileCellList)
 {
-	TileCell* minDistanceTileCell;
+	TileCell* minDistanceTileCell = NULL;
+	float minDistance = -1;
 
-	for (std::list<TileCell*>::iterator itr = tileCellList.end(); itr != tileCellList.begin(); itr--)
+	for (std::list<TileCell*>::iterator itr = tileCellList.begin(); itr != tileCellList.end(); itr++)
 	{
-		int tileX = (*itr)->GetTileX();
-		int tileY = (*itr)->GetTileY();
+		float distanceX = (*itr)->GetTileX() - targetCell->GetTileX();
+		float distanceY = (*itr)->GetTileY() - targetCell->GetTileY();
+
+		float distance = distanceX * distanceX + distanceY * distanceY;
+
+		if (minDistance == -1)
+		{
+			minDistance = distance;
+		}
+
+		else if (minDistance > distance && ((*itr)->CanMove() == true))
+		{
+			minDistance = distance;
+			minDistanceTileCell = (*itr);
+		}
 	}
 
 	return minDistanceTileCell;
